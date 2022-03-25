@@ -1,0 +1,21 @@
+@import "https://unpkg.com/@liqvid/recording/dist/style.css";
+@import "https://unpkg.com/@lqv/codebooth/dist/style.css";
+
+/* container */
+.lqv-codebooth {
+  grid-template: 
+    "editor console" calc(100% - var(--button-height))
+    "buttons console" var(--button-height) / var(--split);
+}
+
+/* preview */
+output {
+  background: #FFF;
+  border-left: 1px solid #AAA;
+  grid-area: console;
+  height: 100%;
+}
+
+.lv-thumbnail-time {
+  color: #000;
+}
