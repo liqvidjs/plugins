@@ -1,0 +1,1 @@
+Liqvid-compatible plugins
