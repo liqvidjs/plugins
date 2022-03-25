@@ -1,0 +1,10 @@
+# generated files
+node_modules
+dist
+
+# Node stuff
+
+# OS files / development
+.DS_Store
+*.code-*
+*.sublime-*

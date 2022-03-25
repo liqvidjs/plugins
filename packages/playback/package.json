@@ -1,0 +1,29 @@
+{
+  "name": "@lqv/playback",
+  "version": "0.0.1",
+  "description": "Playback interface for Liqvid-compatible plugins",
+  "exports": {
+    "./react": {
+      "import": "./dist/esm/react.js",
+      "require": "./dist/cjs/react.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/types/*"
+      ]
+    }
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yuri Sulyma <yuri@liqvidjs.org>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.6.2"
+  }
+}
