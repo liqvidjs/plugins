@@ -46,7 +46,7 @@ yarn install
   liqvid thumbs
   ```
 
-5. View the production build at `http://localhost:3000/dist/`. To see how to embed the video in a page, go to `http://localhost:3000/dist/parent.html`. (See Note 2 below).
+5. View the production build at http://localhost:3000/dist/. To see how to embed the video in a page, go to http://localhost:3000/dist/parent.html. (See Note 2 below).
 
 6. To deploy to your site, upload the `dist` directory.
 
@@ -56,4 +56,4 @@ yarn install
 
 1. If you change the keyboard commands for "Start/Stop/Pause/Discard recording", you must add ` passKeys={["Mod-Alt-2", "Mod-Alt-3", "Mod-Alt-4"]}` (but replace these with your new key sequences) to `<Record>` in `src/@development/ui.tsx`. Note that `passKeys` uses `-` between modifiers (CodeMirror syntax), but the recording control uses `+` (Liqvid syntax).
 
-2. If you want to work on the production version and have it live-reload, run `NODE_ENV=production liqvid serve` and go to `http://localhost:3000/` (*not* `/dist`).
+2. If you want to work on the production version and have it live-reload, run `NODE_ENV=production liqvid serve` and go to http://localhost:3000/ (*not* `/dist`).
