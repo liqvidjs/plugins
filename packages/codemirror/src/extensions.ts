@@ -2,7 +2,9 @@ import type {KeyBinding} from "@codemirror/view";
 import {Keymap} from "@liqvid/keymap";
 
 /**
-Handle key sequences in `seqs` even if key capture is suspended.
+ * Handle key sequences in `seqs` even if key capture is suspended.
+ * @param keymap {@link Keymap} to handle key sequences.
+ * @param seqs Key sequences to handle.
 */
 export function passThrough(keymap: Keymap, seqs: string[] = []): KeyBinding[] {
   return seqs.map(key => {

@@ -22,6 +22,10 @@ interface DrawSelection {
   view: EditorView;
 }
 
+/**
+ * CodeMirror extension to imitate selections.
+ * @param drawSelection CodeMirror extension to modify.
+ */
 export function fakeSelection(drawSelection: Extension[]): (view: EditorView) => DrawSelection {
   // @ts-expect-error create is not exposed
   const create = drawSelection[1].create as (view: EditorView) => DrawSelection;
