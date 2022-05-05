@@ -1,3 +1,4 @@
+import type {Extension} from "@codemirror/state";
 import {EditorView, keymap} from "@codemirror/view";
 import {RecorderPlugin, ReplayDataRecorder} from "@liqvid/recording";
 import {bind} from "@liqvid/utils/misc";
@@ -13,8 +14,16 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
     bind(this, ["extension"]);
   }
 
-  extension(keys: string[] = []) {
-    console.log(keys);
+  /**
+   * Get a CodeMirror extension for recording.
+   * @param specialKeys Map of key sequences to commands, e.g. {"Mod-Enter": "run"}.
+   * @returns CodeMirror extension.
+   */
+  extension(specialKeys: Record<string, string> | string[] = {}): Extension {
+    // legacy
+    if (specialKeys instanceof Array) {
+      specialKeys = Object.fromEntries(specialKeys.map(key => [key, key]));
+    }
     // record document changes
     const updateListener = EditorView.updateListener.of(update => {
       if (!this.manager || this.manager.paused || !this.manager.active)
@@ -40,13 +49,12 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
 
     // record special key presses
     const keyListener = keymap.of(
-      keys.map(key => ({
+      Object.keys(specialKeys).map(key => ({
         key,
         run: () => {
-          console.log(`pressed ${key}`);
-          if (!this.manager || this.manager.paused || !this.manager.active)
-            return false;
-          this.capture(this.manager.getTime(), key);
+          if (this.manager && this.manager.active && !this.manager.paused) {
+            this.capture(this.manager.getTime(), specialKeys[key]);
+          }
           return false;
         }
       }))
@@ -73,7 +81,3 @@ export const CodeRecording: RecorderPlugin<[number, CaptureData], ReplayData<Cap
   saveComponent: KeySaveComponent,
   title: "Record code"
 };
-
-// function formatNum(x: number): number {
-//   return parseFloat(x.toFixed(2));
-// }
