@@ -1,11 +1,11 @@
 {
   "name": "@lqv/cursor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Cursor recording and replaying for Liqvid",
   "exports": {
     "./*": {
-      "import": "./dist/esm/*.js",
-      "require": "./dist/cjs/*.js"
+      "import": "./dist/esm/*.mjs",
+      "require": "./dist/cjs/*.cjs"
     }
   },
   "typesVersions": {
@@ -19,8 +19,9 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "pnpm build:clean; pnpm build:cjs; pnpm build:esm; pnpm build:postclean",
+    "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -rf dist",
+    "build:js": "pnpm build:cjs; pnpm build:esm; node ../../build.mjs",
     "build:cjs": "tsc --outDir dist/cjs --module commonjs",
     "build:esm": "tsc",
     "build:postclean": "rm dist/tsconfig.tsbuildinfo"
@@ -50,18 +51,19 @@
     }
   },
   "peerDependencies": {
-    "@liqvid/recording": "^0.0.3",
+    "@liqvid/recording": "^0.0.5",
     "@lqv/playback": "workspace:^",
     "@types/react": ">=17.0.0",
-    "react": ">=17.0.0",
-    "liqvid": "^2.1.4"
+    "liqvid": "^2.1.5",
+    "react": ">=17.0.0"
   },
   "devDependencies": {
-    "@liqvid/recording": "^0.0.3",
+    "@liqvid/recording": "^0.0.5",
     "@lqv/playback": "workspace:^",
-    "liqvid": "^2.1.4"
+    "liqvid": "^2.1.5",
+    "react": "^17.0.2"
   },
   "dependencies": {
-    "@liqvid/utils": "^1.3.0"
+    "@liqvid/utils": "^1.5.0"
   }
 }

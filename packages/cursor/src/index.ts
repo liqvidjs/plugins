@@ -59,9 +59,9 @@ export function cursorReplay(opts: {
 
   // prevent FoUC
   const {hidden} = target;
-  if (between(start, playback.currentTime, end)) {
-    target.hidden = true;
-  }
+  // if (between(start, playback.currentTime, end)) {
+  //   target.hidden = true;
+  // }
 
   /* measure image */
   let height: number, width: number;
@@ -115,7 +115,7 @@ export function cursorReplay(opts: {
 
   const unsubscribeFromPlayback = subscribe(playback, update);
 
-  return () => {
+  return function unsubscribe() {
     unsubscribeFromPlayback();
     observer.unobserve(target);
   };

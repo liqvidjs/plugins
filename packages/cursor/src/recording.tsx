@@ -1,5 +1,4 @@
-import type {RecorderPlugin} from "@liqvid/recording";
-import {ReplayDataRecorder} from "@liqvid/recording";
+import {compress, RecorderPlugin, ReplayDataRecorder} from "@liqvid/recording";
 import {bind} from "@liqvid/utils/misc";
 import type {ReplayData} from "@liqvid/utils/replay-data";
 
@@ -32,16 +31,18 @@ export class CursorRecorder extends ReplayDataRecorder<[number, number]> {
 
     this.capture(t,
       [
-        formatNum((e.pageX - left) / width * 100),
-        formatNum((e.pageY - top) / height * 100)
+        (e.pageX - left) / width * 100,
+        (e.pageY - top) / height * 100
       ] as [number, number]
     );
   }
 
-  setTarget() {}
+  finalizeRecording(data: ReplayData<[number, number]>): ReplayData<[number, number]> {
+    return compress(data, 4);
+  }
 }
 
-function CursorSaveComponent(props: {data: ReplayData<[number, number]>}) {
+const CursorSaveComponent: React.FC<{data: ReplayData<[number, number]>}> = (props) => {
   return (
     <>
       {props.data ?
@@ -50,7 +51,7 @@ function CursorSaveComponent(props: {data: ReplayData<[number, number]>}) {
       }
     </>
   );
-}
+};
 
 const icon = (
   <g>
@@ -59,7 +60,7 @@ const icon = (
   </g>
 );
 
-export const CursorRecording: RecorderPlugin<[number, number]> = {
+export const CursorRecording: RecorderPlugin<[number, [number, number]], ReplayData<[number, number]>, CursorRecorder> = {
   icon,
   key: "cursor",
   name: "Cursor",
@@ -67,9 +68,3 @@ export const CursorRecording: RecorderPlugin<[number, number]> = {
   saveComponent: CursorSaveComponent,
   title: "Record cursor",
 };
-
-
-function formatNum(x: number): number {
-  return x;
-  // return parseFloat(x.toFixed(3));
-}
