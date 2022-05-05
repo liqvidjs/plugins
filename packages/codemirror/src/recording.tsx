@@ -53,7 +53,7 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
         key,
         run: () => {
           if (this.manager && this.manager.active && !this.manager.paused) {
-            this.capture(this.manager.getTime(), specialKeys[key]);
+            this.capture(this.manager.getTime(), (specialKeys as Record<string, string>)[key]);
           }
           return false;
         }
