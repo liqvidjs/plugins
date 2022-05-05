@@ -3,15 +3,19 @@
   "version": "0.0.3",
   "description": "Codemirror 6 recording and replaying",
   "exports": {
-    ".": "./dist/index.js",
-    "./convert": "./dist/convert.js",
-    "./extensions": "./dist/extensions.js",
-    "./recording": "./dist/recording.js"
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./*": {
+      "import": "./dist/esm/*.mjs",
+      "require": "./dist/cjs/*.cjs"
+    }
   },
   "typesVersions": {
     "*": {
       "*": [
-        "./dist/*"
+        "./dist/types/*.d.ts"
       ]
     }
   },
@@ -34,7 +38,12 @@
   },
   "homepage": "https://github.com/liqvidjs/plugins/tree/main/packages/codemirror",
   "scripts": {
-    "build": "tsc"
+    "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
+    "build:clean": "rm -rf dist",
+    "build:js": "pnpm build:cjs; pnpm build:esm; node ../../build.mjs",
+    "build:cjs": "tsc --outDir dist/cjs --module commonjs",
+    "build:esm": "tsc",
+    "build:postclean": "rm dist/tsconfig.tsbuildinfo"
   },
   "peerDependencies": {
     "@codemirror/state": ">=0.19.9",
@@ -58,7 +67,8 @@
     "@liqvid/keymap": "^1.1.3",
     "@liqvid/recording": "^0.0.5",
     "liqvid": "^2.1.5",
-    "strict-event-emitter-types": "^2.0.0"
+    "strict-event-emitter-types": "^2.0.0",
+    "ts-node": "^10.7.0"
   },
   "dependencies": {
     "@liqvid/utils": "^1.5.0"

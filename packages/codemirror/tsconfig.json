@@ -1,23 +1,12 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "alwaysStrict": true,
-    "declaration": true,
-    "declarationDir": "./dist",
-    "incremental": true,
-    "jsx": "react-jsx",
-    "lib": ["es2015", "es2016", "es2017", "dom"],
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "outDir": "./dist",
-    "pretty": true,
-    "removeComments": false,
-    "suppressImplicitAnyIndexErrors": true,
-    "target": "ES2017"
+    "composite": true,
+    "declarationDir": "./dist/types",
+    "module": "esnext",
+    "outDir": "./dist/esm",
+    "rootDir": "./src",
+    "target": "esnext"
   },
-  "files": [
-    "./src/index.ts",
-    "./src/convert.ts",
-    "./src/extensions.ts",
-    "./src/recording.tsx"
-  ]
+  "include": ["./src"]
 }
