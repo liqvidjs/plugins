@@ -1,4 +1,4 @@
-This demo shows how to use the CodeBooth plugin for TSX tutorials.
+This demo shows how to use the CodeBooth plugin for Python tutorials.
 
 ## Installation
 
@@ -7,9 +7,9 @@ Download this directory and install the packages:
 ```bash
 git clone git@github.com:liqvidjs/plugins.git --no-checkout liqvid-plugins
 cd liqvid-plugins
-git sparse-checkout set demos/codebooth-tsx
+git sparse-checkout set demos/liqvid/codebooth-python
 git checkout
-cd demos/codebooth-tsx
+cd demos/liqvid/codebooth-python
 yarn install
 ```
 
@@ -23,9 +23,9 @@ yarn install
 
 3. Select Audio and Code, or Video and Code.
 
-4. Press `Ctrl+Alt+2` to start recording. Press `Ctrl+Enter` to refresh the React preview. When you are finished, press `Ctrl+Alt+2` to stop recording. (See Note 1 below).
+4. Press `Ctrl+Alt+2` to start recording. Press `Ctrl+Enter` to run the Python code, and `Ctrl+Shift+L` (`Cmd+K` on Mac) to clear the output. When you are finished, press `Ctrl+Alt+2` to stop recording. (See Note 1 below).
 
-5. Save the audio file as `static/audio.webm`. Save the coding data as `static/recordings.json`.
+5. Copy the duration to `src/@production/index.tsx`. Save the audio file as `static/audio.webm`. Save the coding data as `static/recordings.json`.
 
 ## Deploying
 
@@ -34,23 +34,19 @@ yarn install
   liqvid audio convert static/audio.webm
   ```
 
-2. Set the duration (in milliseconds) in `src/@production/index.tsx` (in future, the recording interface will tell you this, for now look at the audio file).
-
-3. Make production bundle:
+2. Make production bundle:
   ```bash
   liqvid build
   ```
 
-4. Generate thumbnail previews:
+3. Generate thumbnail previews:
   ```bash
   liqvid thumbs
   ```
 
-5. View the production build at http://localhost:3000/dist/. To see how to embed the video in a page, go to http://localhost:3000/dist/parent.html. (See Note 2 below).
+4. View the production build at http://localhost:3000/dist/. To see how to embed the video in a page, go to http://localhost:3000/dist/parent.html. (See Note 2 below).
 
-6. To deploy to your site, upload the `dist` directory.
-
-## Production
+5. To deploy to your site, upload the `dist` directory.
 
 ## Notes
 

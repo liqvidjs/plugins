@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@liqvid/recording': ^0.0.4
+
+dependencies:
+  '@liqvid/recording': link:../../../../../../../../.nvm/versions/node/v16.14.0/pnpm-global/5/node_modules/@liqvid/recording

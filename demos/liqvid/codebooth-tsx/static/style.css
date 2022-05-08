@@ -1,5 +1,5 @@
 @import "https://unpkg.com/@liqvid/recording/dist/style.css";
-@import "https://unpkg.com/@lqv/codebooth/dist/style.css";
+@import "https://unpkg.com/@lqv/codebooth/dist/style.min.css";
 
 /* container */
 .lqv-codebooth {

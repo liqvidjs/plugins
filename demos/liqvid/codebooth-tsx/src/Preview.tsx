@@ -10,11 +10,12 @@ declare global {
 
 export function Preview() {
   const ref = useRef<HTMLOutputElement>();
-  const useStore = useBoothStore();
+  const store = useBoothStore();
 
   useEffect(() => {
-    useStore.subscribe(state => state.run, () => {
-      const state = useStore.getState();
+    store.subscribe(state => state.run, () => {
+      const state = store.getState();
+      console.log(state);
       const file = state.groups[state.activeGroup].files[0];
       const tsx = file.view.state.doc.toString();
 

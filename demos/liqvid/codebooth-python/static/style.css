@@ -1,0 +1,10 @@
+@import "https://unpkg.com/@liqvid/recording/dist/style.min.css";
+@import "https://unpkg.com/@lqv/codebooth/dist/style.min.css";
+
+.cm-editor {
+  background: #FAFAFA;
+}
+
+.lv-thumbnail-time {
+  color: #000;
+}
