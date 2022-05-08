@@ -1,0 +1,77 @@
+@import "https://unpkg.com/@liqvid/recording/dist/style.css";
+@import "https://unpkg.com/@lqv/codebooth/dist/style.min.css";
+
+/* dragging */
+.draggable {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+body.dragging .lv-canvas,
+body.dragging .draggable,
+.dragging {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.cm-editor {
+  background: #FAFAFA;
+}
+
+.lqv-console {
+  display: none;
+}
+
+/* preview */
+output {
+  background: #FFF;
+  border-left: 1px solid #AAA;
+  grid-area: console;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.lv-thumbnail-time {
+  color: #000;
+}
+
+/* face */
+.lv-canvas.no-face > .floating-face {
+  display: none;
+}
+
+.floating-face {
+  position: absolute;
+  height: 30%;
+  right: 0;
+  bottom: var(--lv-controls-height);
+  z-index: 3;
+}
+
+/* face control */
+.lv-controls-face {
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 100%;
+}
+
+.lv-controls-face > svg {
+  height: 100%;
+}
+
+.lv-controls-face > svg > circle:first-child {
+  stroke: #666;
+}
+
+.lv-controls-face > svg > *:not(:first-child) {
+  fill: #666;
+}
+
+.lv-controls-face > svg.active > circle:first-child {
+  stroke: #FFF;
+}
+
+.lv-controls-face > svg.active > *:not(:first-child) {
+  fill: #FFF;
+}
