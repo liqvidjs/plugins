@@ -1,18 +1,10 @@
-import {autocompletion, completionKeymap} from "@codemirror/autocomplete";
-import {closeBrackets, closeBracketsKeymap} from "@codemirror/closebrackets";
-import {defaultKeymap, indentWithTab} from "@codemirror/commands";
-import {commentKeymap} from "@codemirror/comment";
-import {foldGutter, foldKeymap} from "@codemirror/fold";
-import {highlightActiveLineGutter, lineNumbers} from "@codemirror/gutter";
-import {defaultHighlightStyle} from "@codemirror/highlight";
-import {history, historyKeymap} from "@codemirror/history";
-import {indentOnInput} from "@codemirror/language";
+import {autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap} from "@codemirror/autocomplete";
+import {defaultKeymap, history, historyKeymap, indentWithTab} from "@codemirror/commands";
+import {bracketMatching, defaultHighlightStyle, foldGutter, foldKeymap, indentOnInput, syntaxHighlighting} from "@codemirror/language";
 import {lintKeymap} from "@codemirror/lint";
-import {bracketMatching} from "@codemirror/matchbrackets";
-import {rectangularSelection} from "@codemirror/rectangular-selection";
 import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
 import {Compartment, EditorState, Extension} from "@codemirror/state";
-import {drawSelection, dropCursor, highlightSpecialChars, keymap} from "@codemirror/view";
+import {crosshairCursor, drawSelection, dropCursor, highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers, rectangularSelection} from "@codemirror/view";
 
 export const basicSetup: Extension = [
   lineNumbers(),
@@ -24,11 +16,12 @@ export const basicSetup: Extension = [
   dropCursor(),
   EditorState.allowMultipleSelections.of(true),
   indentOnInput(),
-  defaultHighlightStyle.fallback,
+  syntaxHighlighting(defaultHighlightStyle, {fallback: true}),
   bracketMatching(),
   closeBrackets(),
   autocompletion(),
   rectangularSelection(),
+  crosshairCursor(),
   // highlightActiveLine(),
   highlightSelectionMatches(),
   keymap.of([
@@ -38,7 +31,6 @@ export const basicSetup: Extension = [
     ...searchKeymap,
     ...historyKeymap,
     ...foldKeymap,
-    ...commentKeymap,
     ...completionKeymap,
     ...lintKeymap
   ])
