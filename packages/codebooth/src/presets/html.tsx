@@ -1,85 +1,49 @@
-import {classHighlightStyle} from "@codemirror/highlight";
-import {html} from "@codemirror/lang-html";
 import {css} from "@codemirror/lang-css";
+import {html} from "@codemirror/lang-html";
 import {javascript} from "@codemirror/lang-javascript";
-import {Extension, Text} from "@codemirror/state";
-import {useCallback} from "react";
+import {Extension} from "@codemirror/state";
+import {CodeRecording} from "@lqv/codemirror/recording";
+import {useEffect, useRef} from "react";
+import {useStore} from "zustand";
 import {CodeBooth} from "..";
 import {Buttons, Clear, Copy, Reset, Run, Tab, TabList} from "../components/buttons";
-import {TabPanel} from "../components/TabPanel";
-import {FileTabs} from "../components/FileTabs";
 import {Console} from "../components/Console";
 import {Editor} from "../components/Editor";
-import {Replay} from "../components/Replay";
+import {EditorGroup} from "../components/EditorGroup";
+import {EditorPanel} from "../components/EditorPanel";
+import {FileTabs} from "../components/FileTabs";
+import {Record} from "../components/Record";
+import {Replay, ReplayMultiple} from "../components/Replay";
 import {Resize} from "../components/Resize";
-import {Preview} from "../components/Preview";
 import {basicSetup} from "../extensions";
-import {State} from "../store";
-
-type RunCallback = React.ComponentProps<typeof CodeBooth>["run"];
-type HandleCallback = React.ComponentProps<typeof Replay>["handle"];
-
-/** HTML run function */
-const run: RunCallback = (files, setState) => {
-
-};
-
-/** Replay handling function */
-const handle: HandleCallback = (useStore, key, doc) => {
-  switch (key) {
-    case "Ctrl-Enter":
-    case "Cmd-Enter":
-      const {getActiveFiles, run} = useStore.getState();
-
-      // if we're replaying, latest changes haven't been dispatched to editor yet
-      const files = getActiveFiles();
-      files["untitled.py"] = doc.toString();
-
-      run(files, useStore.setState);
-      break;
-    case "Ctrl-L":
-    case "Cmd-K":
-      useStore.setState({messages: []});
-      break;
-  }
-};
+import {State, useBoothStore} from "../store";
 
 /** HTML demo */
 export function HTMLDemo(props: {
-  initial?: Record<string, {
-    activeFile: string;
-    files: {
-      content: string;
-      filename: string;
-    }[];
-  }>;
+  /**
+   * CodeMirror extensions to include.
+   */
   extensions?: Extension[];
-}) {
-  const initial = props.initial || {
-    demo: {
-      activeFile: "index.html",
-      files: [
-        {content: "", filename: "index.html"},
-        {content: "", filename: "script.js"},
-        {content: "", filename: "style.css"}
-      ]
-    }
-  };
 
+  /**
+   * Map of filenames to file contents.
+   */
+  files: Record<string, string>;
+}) {
   return (
-    <CodeBooth run={run}>
+    <CodeBooth>
       <FileTabs />
-      {Object.keys(initial).map(group =>
-        <TabPanel id={group} key={group}>
-          {initial[group].files.map(file =>
-            <Editor extensions={[basicSetup, extensionFromFilename(file.filename)]} filename={file.filename} key={file.filename} />
-          )}
-        </TabPanel>
+      {Object.keys(props.files).map(filename =>
+        <EditorPanel filename={filename} key={filename}>
+          <Editor content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename), ...(props.extensions || [])]} />
+        </EditorPanel>
       )}
       <Resize />
+      <Resize dir="ns" />
+      <HTMLPreview />
       <Console />
       <Buttons>
-        <Reset to={initial} />
+        <Reset />
         <Run />
         <Clear />
       </Buttons>
@@ -87,24 +51,45 @@ export function HTMLDemo(props: {
   );
 }
 
-/** Interactive HTML replay */
+/** Interactive HTML replay. */
 export const HTMLReplay: React.FC<{
-  replay: React.ComponentProps<typeof Replay>["replay"];
-  start: number;
+  /** Map of filenames to file contents. */
+  files: Record<string, string>;
+
+  /** Coding data to replay. */
+  replay: React.ComponentProps<typeof ReplayMultiple>["replay"];
+
+  /**
+   * When replay should start.
+   * @default 0
+   */
+  start?: number;
 }> = (props) => {
   return (
-    <CodeBooth activeGroup="replay" run={run}>
-      <TabPanel id="replay">
-        <Replay extensions={[basicSetup, html()]} filename="untitled.py" handle={handle} replay={props.replay} start={props.start} />
-      </TabPanel>
-      <TabPanel id="playground">
-        <Editor extensions={[basicSetup, html()]} filename="untitled.py" />
-      </TabPanel>
+    <CodeBooth>
+      <FileTabs />
+      <EditorGroup id="replay">
+        {Object.keys(props.files).map(filename =>
+          <EditorPanel filename={filename} key={filename}>
+            <Replay content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename)]} />
+          </EditorPanel>
+        )}
+        <ReplayMultiple replay={props.replay} start={props.start} />
+      </EditorGroup>
+      <EditorGroup id="playground">
+        {Object.keys(props.files).map(filename =>
+          <EditorPanel filename={filename} key={filename}>
+            <Editor extensions={[basicSetup, extensionFromFilename(filename)]} />
+          </EditorPanel>
+        )}
+      </EditorGroup>
       <Resize />
+      <Resize dir="ns" />
+      <HTMLPreview />
       <Console />
       <Buttons>
         <TabList>
-          <Tab id="replay">Code</Tab>
+          <Tab id="replay">Replay</Tab>
           <Tab id="playground">Playground</Tab>
         </TabList>
         <Copy from="replay" to="playground" />
@@ -112,56 +97,177 @@ export const HTMLReplay: React.FC<{
         <Clear />
       </Buttons>
       {props.children}
-    </CodeBooth>
+    </CodeBooth >
+  );
+};
+
+/** Record HTML demos. */
+export const HTMLRecord: React.FC<{
+  /** Map of filenames to file contents. */
+  files: Record<string, string>;
+}> = (props) => {
+  return (
+    <CodeBooth recorder={CodeRecording.recorder}>
+      <FileTabs />
+      {Object.keys(props.files).map(filename =>
+        <EditorPanel filename={filename} key={filename}>
+          <Record content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename)]} />
+        </EditorPanel>
+      )}
+      <Resize />
+      <Resize dir="ns" />
+      <HTMLPreview />
+      <Console />
+      <Buttons>
+        <Run />
+        <Clear />
+      </Buttons>
+    </CodeBooth >
+  );
+};
+
+/** Preview of HTML document. */
+export function HTMLPreview() {
+  const store = useBoothStore();
+
+  /** <iframe> containing preview document */
+  const iframe = useRef<HTMLIFrameElement>();
+
+  /* rendering */
+  useEffect(() => {
+    /* re-render */
+    function render() {
+      const files = getFileContents(store.getState());
+      if (!("index.html" in files)) {
+        return;
+      }
+      iframe.current.srcdoc = transform(files["index.html"], files);
+    }
+
+    // initial render
+    render();
+
+    /* unsubscriptions */
+    const unsubs: (() => void)[] = [];
+
+    /* messaging */
+    function update(msg: MessageEvent) {
+      if (msg.data.type === "console.log") {
+        store.setState(prev => ({
+          ...prev,
+          messages: prev.messages.concat(<pre key={Math.random()}>{msg.data.content.map((item: unknown) => formatLog(item))}</pre>)
+        }));
+      } else if (msg.data.type === "console.clear") {
+        store.setState(prev => ({
+          ...prev,
+          messages: []
+        }));
+      }
+    }
+
+    window.addEventListener("message", update);
+    unsubs.push(() => {
+      window.removeEventListener("message", update);
+    });
+
+    // subscribe to run event
+    unsubs.push(store.subscribe(state => state.run, () => {
+      render();
+      // iframe.current.contentWindow.postMessage({
+      //   type: "update-css",
+      //   filename: file.filename,
+      //   content
+      // }, "*");
+    }));
+
+    // unsubscribe
+    return () => {
+      for (const unsub of unsubs) {
+        unsub();
+      }
+    };
+  }, []);
+
+  return (
+    <iframe className="lqv-preview" ref={iframe} sandbox="allow-popups allow-scripts" />
   );
 }
 
-/** Record HTML demos */
-export const HTMLRecord: React.FC<{}> = () => {
-  return (
-    <CodeBooth>
-      <FileTabs />
-      <TabPanel id="record">
-        <Editor extensions={[basicSetup, html()]} filename="index.html" />
-        <Editor extensions={[basicSetup, css()]} filename="style.css" />
-        <Editor extensions={[basicSetup, javascript()]} filename="script.js" />
-      </TabPanel>
-      <Resize />
-      <Buttons>
-        <Run />
-      </Buttons>
-      <Preview />
-    </CodeBooth>
-  )
-};
+/**
+ * Inlines scripts and stylesheets in HTML code.
+ * @param html HTML code to transform
+ * @param files Map of file
+ * @returns Transformed HTML code.
+ */
+export function transform(html: string, files: Record<string, string>) {
+  // transform <script>s
+  html = html.replace(/<script\s*src=(['"])(?:\.\/)?([^\1]+?\.js)\1\s*><\/script>/gi, (match, q, src) => {
+    if (src in files) {
+      return "<script>" + files[src] + "</script>";
+    }
+    return match;
+  });
 
-// /* messaging */
-// const messages = useStore(state => state.messages);
+  // transform <link>s
+  html = html.replace(/<link([^>]+?)>/gi, (match, attrs) => {
+    const $_ = attrs.match(/href=(['"])(?:\.\/)?([^\1]+?\.css)\1/);
+    if ($_) {
+      const href = $_[2];
+      if (href in files) {
+        return `<style data-filename="${href}">` + files[href] + "</style>";
+      }
+      return match;
+    }
+    return match;
+  });
 
-// useEffect(() => {
-//   function update(msg: MessageEvent) {
-//     if (msg.data.type === "console.log") {
-//       useStore.setState(prev => ({
-//         ...prev,
-//         messages: prev.messages.concat(msg.data.content)
-//       }));
-//     } else if (msg.data.type === "console.clear") {
-//       useStore.setState(prev => ({
-//         ...prev,
-//         messages: []
-//       }))
-//     }
-//   }
+  // magic scripts
+  html = html.replace("<head>", "<head>" + magicScripts);
 
-//   window.addEventListener("message", update);
+  // return
+  return html;
+}
 
-//   return () => {
-//     window.removeEventListener("message", update);
-//   }
-// }, []);
+/** Iframe client code for development magic */
+const magicScripts = String.raw`<script>
+/* update CSS without reloading */
+window.addEventListener("message", ({data}) => {
+  if (data.type === "update-css") {
+    document.querySelector("style[data-filename='" + data.filename + "']").textContent = data.content;
+  }
+});
 
-/** Get CM extension appropriate to filename extension */
-function extensionFromFilename(filename: string): Extension {
+/* intercept console.log */
+{
+  const log = console.log;
+  console.log = function(...args) {
+    try {
+      window.parent.postMessage({
+        type: "console.log",
+        content: args
+      }, "*");
+    } catch (e) {
+      
+    }
+    log(...args);
+  }
+
+  const clear = console.clear;
+  console.clear = function() {
+    window.parent.postMessage({
+      type: "console.clear"
+    }, "*");
+    clear();
+  }
+}
+</script>`;
+
+/**
+ * Get CodeMirror {@link Extension} appropriate to filename extension
+ * @param filename Name of file.
+ * @returns Either `css()`, `html()`, or `javascript()` from `@codemirror/lang-*`.
+ */
+export function extensionFromFilename(filename: string): Extension {
   switch (true) {
     case filename.endsWith(".css"):
       return css();
@@ -170,4 +276,52 @@ function extensionFromFilename(filename: string): Extension {
     case filename.endsWith(".js"):
       return javascript();
   }
+}
+
+function getFileContents(state: State): Record<string, string> {
+  const ret: Record<string, string> = {};
+  if (!(state.groups[state.activeGroup]))
+    return ret;
+  const {files} = state.groups[state.activeGroup];
+  for (const file of files) {
+    ret[file.filename] = file.view.state.doc.toString();
+  }
+  return ret;
+}
+
+/** Format console logs */
+function formatLog(o: unknown, formatString = false) {
+  if (o instanceof Array) {
+    return <span className="array" key={key()}>Array [ <ol>{o.map((entry, i) => <li key={i}>{formatLog(entry, true)}</li>)}</ol> ]</span>;
+  } else if (typeof o === "object") {
+    return <span className="object" key={key()}>Object &#123; <ol>{Object.keys(o).map((k, i) => <li key={i}>{k}: {formatLog((o as Record<string, unknown>)[k], true)}</li>)}</ol> &#125;</span>;
+  } else if (typeof o === "number") {
+    return <span className="number" key={key()}>{o}</span>;
+  } else if (typeof o === "string") {
+    if (formatString) {
+      return <span className="string" key={key()}>&quot;{o}&quot;</span>;
+    } else {
+      return <span key={key()}>{o}</span>;
+    }
+  }
+  return o.toString();
+}
+
+/** Get unique React key. */
+function key() {
+  return Math.random();
+}
+
+/** Component for displaying console logs. */
+export function HTMLConsole() {
+  const store = useBoothStore();
+  const messages = useStore(store, state => state.messages);
+
+  return (
+    <section className="lqv-console">
+      <output>
+        {messages}
+      </output>
+    </section>
+  );
 }

@@ -21,19 +21,21 @@ export function Editor(props: {
   /** Filename for the file being edited. */
   filename?: string;
 
-  /** Group name for editor. You usually specify this on the parent {@link TabPanel} instead. */
+  /**
+   * Group name for editor. You usually specify this on the parent {@link EditorGroup} instead.
+   * @default "default"
+   */
   group?: string;
 }) {
-  const useStore = useBoothStore();
+  const {
+    editable = true,
+    group: groupId = "default"
+  } = props;
+  const store = useBoothStore();
+
   const ref = useRef<HTMLDivElement>();
 
   useEffect(() => {
-    // get prefix (before we replace the DOM element)
-    let prefix = "";
-    if (ref.current.parentElement.getAttribute("role") === "tabpanel") {
-      prefix = ref.current.parentElement.getAttribute("id").slice("panel-".length) + ":";
-    }
-
     // create editor
     const view = new EditorView({
       state: EditorState.create({
@@ -41,7 +43,7 @@ export function Editor(props: {
         extensions: [
           recording.of([]),
           shortcuts.of([]),
-          ...(props.editable ? [EditorView.editable.of(false)] : []),
+          ...(editable ? [] : [EditorView.editable.of(false)]),
           ...(props.extensions ?? [])
         ]
       })
@@ -49,18 +51,20 @@ export function Editor(props: {
 
     ref.current.replaceWith(view.dom);
 
-    useStore.setState(prev => {
-      const group = prev.groups[props.group] ?? {activeFile: props.filename, files: []};
-      
+    // insert into state
+    store.setState(prev => {
+      const group = prev.groups[groupId] ?? {activeFile: props.filename, files: []};
+
       return {
+        activeGroup: prev.activeGroup || groupId,
         groups: {
           ...prev.groups,
-          [props.group]: {
+          [groupId]: {
             activeFile: group.activeFile,
             files: [
               ...group.files,
               {
-                editable: props.editable ?? true,
+                editable,
                 filename: props.filename,
                 view
               }
@@ -71,7 +75,5 @@ export function Editor(props: {
     });
   }, []);
 
-return (
-  <div ref={ref} />
-);
+  return (<div ref={ref} />);
 }

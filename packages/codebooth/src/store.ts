@@ -1,14 +1,21 @@
 import {EditorView} from "@codemirror/view";
+import type {CodeRecorder} from "@lqv/codemirror/recording";
 import {createContext, useContext} from "react";
-import create, {GetState, SetState, StoreApi, Mutate} from "zustand";
+import {createStore} from "zustand";
 import {subscribeWithSelector} from "zustand/middleware";
+
+type RecordType<T> = T extends Record<string, infer K> ? K : never;
+type ArrayType<T> = T extends (infer K)[] ? K : never;
 
 /** CodeBooth store state. */
 export interface State {
   /**
-   * Name of active group.
+   * Name of active editor group.
    */
   activeGroup: string;
+
+  /** Class names to attach to root. */
+  classNames: string[];
 
   /** Group of files/editors. */
   groups: Record<string, {
@@ -28,49 +35,46 @@ export interface State {
     }[];
   }>;
 
-  /** Get active files */
-  getActiveFiles(): Record<string, string>;
+  /** Console logs. */
+  messages: React.ReactChild[];
 
-  /** Console logs */
-  messages: {
-    classNames: string[];
-    text: string;
-  }[];
+  /** Code recorder. */
+  recorder?: CodeRecorder;
 
   /** Used to broadcast run events. */
   run: number;
+
+  /** Get the active file. */
+  getActiveFile(): ArrayType<RecordType<State["groups"]>["files"]>;
+
+  /** Get the active view. */
+  getActiveView(): EditorView;
 }
 
-export const createStore = (state: Partial<State> = {}) => create<
-  State,
-  SetState<State>,
-  GetState<State>,
-  Mutate<StoreApi<State>, [["zustand/subscribeWithSelector", never]]>
->(subscribeWithSelector((set, get) => ({
+export const makeStore = (state: Partial<State> = {}) => createStore<State>()(subscribeWithSelector((set, get) => ({
   // default values
   activeGroup: undefined,
-  groups: {},
-  getActiveFiles() {
-    const {activeGroup, editors} = get();
-    const files: Record<string, string> = {};
-    for (const key in editors) {
-      if (key.startsWith(`${activeGroup}:`)) {
-        const filename = key.slice(`${activeGroup}:`.length);
-        files[filename] = editors[key].state.doc.toString();
-      }
-    }
-    return files;
+  classNames: ["lqv-codebooth"],
+  getActiveFile() {
+    const state = get();
+    const group = state.groups[state.activeGroup];
+    return group?.files?.find(_ => _.filename === group.activeFile);
   },
+  getActiveView() {
+    return get().getActiveFile().view;
+  },
+  groups: {},
   messages: [],
+  recorder: undefined,
   run: 0,
   ...state
 })));
 
-export type Store = ReturnType<typeof createStore>;
+export type Store = ReturnType<typeof makeStore>;
 
-export const BoothStore = createContext<ReturnType<typeof createStore>>(null);
+export const BoothStore = createContext<Store>(null);
 
+/** Get a reference to the Zustand store for this CodeBooth. See {@link State} for store shape. */
 export function useBoothStore() {
   return useContext(BoothStore);
 }
-

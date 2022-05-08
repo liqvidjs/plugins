@@ -1,0 +1,85 @@
+/* console */
+.lqv-console
+  grid-area console
+  overflow-y auto
+  white-space pre-wrap
+  overflow-wrap anywhere
+
+  color #000
+
+  // .light &
+  //   background #FFF
+  
+  // .dark &
+  // background #232327
+
+.lqv-console > pre
+  display block
+  padding .1em .4em
+  width 100%
+  color #000
+
+  // .light &
+  //   border-bottom 1px solid #f2f2f4
+  //   color #000
+
+  // .dark &
+  // border-bottom 1px solid #38383d
+  border-bottom 1px solid #EEE
+  // color #0F0
+
+  &.error
+    color #F00
+
+  > *:not(:last-child)
+    margin-right .75em
+
+
+/* html preview */
+.lqv-preview
+  grid-area console
+  height 100%
+  width 100%
+  border-left 1px solid #ddd
+
+/* html console */
+.lqv-preview + .lqv-console
+  color #FFF
+  left var(--split)
+  height var(--v-split)
+  grid-area none
+  width calc(100% - var(--split))
+  position absolute
+  bottom 0
+
+  &::before
+    content "Console"
+    color #FFF
+    background-color #333
+    font-family sans-serif
+    padding .1em .4em
+    width 100%
+    display block
+
+.lqv-console > pre span
+  display inline-block
+
+  &.array, &.object
+    color #479bee
+
+  &.number
+    color green
+
+  &.string
+    color #e438bc
+
+  ol
+    display inline
+    list-style-type none
+
+    > li
+      display inline
+
+      &:not(:last-child)::after
+        color #000
+        content ", "
