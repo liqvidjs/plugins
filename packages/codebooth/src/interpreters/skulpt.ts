@@ -12,10 +12,12 @@ interface Skulpt {
 
   importMainWithBody(name: string, dumpJS: boolean, body: string, canSuspend: boolean): void;
 
-  misceval: any;
+  misceval: {
+    asyncToPromise(callback: unknown): Promise<unknown>;
+  }
 }
 
-declare var Sk: Skulpt;
+declare const Sk: Skulpt;
 
 export class PythonInterpreter {
   constructor() {
@@ -29,9 +31,13 @@ export class PythonInterpreter {
   }
 
   run(code: string): Promise<string[]> {
-    const output = [];
+    const output: string[] = [];
     Sk.configure({
-      output: (txt) => {output.push(txt);},
+      output: (txt) => {
+        if (txt !== "\n") {
+          output.push(txt);
+        }
+      },
       read: this.read
     });
 
@@ -43,7 +49,11 @@ export class PythonInterpreter {
   runSync(code: string): string[] {
     const output: string[] = [];
     Sk.configure({
-      output: (txt: string) => {output.push(txt);},
+      output: (txt: string) => {
+        if (txt !== "\n") {
+          output.push(txt);
+        }
+      },
       read: this.read
     });
 

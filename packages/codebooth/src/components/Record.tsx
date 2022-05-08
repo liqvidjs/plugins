@@ -1,7 +1,7 @@
 import {keymap} from "@codemirror/view";
 import {passThrough} from "@lqv/codemirror/extensions";
 import {CodeRecording} from "@lqv/codemirror/recording";
-import {useKeymap} from "liqvid";
+import {useKeymap} from "@liqvid/keymap/react";
 import {useEffect, useMemo} from "react";
 import {recording} from "../extensions";
 import {useBoothStore} from "../store";
@@ -11,9 +11,9 @@ import {Editor} from "./Editor";
 export const Record: React.FC<{
   /**
    * Special key sequences to include in recording.
-   * @default ["Mod-Enter", "Mod-L"]
+   * @default {"Mod-Enter": run, "Mod-K": "clear", "Mod-L": "clear"}
    */
-  captureKeys?: string[];
+  captureKeys?: Record<string, string>;
 
   /**
    * Key sequences to pass through to {@link Keymap}.
@@ -22,24 +22,29 @@ export const Record: React.FC<{
   passKeys?: string[];
 } & React.ComponentProps<typeof Editor>> = (props) => {
   const {
-    captureKeys = ["Mod-Enter", "Mod-L"],
+    captureKeys = {
+      "Mod-Enter": "run",
+      "Mod-K": "clear",
+      "Mod-L": "clear"
+    },
     extensions = [],
+    group = "default",
     passKeys = ["Mod-Alt-2", "Mod-Alt-3", "Mod-Alt-4"],
     ...attrs
   } = props;
 
-  const useStore = useBoothStore();
+  const store = useBoothStore();
   const lqvKeymap = useKeymap();
-
-  const newExtensions = useMemo(() => [
+  
+  const newExtensions = useMemo(() => lqvKeymap ? [
     keymap.of(passThrough(lqvKeymap, passKeys)),
-    ...(props.extensions ?? [])
-  ], [passKeys]);
+    ...extensions
+  ] : [], [passKeys]);
 
   // attach recording extensions --- this has to be done this way because
   // the `shortcuts` Compartment will abort further handling of the sequence
   useEffect(() => {
-    const {view} = useStore.getState().groups[props.group].files.find(file => file.filename === props.filename);
+    const {view} = store.getState().groups[group].files.find(file => file.filename === props.filename);
     view.dispatch({
       effects: recording.reconfigure([
         recording.get(view.state),
@@ -51,4 +56,4 @@ export const Record: React.FC<{
   return (
     <Editor content={props.content} extensions={newExtensions} {...attrs} />
   );
-}
+};
