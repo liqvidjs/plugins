@@ -1,6 +1,6 @@
 import {Playback, Player} from "liqvid";
 import {render} from "react-dom";
-// import {Face, FaceControl} from "./Face";
+import {Face, FaceControl} from "./Face";
 import {UI} from "./ui";
 
 const playback = new Playback({duration: 347900});
@@ -12,11 +12,11 @@ function Lesson() {
   };
 
   return (
-    <Player controls={[/*<FaceControl />*/]} playback={playback} thumbs={thumbs}>
-      {/* <Face>
+    <Player controls={[<FaceControl />]} playback={playback} thumbs={thumbs}>
+      <Face>
         <source src="./video.mp4" type="video/mp4" />
         <source src="./video.webm" type="video/webm" />
-      </Face> */}
+      </Face>
       <UI />
     </Player>
   );

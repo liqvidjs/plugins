@@ -27,6 +27,8 @@ yarn install
 
 5. Copy the duration to `src/@production/index.tsx`. Save the audio file as `static/audio.webm`. Save the coding data as `static/recordings.json`.
 
+6. **Add `[0, "file:index.html"],` to the beginning of `static/recordings.json` (this is a current shortcoming of the CodeBooth package).**
+
 ## Deploying
 
 1. Convert the audio file:
