@@ -7,7 +7,7 @@ import {useMemo, useRef, useState} from "react";
 export const Face: React.FC = (props) => {
   const player = usePlayer();
   const offset = useRef({x: 0, y: 0});
-  const dragEvents = useMemo(() => onDrag<HTMLVideoElement>(
+  const dragEvents = useMemo(() => onDrag(
     // move
     (e, hit) => {
       const {domElement} = ref.current;
