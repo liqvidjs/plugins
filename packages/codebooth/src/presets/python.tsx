@@ -1,4 +1,5 @@
 import {python} from "@codemirror/lang-python";
+import {Extension} from "@codemirror/state";
 import {CodeRecording} from "@lqv/codemirror/recording";
 import {useEffect} from "react";
 import {CodeBooth} from "..";
@@ -19,10 +20,18 @@ const interpreter = new PythonInterpreter();
 export const PythonDemo: React.FC<{
   /** File contents. */
   content?: string;
+
+  /**
+   * CodeMirror extensions to add.
+   * @default []
+   */
+  extensions?: Extension[];
 }> = (props) => {
+  const {extensions = []} = props;
+
   return (
     <CodeBooth>
-      <Editor content={props.content} extensions={[basicSetup, python()]} filename="untitled.py" />
+      <Editor content={props.content} extensions={[basicSetup, python(), ...extensions]} filename="untitled.py" />
       <Resize />
       <PythonRun />
       <Console />
@@ -39,10 +48,18 @@ export const PythonDemo: React.FC<{
 export const PythonRecord: React.FC<{
   /** File contents. */
   content?: string;
+
+  /**
+   * CodeMirror extensions to add.
+   * @default []
+   */
+  extensions?: Extension[];
 }> = (props) => {
+  const {extensions = []} = props;
+
   return (
     <CodeBooth recorder={CodeRecording.recorder}>
-      <Record content={props.content} extensions={[basicSetup, python()]} filename="untitled.py" />
+      <Record content={props.content} extensions={[basicSetup, python(), ...extensions]} filename="untitled.py" />
       <Resize />
       <PythonRun />
       <Console />
@@ -59,6 +76,12 @@ export const PythonReplay: React.FC<{
   /** File contents. */
   content?: string;
 
+  /**
+   * CodeMirror extensions to add.
+   * @default []
+   */
+  extensions?: Extension[];
+
   /** Coding data to replay. */
   replay: React.ComponentProps<typeof Replay>["replay"];
 
@@ -68,13 +91,15 @@ export const PythonReplay: React.FC<{
    */
   start?: number;
 }> = (props) => {
+  const {extensions = []} = props;
+
   return (
     <CodeBooth>
       <EditorGroup id="replay">
-        <Replay content={props.content} extensions={[basicSetup, python()]} filename="untitled.py" replay={props.replay} start={props.start} />
+        <Replay content={props.content} extensions={[basicSetup, python(), ...extensions]} filename="untitled.py" replay={props.replay} start={props.start} />
       </EditorGroup>
       <EditorGroup id="playground">
-        <Editor content={props.content} extensions={[basicSetup, python()]} filename="untitled.py" />
+        <Editor content={props.content} extensions={[basicSetup, python(), ...extensions]} filename="untitled.py" />
       </EditorGroup>
       <Resize />
       <PythonRun />
@@ -96,7 +121,7 @@ export const PythonReplay: React.FC<{
 /** Run Python code. */
 export const PythonRun: React.FC = () => {
   const store = useBoothStore();
-  
+
   useEffect(() => {
     return store.subscribe(state => state.run, () => {
       const state = store.getState();

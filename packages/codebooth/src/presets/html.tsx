@@ -21,7 +21,8 @@ import {State, useBoothStore} from "../store";
 /** HTML demo */
 export function HTMLDemo(props: {
   /**
-   * CodeMirror extensions to include.
+   * CodeMirror extensions to add.
+   * @default []
    */
   extensions?: Extension[];
 
@@ -30,12 +31,14 @@ export function HTMLDemo(props: {
    */
   files: Record<string, string>;
 }) {
+  const {extensions = []} = props;
+
   return (
     <CodeBooth>
       <FileTabs />
       {Object.keys(props.files).map(filename =>
         <EditorPanel filename={filename} key={filename}>
-          <Editor content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename), ...(props.extensions || [])]} />
+          <Editor content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
         </EditorPanel>
       )}
       <Resize />
@@ -53,6 +56,12 @@ export function HTMLDemo(props: {
 
 /** Interactive HTML replay. */
 export const HTMLReplay: React.FC<{
+  /**
+   * CodeMirror extensions to add.
+   * @default []
+   */
+  extensions?: Extension[];
+
   /** Map of filenames to file contents. */
   files: Record<string, string>;
 
@@ -65,13 +74,15 @@ export const HTMLReplay: React.FC<{
    */
   start?: number;
 }> = (props) => {
+  const {extensions = []} = props;
+
   return (
     <CodeBooth>
       <FileTabs />
       <EditorGroup id="replay">
         {Object.keys(props.files).map(filename =>
           <EditorPanel filename={filename} key={filename}>
-            <Replay content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename)]} />
+            <Replay content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
           </EditorPanel>
         )}
         <ReplayMultiple replay={props.replay} start={props.start} />
@@ -79,7 +90,7 @@ export const HTMLReplay: React.FC<{
       <EditorGroup id="playground">
         {Object.keys(props.files).map(filename =>
           <EditorPanel filename={filename} key={filename}>
-            <Editor extensions={[basicSetup, extensionFromFilename(filename)]} />
+            <Editor extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
           </EditorPanel>
         )}
       </EditorGroup>
@@ -103,15 +114,23 @@ export const HTMLReplay: React.FC<{
 
 /** Record HTML demos. */
 export const HTMLRecord: React.FC<{
+  /**
+   * CodeMirror extensions to add.
+   * @default []
+   */
+  extensions?: Extension[];
+
   /** Map of filenames to file contents. */
   files: Record<string, string>;
 }> = (props) => {
+  const {extensions = []} = props;
+
   return (
     <CodeBooth recorder={CodeRecording.recorder}>
       <FileTabs />
       {Object.keys(props.files).map(filename =>
         <EditorPanel filename={filename} key={filename}>
-          <Record content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename)]} />
+          <Record content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
         </EditorPanel>
       )}
       <Resize />
