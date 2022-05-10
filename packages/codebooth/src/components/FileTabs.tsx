@@ -1,6 +1,6 @@
 import {onClick} from "@liqvid/utils/react";
 import {selectCmd} from "@lqv/codemirror";
-import {useEffect, useMemo} from "react";
+import {useCallback, useEffect, useMemo} from "react";
 import {useStore} from "zustand";
 import {State, useBoothStore} from "../store";
 import {ids} from "../utils";
@@ -16,12 +16,12 @@ export function FileTabs() {
   const group = store.getState().groups[activeGroup];
   const {recorder} = store.getState();
 
-  const events = useMemo(() => onClick<HTMLButtonElement>(e => {
+  const select = useCallback((filename: string) => {
     // record event
     // @ts-expect-error Manager needs to be changed from protected to public
     if (recorder?.manager?.active) {
       recorder.capture(undefined,
-        selectCmd + e.currentTarget.textContent
+        selectCmd + filename
       );
     }
 
@@ -31,15 +31,53 @@ export function FileTabs() {
         ...state.groups,
         [state.activeGroup]: {
           ...(state.groups[state.activeGroup]),
-          activeFile: e.currentTarget.textContent.trim()
+          activeFile: filename
         }
       }
     }));
-  }), [recorder]);
+
+    // focus editor
+    // this has to come last!
+    const state = store.getState();
+    state.groups[state.activeGroup]?.files.find(_ => _.filename === filename)?.view.focus();
+  }, [recorder]);
+
+  const events = useMemo(() => onClick<HTMLButtonElement>(e => {
+    select(e.currentTarget.textContent.trim());
+  }), [select]);
 
   // set class
   useEffect(() => {
-    store.setState(prev => ({classNames: prev.classNames.concat("multifile")}));
+    // keyboard shortcuts
+    const selectShortcuts: State["shortcuts"] = {};
+
+    for (let i = 1; i <= 9; ++i) {
+      selectShortcuts[`Mod-${i}`] = {
+        key: `Mod-${i}`,
+        run: () => {
+          const state = store.getState();
+          const group = state.groups[state.activeGroup];
+
+          if (group.files.length < i)
+            return false;
+
+          select(group.files[i-1].filename);
+
+          return true;
+        }
+      };
+    }
+
+    // set class
+    store.setState(prev => ({
+      // set class
+      classNames: prev.classNames.concat("multifile"),
+      // shortcuts
+      shortcuts: {
+        ...prev.shortcuts,
+        ...selectShortcuts
+      }
+    }));
   }, []);
 
   if (!group)

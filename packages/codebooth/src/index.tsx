@@ -1,8 +1,10 @@
+import {keymap} from "@codemirror/view";
 import type {CodeRecorder} from "@lqv/codemirror/recording";
 import {PlaybackContext, usePlayback} from "@lqv/playback/react";
-import {useRef} from "react";
+import {useEffect, useRef} from "react";
 import {useStore} from "zustand";
-import {BoothStore, makeStore, Store} from "./store";
+import {shortcuts} from "./extensions";
+import {BoothStore, makeStore, Store, useBoothStore} from "./store";
 
 // buttons
 export * from "./components/buttons";
@@ -36,9 +38,39 @@ export const CodeBooth: React.FC<{
     <div className={classNames.join(" ")} data-affords="click" {...attrs}>
       <BoothStore.Provider value={store.current}>
         <PlaybackContext.Provider value={usePlayback()}>
+          <KeyboardShortcuts />
           {props.children}
         </PlaybackContext.Provider>
       </BoothStore.Provider>
     </div>
   );
 };
+
+function KeyboardShortcuts(): null {
+  const store = useBoothStore();
+
+  useEffect(() => {
+    // this is somewhat wasteful but oh well
+    function reconfigure() {
+      const state = store.getState();
+
+      for (const groupName in state.groups) {
+        for (const {view} of state.groups[groupName].files) {
+          view.dispatch({
+            effects: shortcuts.reconfigure([
+              keymap.of(Object.values(state.shortcuts))
+            ])
+          });
+        }
+      }
+    }
+
+    // update with new shortcuts
+    store.subscribe(state => state.shortcuts, reconfigure);
+
+    // update with new editors
+    store.subscribe(state => state.groups, reconfigure);
+  }, []);
+
+  return null;
+}

@@ -1,4 +1,4 @@
-import {EditorView} from "@codemirror/view";
+import {EditorView, KeyBinding} from "@codemirror/view";
 import type {CodeRecorder} from "@lqv/codemirror/recording";
 import {createContext, useContext} from "react";
 import {createStore} from "zustand";
@@ -44,6 +44,9 @@ export interface State {
   /** Used to broadcast run events. */
   run: number;
 
+  /** Keyboard shortcuts. */
+  shortcuts: Record<string, KeyBinding>;
+
   /** Get the active file. */
   getActiveFile(): ArrayType<RecordType<State["groups"]>["files"]>;
 
@@ -67,6 +70,7 @@ export const makeStore = (state: Partial<State> = {}) => createStore<State>()(su
   messages: [],
   recorder: undefined,
   run: 0,
+  shortcuts: {},
   ...state
 })));
 

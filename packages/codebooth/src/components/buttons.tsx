@@ -1,8 +1,7 @@
-import {EditorView, keymap} from "@codemirror/view";
+import {EditorView} from "@codemirror/view";
 import {onClick} from "@liqvid/utils/react";
 import {useCallback, useEffect, useMemo, useRef} from "react";
 import {useStore} from "zustand";
-import {shortcuts} from "../extensions";
 import {State, useBoothStore} from "../store";
 import {ids} from "../utils";
 
@@ -24,12 +23,18 @@ export const Clear: React.FC = () => {
 
   /* add keyboard shortcuts */
   useEffect(() => {
-    for (const view of getAllEditors(store.getState())) {
-      addKeyboardShortcuts(view, "Mod-L", () => {
-        clear();
-        return true;
-      });
-    }
+    store.setState(prev => ({
+      shortcuts: {
+        ...prev.shortcuts,
+        "Mod-L": {
+          key: "Mod-L",
+          run: () => {
+            clear();
+            return true;
+          }
+        }
+      }
+    }));
   }, []);
 
   const label = "Clear";
@@ -128,12 +133,18 @@ export function Run() {
 
   /* add keyboard shortcuts */
   useEffect(() => {
-    for (const view of getAllEditors(store.getState())) {
-      addKeyboardShortcuts(view, "Mod-Enter", () => {
-        run();
-        return true;
-      });
-    }
+    store.setState(prev => ({
+      shortcuts: {
+        ...prev.shortcuts,
+        "Mod-Enter": {
+          key: "Mod-Enter",
+          run: () => {
+            run();
+            return true;
+          }
+        }
+      }
+    }));
   }, []);
 
   // click events
@@ -168,29 +179,6 @@ export const TabList: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) =
   const {children, ...attrs} = props;
   return (<div role="tablist" {...attrs}>{children}</div>);
 };
-
-/** Add keyboard shortcuts to editors */
-function addKeyboardShortcuts(view: EditorView, key: string, run: (view: EditorView) => boolean) {
-  view.dispatch({
-    effects: shortcuts.reconfigure([
-      shortcuts.get(view.state),
-      keymap.of([
-        {key, run}
-      ])
-    ])
-  });
-}
-
-function getAllEditors(state: State): EditorView[] {
-  const editors: EditorView[] = [];
-  for (const key in state.groups) {
-    for (const file of state.groups[key].files) {
-      editors.push(file.view);
-    }
-  }
-
-  return editors;
-}
 
 /** Format key sequences with special characters on Mac */
 function fmtSeq(str: string) {
