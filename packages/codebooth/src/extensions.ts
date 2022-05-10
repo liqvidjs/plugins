@@ -4,7 +4,7 @@ import {bracketMatching, defaultHighlightStyle, foldGutter, foldKeymap, indentOn
 import {lintKeymap} from "@codemirror/lint";
 import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
 import {Compartment, EditorState, Extension} from "@codemirror/state";
-import {crosshairCursor, drawSelection, dropCursor, highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers, rectangularSelection} from "@codemirror/view";
+import {drawSelection, dropCursor, highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers, rectangularSelection} from "@codemirror/view";
 
 export const basicSetup: Extension = [
   lineNumbers(),
@@ -21,7 +21,7 @@ export const basicSetup: Extension = [
   closeBrackets(),
   autocompletion(),
   rectangularSelection(),
-  crosshairCursor(),
+  // crosshairCursor(),
   // highlightActiveLine(),
   highlightSelectionMatches(),
   keymap.of([
