@@ -1,5 +1,4 @@
-import {ChangeSet} from "@codemirror/state";
-import {Text} from "@codemirror/text";
+import {ChangeSet, Text} from "@codemirror/state";
 import type {ReplayData} from "@liqvid/utils/replay-data";
 
 interface CMPosition {
