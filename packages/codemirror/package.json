@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codemirror",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Codemirror 6 recording and replaying",
   "exports": {
     ".": {
@@ -49,10 +49,10 @@
     "@codemirror/state": ">=0.20.0",
     "@codemirror/view": ">=0.20.0",
     "@liqvid/keymap": "^1.1.3",
-    "@liqvid/recording": "^0.0.5",
+    "@liqvid/recording": "^0.1.0",
     "@types/react": ">=17.0.0",
-    "liqvid": "^2.1.6",
-    "react": ">=17.0.0"
+    "liqvid": "^2.1.7",
+    "react": ">=18.1.0"
   },
   "peerDependenciesMeta": {
     "@liqvid/keymap": {
@@ -61,7 +61,13 @@
     "@liqvid/recording": {
       "optional": true
     },
+    "@types/react": {
+      "optional": true
+    },
     "liqvid": {
+      "optional": true
+    },
+    "react": {
       "optional": true
     }
   },
@@ -69,10 +75,6 @@
     "@codemirror/state": ">=0.20.0",
     "@codemirror/view": ">=0.20.0",
     "@liqvid/keymap": "^1.1.3",
-    "@liqvid/recording": "^0.0.5",
-    "liqvid": "^2.1.6",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "strict-event-emitter-types": "^2.0.0"
   },
   "dependencies": {
