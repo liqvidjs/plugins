@@ -1,0 +1,55 @@
+body, #root, .App {
+  height: 100%;
+  width: 100%;
+}
+
+.lv-cursor {
+  height: 2em;
+}
+
+#watch {
+  font-size: 3em;
+  position: absolute;
+  text-align: center;
+  top: 35%;
+  width: 100%;
+  pointer-events: none;
+}
+
+#targets {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  pointer-events: none;
+}
+
+select {
+  font-size: 2em;
+  position: absolute;
+  left: 45%;
+  top: 50%;
+}
+
+#scrubber {
+  position: absolute;
+  bottom: 5%;
+  width: 50%;
+  left: 25%;
+}
+
+#scrubber > * {
+  vertical-align: middle;
+}
+
+#scrubber > button {
+  cursor: pointer;
+  font-size: 1em;
+  margin: 0 .1em;
+  text-align: center;
+  width: 2em;
+}
+
+#scrubber > input {
+  width: 90%;
+}
