@@ -1477,7 +1477,7 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@liqvid/utils@^1.6.0":
+"@liqvid/utils@^1.6.0", "@liqvid/utils@^1.6.3":
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/@liqvid/utils/-/utils-1.6.3.tgz#ca747985d62511d38667f7f5dc8e54bd96c240c3"
   integrity sha512-mVg1OWQJhKc201yo+qkUaP8PUPvBN3PI51I9RQE0xtCiQiDIa1p1sdwC08Haib/twljl9c5ey7al189vBTa7NQ==
@@ -1490,6 +1490,13 @@
   integrity sha512-t8lfTowsrGogBE+GRlAFq1CaCUqmJpgyhAc8P6YtxZFM/UG2nCC9NsLpxOtPxbtF4TO2P0z6wqwYe9s36jxGsw==
   dependencies:
     "@liqvid/utils" "^1.6.0"
+
+"@lqv/gsap@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@lqv/gsap/-/gsap-0.0.1.tgz#d1ac1f32f4220b7412d326d80a6609b6b47bc11a"
+  integrity sha512-JkFK9JMm3t84OKHKaRNuwLa5VaqUgoOJYuUk28IOJqMaHCvNHahiwPr5erEiIY6W3pjweUcRlgWknw2ll7OQKQ==
+  dependencies:
+    "@liqvid/utils" "^1.6.3"
 
 "@lqv/playback@^0.0.1":
   version "0.0.1"
