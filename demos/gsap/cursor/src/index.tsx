@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 
 
 function importBuildTarget() { 
-  if (false && process.env.NODE_ENV === "development") { 
+  if (process.env.NODE_ENV === "development") { 
     return import("./@development/index.js"); 
   } else { 
     return import("./@production/index.js");
