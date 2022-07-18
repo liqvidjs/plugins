@@ -62,7 +62,6 @@ select {
   background: #0001;
   border-radius: 0 0 3px 0;
   box-shadow: 2px 2px 2px #3336;
-  height: 20%;
   left: 0;
   padding: .5em;
   position: absolute;
@@ -82,8 +81,8 @@ select {
   height: 1em;
   display: block;
   overflow-y: auto;
-  max-height: 45%;
-  min-height: 45%;
+  max-height: 5em;
+  min-height: 5em;
   max-width: calc(100% - 1em);
   min-width: calc(100% - 1em);
 }
