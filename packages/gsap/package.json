@@ -1,0 +1,50 @@
+{
+  "name": "@lqv/gsap",
+  "version": "0.0.1",
+  "description": "GSAP compatibility layer for Liqvid plugins",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
+    "build:clean": "rm -rf dist",
+    "build:js": "tsc",
+    "build:postclean": "find dist -name tsconfig.tsbuildinfo -delete",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yuri Sulyma <yuri@liqvidjs.org>",
+  "license": "MIT",
+  "dependencies": {
+    "@liqvid/utils": "^1.6.3"
+  },
+  "devDependencies": {
+    "@lqv/playback": "workspace:^",
+    "gsap": "^3.10.4"
+  },
+  "peerDependencies": {
+    "@lqv/playback": "workspace:^",
+    "gsap": ">=3.0.0",
+    "react": ">=18.1.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "gsap": {
+      "optional": true
+    }
+  },
+  "type": "module"
+}
