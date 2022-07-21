@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@liqvid/recording": "^0.1.0",
     "@lqv/cursor": "^0.1.0",
     "@lqv/gsap": "^0.0.1",
     "@lqv/playback": "^0.0.1",
