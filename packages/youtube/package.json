@@ -1,0 +1,70 @@
+{
+  "name": "@lqv/youtube",
+  "version": "0.0.1",
+  "description": "Sync YouTube videos with Liqvid playback",
+  "exports": {
+    "./*": {
+      "import": "./dist/esm/*.mjs",
+      "require": "./dist/cjs/*.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/types/*.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
+    "build:clean": "rm -rf dist",
+    "build:js": "pnpm build:cjs; pnpm build:esm; node ../../build.mjs",
+    "build:cjs": "tsc --outDir dist/cjs --module commonjs",
+    "build:esm": "tsc",
+    "build:postclean": "rm dist/tsconfig.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liqvidjs/plugins.git"
+  },
+  "keywords": [
+    "liqvid",
+    "youtube"
+  ],
+  "author": "Yuri Sulyma <yuri@liqvidjs.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liqvidjs/plugins/issues"
+  },
+  "homepage": "https://github.com/liqvidjs/plugins/tree/main/packages/youtube",
+  "peerDependenciesMeta": {
+    "liqvid": {
+      "optional": true
+    },
+    "@types/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "peerDependencies": {
+    "@liqvid/recording": "^0.1.0",
+    "@lqv/playback": "workspace:^",
+    "@types/react": ">=18.0.0",
+    "@types/youtube": "^0.0.47",
+    "liqvid": "^2.1.7",
+    "react": ">=18.1.0"
+  },
+  "devDependencies": {
+    "@liqvid/recording": "^0.1.0",
+    "@lqv/playback": "workspace:^",
+    "@types/youtube": "^0.0.47"
+  },
+  "dependencies": {
+    "@liqvid/utils": "^1.6.3"
+  }
+}

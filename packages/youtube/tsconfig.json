@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./dist/types",
+    "module": "esnext",
+    "outDir": "./dist/esm",
+    "rootDir": "./src",
+    "target": "esnext"
+  },
+  "include": ["./src"]
+}
