@@ -17,7 +17,7 @@ The easiest way to get started is to clone one of the demos.
   </thead>
   <tbody>
     <tr>
-      <th align="left">Cursor</th>
+      <th>Cursor</th>
       <td>
         <a href="https://github.com/liqvidjs/plugins/tree/main/demos/liqvid/cursor">Demo</a><br/>
       </td>
