@@ -1,9 +1,9 @@
-import {Playback, Player} from "liqvid";
+import {Audio, Playback, Player} from "liqvid";
 import {render} from "react-dom";
-import {Face, FaceControl} from "./Face";
 import {UI} from "./ui";
+import {MEDIA_URL} from "./media-url";
 
-const playback = new Playback({duration: 347900});
+const playback = new Playback({duration: 220166});
 
 function Lesson() {
   const thumbs = {
@@ -12,11 +12,11 @@ function Lesson() {
   };
 
   return (
-    <Player controls={[<FaceControl />]} playback={playback} thumbs={thumbs}>
-      <Face>
-        <source src="./video.mp4" type="video/mp4" />
-        <source src="./video.webm" type="video/webm" />
-      </Face>
+    <Player playback={playback} thumbs={thumbs}>
+      <Audio>
+        <source src={`${MEDIA_URL}/audio.mp4`} type="audio/mp4" />
+        <source src={`${MEDIA_URL}/audio.webm`} type="audio/webm" />
+      </Audio>
       <UI />
     </Player>
   );
