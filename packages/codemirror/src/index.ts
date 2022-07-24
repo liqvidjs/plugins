@@ -27,7 +27,7 @@ export function cmReplay(
     }
 ): () => void {
   return cmReplayMultiple({
-    data: [[0,selectCmd + "default"], ...data],
+    data: [[0, selectCmd + "default"], ...data],
     handle: (key, docs) => handle(key, docs["default"]),
     playback, start,
     views: {
@@ -88,17 +88,19 @@ export function cmReplayMultiple({data, handle, playback, start = 0, views}: {
   }
 
   // compute inverses
-  const docs: Record<keyof typeof views, Text> = {};
-  for (const key in views) {
-    docs[key] = views[key].state.doc;
-  }
-  for (let i = 0; i < data.length; ++i) {
-    const action = data[i][1];
-    if (typeof action !== "string") {
-      inverses[file][i] = action[0].invert(docs[file]);
-      docs[file] = action[0].apply(docs[file]);
-    } else if (action.startsWith(selectCmd)) {
-      file = action.slice(selectCmd.length);
+  {
+    const docs: Record<keyof typeof views, Text> = {};
+    for (const key in views) {
+      docs[key] = views[key].state.doc;
+    }
+    for (let i = 0; i < data.length; ++i) {
+      const action = data[i][1];
+      if (typeof action !== "string") {
+        inverses[file][i] = action[0].invert(docs[file]);
+        docs[file] = action[0].apply(docs[file]);
+      } else if (action.startsWith(selectCmd)) {
+        file = action.slice(selectCmd.length);
+      }
     }
   }
 
@@ -150,10 +152,13 @@ export function cmReplayMultiple({data, handle, playback, start = 0, views}: {
           changes[file] = changes[file].compose(inverses[file][i]);
         } else if (data[i][1] === selectCmd + file) {
           // find file to replay into
-          for (let j = i-1; 0 <= j; --j) {
+          for (let j = i - 1; 0 <= j; --j) {
             const action = data[j][1];
             if (typeof action === "string" && action.startsWith(selectCmd)) {
               file = action.slice(selectCmd.length);
+
+              // XXX figure out how to handle more general actions
+              handle(action, {});
               break;
             }
           }
