@@ -15,5 +15,5 @@
       "@env/*": ["./src/@development/*", "./src/@production/*"]
     }
   },
-  "files": ["./src/@production/index.tsx"]
+  "files": ["./src/@development/index.tsx", "./src/@production/index.tsx"]
 }
