@@ -18,7 +18,6 @@ export function FileTabs() {
 
   const select = useCallback((filename: string) => {
     // record event
-    // @ts-expect-error Manager needs to be changed from protected to public
     if (recorder?.manager?.active) {
       recorder.capture(undefined,
         selectCmd + filename
@@ -37,9 +36,12 @@ export function FileTabs() {
     }));
 
     // focus editor
-    // this has to come last!
     const state = store.getState();
-    state.groups[state.activeGroup]?.files.find(_ => _.filename === filename)?.view.focus();
+    const view = state.groups[state.activeGroup]?.files.find(_ => _.filename === filename)?.view;
+    if (view) {
+      // XXX yikes
+      setTimeout(() => view.focus());
+    }
   }, [recorder]);
 
   const events = useMemo(() => onClick<HTMLButtonElement>(e => {

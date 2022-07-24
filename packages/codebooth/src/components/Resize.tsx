@@ -11,7 +11,19 @@ export const Resize: React.FC<{
    * @default "ew"
    */
   dir?: "ew" | "ns";
-}> = ({dir = "ew"}) => {
+
+  /**
+   * Maximum value.
+   * @default 0.75
+   */
+  max?: number;
+
+  /**
+   * Minimum value.
+   * @default 0.25
+   */
+  min?: number;
+}> = ({dir = "ew", max = 0.75, min = 0.25}) => {
   const ref = useRef<HTMLDivElement>();
 
   /* event handlers */
@@ -21,9 +33,9 @@ export const Resize: React.FC<{
       const rect = container.getBoundingClientRect();
 
       if (dir === "ew") {
-        container.style.setProperty("--split", clamp(0.25, (x - rect.left) / rect.width, 0.75) * 100 + "%");
+        container.style.setProperty("--split", clamp(min, (x - rect.left) / rect.width, max) * 100 + "%");
       } else if (dir === "ns") {
-        container.style.setProperty("--v-split", clamp(0.05, (rect.bottom - y) / rect.height, 0.75) * 100 + "%");
+        container.style.setProperty("--v-split", clamp(min, (rect.bottom - y) / rect.height, max) * 100 + "%");
       }
     }, () => {
       container = ref.current.closest(".lqv-codebooth") as HTMLDivElement;

@@ -1,42 +1,63 @@
 /* console */
 .lqv-console
+  color #000
   grid-area console
   overflow-y auto
-  white-space pre-wrap
   overflow-wrap anywhere
+  white-space pre-wrap
 
-  color #000
+  // header
+  > header
+    color #FFF
+    background-color #333
+    font-family sans-serif
+    padding .2em .4em
+    width 100%
+    display block
 
-  // .light &
-  //   background #FFF
-  
-  // .dark &
-  // background #232327
+  // output
+  > output
+    > pre
+      border-bottom 1px solid #eee
+      display block
+      padding .1em .4em
+      width 100%
+      color #000
+    
+      &.error
+        color #F00
 
-.lqv-console > pre
-  display block
-  padding .1em .4em
-  width 100%
-  color #000
+// special spans
+.lqv-console > output > pre
+  span
+    display inline-block
 
-  // .light &
-  //   border-bottom 1px solid #f2f2f4
-  //   color #000
+    &.array, &.object
+      color #479bee
 
-  // .dark &
-  // border-bottom 1px solid #38383d
-  border-bottom 1px solid #EEE
-  // color #0F0
+    &.number
+      color green
 
-  &.error
-    color #F00
+    &.string
+      color #e438bc
 
-  > *:not(:last-child)
-    margin-right .75em
+    &.undefined
+      color #aaa
 
+    ol
+      display inline
+      list-style-type none
+
+      > li
+        display inline
+
+        &:not(:last-child)::after
+          color #000
+          content ", "
 
 /* html preview */
 .lqv-preview
+  background #FFF
   grid-area console
   height 100%
   width 100%
@@ -44,42 +65,9 @@
 
 /* html console */
 .lqv-preview + .lqv-console
-  color #FFF
   left var(--split)
   height var(--v-split)
   grid-area none
   width calc(100% - var(--split))
   position absolute
   bottom 0
-
-  &::before
-    content "Console"
-    color #FFF
-    background-color #333
-    font-family sans-serif
-    padding .1em .4em
-    width 100%
-    display block
-
-.lqv-console > pre span
-  display inline-block
-
-  &.array, &.object
-    color #479bee
-
-  &.number
-    color green
-
-  &.string
-    color #e438bc
-
-  ol
-    display inline
-    list-style-type none
-
-    > li
-      display inline
-
-      &:not(:last-child)::after
-        color #000
-        content ", "

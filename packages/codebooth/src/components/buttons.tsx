@@ -1,14 +1,11 @@
-import {EditorView} from "@codemirror/view";
 import {onClick} from "@liqvid/utils/react";
 import {useCallback, useEffect, useMemo, useRef} from "react";
 import {useStore} from "zustand";
-import {State, useBoothStore} from "../store";
+import {useBoothStore} from "../store";
 import {ids} from "../utils";
 
-const mac = navigator.platform === "MacIntel";
-
 /** Div to hold buttons. */
-export const Buttons: React.FC = (props) => {
+export const Buttons: React.FC<{children?: React.ReactNode}> = (props) => {
   return (<div className="lqv-cb-buttons">{props.children}</div>);
 };
 
@@ -123,7 +120,7 @@ export const Reset: React.FC = () => {
 };
 
 /** Button for running the code. */
-export function Run() {
+export const Run: React.FC = () => {
   const store = useBoothStore();
 
   // run callback
@@ -151,7 +148,7 @@ export function Run() {
   const events = useMemo(() => onClick(run), []);
 
   return (<button className="lqv-cb-run" {...events}>Run</button>);
-}
+};
 
 /** Group selection tab. */
 export const Tab: React.FC<{
@@ -179,22 +176,3 @@ export const TabList: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) =
   const {children, ...attrs} = props;
   return (<div role="tablist" {...attrs}>{children}</div>);
 };
-
-/** Format key sequences with special characters on Mac */
-function fmtSeq(str: string) {
-  if (navigator.platform !== "MacIntel")
-    return str;
-  if (str === void 0)
-    return str;
-  return str.split("+").map(k => {
-    if (k === "Ctrl")
-      return "^";
-    else if (k === "Alt")
-      return "⌥"
-    if (k === "Shift")
-      return "⇧";
-    if (k === "Meta")
-      return "⌘";
-    return k;
-  }).join("");
-}

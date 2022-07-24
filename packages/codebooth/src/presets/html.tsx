@@ -56,6 +56,8 @@ export function HTMLDemo(props: {
 
 /** Interactive HTML replay. */
 export const HTMLReplay: React.FC<{
+  children?: React.ReactNode;
+
   /**
    * CodeMirror extensions to add.
    * @default []
@@ -258,12 +260,18 @@ window.addEventListener("message", ({data}) => {
 
 /* intercept console.log */
 {
+  function formatArgs(args) {
+    if (args instanceof Array) {
+      return args.filter(item => !(item instanceof Node)).map(formatArgs);
+    }
+    return args;
+  }
   const log = console.log;
   console.log = function(...args) {
     try {
       window.parent.postMessage({
         type: "console.log",
-        content: args
+        content: formatArgs(args)
       }, "*");
     } catch (e) {
       
@@ -297,6 +305,10 @@ export function extensionFromFilename(filename: string): Extension {
   }
 }
 
+/**
+ * Get record of filenames to file contents.
+ * @param state Booth state.
+ */
 function getFileContents(state: State): Record<string, string> {
   const ret: Record<string, string> = {};
   if (!(state.groups[state.activeGroup]))
@@ -308,8 +320,12 @@ function getFileContents(state: State): Record<string, string> {
   return ret;
 }
 
-/** Format console logs */
-function formatLog(o: unknown, formatString = false) {
+/**
+ * Format console logs.
+ * @param o Message or object to log.
+ * @param formatString Whether to format the log entry.
+ */
+function formatLog(o: unknown, formatString = false): string | JSX.Element {
   if (o instanceof Array) {
     return <span className="array" key={key()}>Array [ <ol>{o.map((entry, i) => <li key={i}>{formatLog(entry, true)}</li>)}</ol> ]</span>;
   } else if (typeof o === "object") {
@@ -322,17 +338,21 @@ function formatLog(o: unknown, formatString = false) {
     } else {
       return <span key={key()}>{o}</span>;
     }
+  } else if (typeof o === "undefined") {
+    return <span className="undefined" key={key()}>undefined</span>;
   }
   return o.toString();
 }
 
 /** Get unique React key. */
-function key() {
+function key(): number {
   return Math.random();
 }
 
-/** Component for displaying console logs. */
-export function HTMLConsole() {
+/**
+ * Component for displaying console logs.
+ */
+export const HTMLConsole: React.FC = () => {
   const store = useBoothStore();
   const messages = useStore(store, state => state.messages);
 
@@ -343,4 +363,4 @@ export function HTMLConsole() {
       </output>
     </section>
   );
-}
+};

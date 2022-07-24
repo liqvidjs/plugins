@@ -56,10 +56,11 @@ export const PythonRecord: React.FC<{
   extensions?: Extension[];
 }> = (props) => {
   const {extensions = []} = props;
+  console.log(python());
 
   return (
     <CodeBooth recorder={CodeRecording.recorder}>
-      <Record content={props.content} extensions={[basicSetup, python(), ...extensions]} filename="untitled.py" />
+      <Record content={props.content} extensions={[python(), basicSetup, ...extensions]} filename="untitled.py" />
       <Resize />
       <PythonRun />
       <Console />
@@ -73,6 +74,8 @@ export const PythonRecord: React.FC<{
 
 /** Interactive Python replay. */
 export const PythonReplay: React.FC<{
+  children?: React.ReactNode;
+
   /** File contents. */
   content?: string;
 
@@ -127,7 +130,7 @@ export const PythonRun: React.FC = () => {
       const state = store.getState();
       const view = state.getActiveView();
       const code = view.state.doc.toString();
-      let output: React.ReactChild[] = [];
+      let output: React.ReactNode[] = [];
       try {
         output = interpreter.runSync(code).map((log) => <pre key={Math.random()}>{log}</pre>);
       } catch (e) {
