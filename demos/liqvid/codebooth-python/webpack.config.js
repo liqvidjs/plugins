@@ -10,10 +10,7 @@ module.exports = {
   },
 
   externals: {
-    "@babel/standalone": "Babel",
-    "liqvid": "Liqvid",
-    "react": "React",
-    "react-dom": "ReactDOM",
+    "@babel/standalone": "Babel"
   },
 
   mode: env,
@@ -48,9 +45,5 @@ module.exports = {
     alias: {
       "@env": path.join(__dirname, "src", "@" + env)
     }
-  },
-
-  snapshot: {
-    managedPaths: []
   }
 };
