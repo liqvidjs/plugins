@@ -7,8 +7,9 @@ export function Console() {
   const messages = useStore(store, state => state.messages);
 
   return (
-    <output className="lqv-console">
-      {messages}
-    </output>
+    <section className="lqv-console">
+      <header>Console</header>
+      <output>{messages}</output>
+    </section>
   );
 }

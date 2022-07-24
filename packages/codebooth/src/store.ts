@@ -36,7 +36,7 @@ export interface State {
   }>;
 
   /** Console logs. */
-  messages: React.ReactChild[];
+  messages: React.ReactNode[];
 
   /** Code recorder. */
   recorder?: CodeRecorder;

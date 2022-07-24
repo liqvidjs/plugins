@@ -7,6 +7,8 @@ import {ids} from "../utils";
  * Tabpanel containing a single editor.
  */
 export const EditorPanel: React.FC<{
+  children?: React.ReactNode;
+
   /** Filename for the panel. */
   filename: string;
 
