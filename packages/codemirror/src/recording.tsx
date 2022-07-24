@@ -41,6 +41,10 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
           .filter(Boolean)
           .slice(-1);
 
+      // empty events can break replay
+      if (update.changes.empty && transactions.length === 0)
+        return;
+
       this.capture(this.manager.getTime(), [
         update.changes.toJSON(),
         ...transactions
