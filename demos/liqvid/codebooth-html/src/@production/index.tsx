@@ -1,7 +1,7 @@
 import {Audio, Playback, Player} from "liqvid";
-import {render} from "react-dom";
-import {UI} from "./ui";
+import {createRoot} from "react-dom/client";
 import {MEDIA_URL} from "./media-url";
+import {UI} from "./ui";
 
 const playback = new Playback({duration: 220166});
 
@@ -22,4 +22,4 @@ function Lesson() {
   );
 }
 
-render(<Lesson/>, document.querySelector("main"));
+createRoot(document.querySelector("main")).render(<Lesson />);
