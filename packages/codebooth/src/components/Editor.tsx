@@ -36,6 +36,12 @@ export function Editor(props: {
   const ref = useRef<HTMLDivElement>();
 
   useEffect(() => {
+    // be idempotent
+    const state = store.getState();
+    if (state.groups[groupId]?.files.some(file => file.filename === props.filename)) {
+      return;
+    }
+
     // create editor
     const view = new EditorView({
       state: EditorState.create({

@@ -51,24 +51,24 @@
   },
   "homepage": "https://github.com/liqvidjs/plugins/tree/main/packages/codebooth",
   "devDependencies": {
-    "@codemirror/autocomplete": "^0.20.0",
-    "@codemirror/commands": "^0.20.0",
-    "@codemirror/lang-css": "^0.20.0",
-    "@codemirror/lang-html": "^0.20.0",
-    "@codemirror/lang-javascript": "^0.20.0",
-    "@codemirror/lang-python": "^0.20.0",
-    "@codemirror/language": "^0.20.0",
-    "@codemirror/lint": "^0.20.2",
-    "@codemirror/search": "^0.20.1",
-    "@codemirror/state": "^0.20.0",
-    "@codemirror/view": "^0.20.4",
-    "@liqvid/recording": "^0.0.5",
+    "@codemirror/autocomplete": "^6.1.0",
+    "@codemirror/commands": "^6.0.1",
+    "@codemirror/lang-css": "^6.0.0",
+    "@codemirror/lang-html": "^6.1.0",
+    "@codemirror/lang-javascript": "^6.0.2",
+    "@codemirror/lang-python": "^6.0.1",
+    "@codemirror/language": "^6.2.1",
+    "@codemirror/lint": "^6.0.0",
+    "@codemirror/search": "^6.0.1",
+    "@codemirror/state": "^6.1.1",
+    "@codemirror/view": "^6.2.0",
+    "@liqvid/recording": "^0.1.0",
     "@lqv/codemirror": "workspace:^",
     "@lqv/playback": "workspace:^",
-    "@types/react": "^17.0.43",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "tsc-esm-fix": "^2.13.0"
+    "@types/react": "^18.0.17",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsc-esm-fix": "^2.20.0"
   },
   "peerDependencies": {
     "@codemirror/autocomplete": ">=0.20.0",
@@ -82,10 +82,10 @@
     "@codemirror/search": ">=0.20.0",
     "@codemirror/state": ">=0.20.0",
     "@codemirror/view": ">=0.20.0",
-    "@liqvid/recording": "^0.0.5",
+    "@liqvid/recording": "^0.1.0",
     "@lqv/codemirror": "workspace:^",
     "@lqv/playback": "workspace:^",
-    "react": "^17.0.2"
+    "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
     "@codemirror/lang-css": {
@@ -106,8 +106,8 @@
   },
   "dependencies": {
     "@liqvid/keymap": "^1.1.3",
-    "@liqvid/utils": "^1.6.0",
-    "zustand": ">=4.0.0-rc.1"
+    "@liqvid/utils": "^1.6.3",
+    "zustand": ">=4.0.0"
   },
   "type": "module"
 }

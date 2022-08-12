@@ -40,7 +40,7 @@ export const Record: React.FC<{
   const newExtensions = useMemo(() => lqvKeymap ? [
     keymap.of(passThrough(lqvKeymap, passKeys)),
     ...extensions
-  ] : [], [passKeys]);
+  ] : extensions, [passKeys]);
 
   // attach recording extensions --- this has to be done this way because
   // the `shortcuts` Compartment will abort further handling of the sequence
