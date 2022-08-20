@@ -18,22 +18,25 @@ export interface State {
   classNames: string[];
 
   /** Group of files/editors. */
-  groups: Record<string, {
-    /** Name of active file. */
-    activeFile: string;
+  groups: Record<
+    string,
+    {
+      /** Name of active file. */
+      activeFile: string;
 
-    /** Files contained in this editor group. */
-    files: {
-      /** Whether the buffer can be edited by the viewer. */
-      editable: boolean;
+      /** Files contained in this editor group. */
+      files: {
+        /** Whether the buffer can be edited by the viewer. */
+        editable: boolean;
 
-      /** File name. */
-      filename: string;
+        /** File name. */
+        filename: string;
 
-      /** Reference to CodeMirror {@link EditorView} */
-      view: EditorView;
-    }[];
-  }>;
+        /** Reference to CodeMirror {@link EditorView} */
+        view: EditorView;
+      }[];
+    }
+  >;
 
   /** Console logs. */
   messages: React.ReactNode[];
@@ -54,31 +57,35 @@ export interface State {
   getActiveView(): EditorView;
 }
 
-export const makeStore = (state: Partial<State> = {}) => createStore<State>()(subscribeWithSelector((set, get) => ({
-  // default values
-  activeGroup: undefined,
-  classNames: ["lqv-codebooth"],
-  getActiveFile() {
-    const state = get();
-    const group = state.groups[state.activeGroup];
-    return group?.files?.find(_ => _.filename === group.activeFile);
-  },
-  getActiveView() {
-    return get().getActiveFile().view;
-  },
-  groups: {},
-  messages: [],
-  recorder: undefined,
-  run: 0,
-  shortcuts: {},
-  ...state
-})));
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const makeStore = (state: Partial<State> = {}) =>
+  createStore<State>()(
+    subscribeWithSelector((set, get) => ({
+      // default values
+      activeGroup: undefined,
+      classNames: ["lqv-codebooth"],
+      getActiveFile() {
+        const state = get();
+        const group = state.groups[state.activeGroup];
+        return group?.files?.find((_) => _.filename === group.activeFile);
+      },
+      getActiveView() {
+        return get().getActiveFile().view;
+      },
+      groups: {},
+      messages: [],
+      recorder: undefined,
+      run: 0,
+      shortcuts: {},
+      ...state,
+    }))
+  );
 
 export type Store = ReturnType<typeof makeStore>;
 
 export const BoothStore = createContext<Store>(null);
 
 /** Get a reference to the Zustand store for this CodeBooth. See {@link State} for store shape. */
-export function useBoothStore() {
+export function useBoothStore(): Store {
   return useContext(BoothStore);
 }

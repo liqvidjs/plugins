@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codebooth",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "GUI for interactive coding tutorials with CodeMirror",
   "exports": {
     ".": {
@@ -42,6 +42,7 @@
     "build:css": "stylus -o dist/style.css styl/style.styl; stylus -c -o dist/style.min.css styl/style.styl",
     "build:js": "tsc --module commonjs --outDir dist/cjs; tsc; node ../../build.mjs",
     "build:postclean": "rm -fr dist/tsconfig.tsbuildinfo",
+    "lint": "eslint --fix src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
@@ -63,7 +64,6 @@
     "@codemirror/state": "^6.1.1",
     "@codemirror/view": "^6.2.0",
     "@lqv/codemirror": "workspace:^",
-    "@lqv/playback": "workspace:^",
     "tsc-esm-fix": "^2.20.0"
   },
   "peerDependencies": {
@@ -80,7 +80,6 @@
     "@codemirror/view": ">=6.0.0",
     "@liqvid/recording": "^0.1.0",
     "@lqv/codemirror": "workspace:^",
-    "@lqv/playback": "workspace:^",
     "react": ">=18.0.0"
   },
   "peerDependenciesMeta": {
@@ -102,7 +101,8 @@
   },
   "dependencies": {
     "@liqvid/keymap": "^1.1.3",
-    "@liqvid/utils": "^1.6.3",
+    "@liqvid/utils": "^1.8.0",
+    "@lqv/playback": "workspace:^",
     "zustand": ">=4.0.0"
   },
   "sideEffects": false,

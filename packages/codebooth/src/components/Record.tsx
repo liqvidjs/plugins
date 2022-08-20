@@ -9,24 +9,26 @@ import {State, useBoothStore} from "../store";
 import {Editor} from "./Editor";
 
 /** Recording editor. */
-export const Record: React.FC<{
-  /**
-   * Special key sequences to include in recording.
-   * @default {"Mod-Enter":"run","Mod-K":"clear","Mod-L":"clear"}
-   */
-  captureKeys?: Record<string, string>;
+export const Record: React.FC<
+  React.ComponentProps<typeof Editor> & {
+    /**
+     * Special key sequences to include in recording.
+     * @default {"Mod-Enter":"run","Mod-K":"clear","Mod-L":"clear"}
+     */
+    captureKeys?: Record<string, string>;
 
-  /**
-   * Key sequences to pass through to {@link Keymap}.
-   * @default ["Mod-Alt-2","Mod-Alt-3","Mod-Alt-4"]
-  */
-  passKeys?: string[];
-} & React.ComponentProps<typeof Editor>> = (props) => {
+    /**
+     * Key sequences to pass through to {@link Keymap}.
+     * @default ["Mod-Alt-2","Mod-Alt-3","Mod-Alt-4"]
+     */
+    passKeys?: string[];
+  }
+> = (props) => {
   const {
     captureKeys = {
       "Mod-Enter": "run",
       "Mod-K": "clear",
-      "Mod-L": "clear"
+      "Mod-L": "clear",
     },
     extensions = [],
     group = "default",
@@ -37,22 +39,27 @@ export const Record: React.FC<{
   const store = useBoothStore();
   const lqvKeymap = useKeymap();
 
-  const newExtensions = useMemo(() => lqvKeymap ? [
-    keymap.of(passThrough(lqvKeymap, passKeys)),
-    ...extensions
-  ] : extensions, [passKeys]);
+  const newExtensions = useMemo(
+    () =>
+      lqvKeymap
+        ? [keymap.of(passThrough(lqvKeymap, passKeys)), ...extensions]
+        : extensions,
+    [passKeys]
+  );
 
   // attach recording extensions --- this has to be done this way because
   // the `shortcuts` Compartment will abort further handling of the sequence
   useEffect(() => {
     const state = store.getState();
-    const {view} = state.groups[group].files.find(file => file.filename === props.filename);
+    const {view} = state.groups[group].files.find(
+      (file) => file.filename === props.filename
+    );
 
     view.dispatch({
       effects: recording.reconfigure([
         ...(recording.get(view.state) as Extension[]),
-        [state.recorder.extension(captureKeys)]
-      ])
+        [state.recorder.extension(captureKeys)],
+      ]),
     });
 
     includeFilenameInRecording(state);
@@ -62,7 +69,6 @@ export const Record: React.FC<{
     <Editor content={props.content} extensions={newExtensions} {...attrs} />
   );
 };
-
 
 /* NOOOOOOOOOO */
 const modifiedRecorder = Symbol();
@@ -79,8 +85,7 @@ function includeFilenameInRecording(state: State) {
         const extnState = recording.get(view.state);
         if (extnState instanceof Array && extnState.length > 0) {
           recordingExtensions++;
-          if (recordingExtensions > 1)
-            break outer;
+          if (recordingExtensions > 1) break outer;
         }
       }
     }
@@ -97,8 +102,10 @@ function includeFilenameInRecording(state: State) {
   // intercept beginRecording
   const beginRecording = state.recorder.beginRecording.bind(state.recorder);
   state.recorder.beginRecording = (...args) => {
-    state.recorder.capture(0, selectCmd + state.getActiveFile().filename);
+    // have to call existing beginRecording() FIRST in order to
+    // set state.recorder.duration, otherwise we get negative times!
     beginRecording(...args);
+    state.recorder.capture(0, selectCmd + state.getActiveFile().filename);
   };
   (state.recorder as Hack)[modifiedRecorder] = true;
 }

@@ -3,7 +3,15 @@ import {Extension} from "@codemirror/state";
 import {CodeRecording} from "@lqv/codemirror/recording";
 import {useEffect} from "react";
 import {CodeBooth} from "..";
-import {Buttons, Clear, Copy, Reset, Run, Tab, TabList} from "../components/buttons";
+import {
+  Buttons,
+  Clear,
+  Copy,
+  Reset,
+  Run,
+  Tab,
+  TabList,
+} from "../components/buttons";
 import {Console} from "../components/Console";
 import {Editor} from "../components/Editor";
 import {EditorGroup} from "../components/EditorGroup";
@@ -31,7 +39,11 @@ export const PythonDemo: React.FC<{
 
   return (
     <CodeBooth>
-      <Editor content={props.content} extensions={[basicSetup, python(), ...extensions]} filename="untitled.py" />
+      <Editor
+        content={props.content}
+        extensions={[basicSetup, python(), ...extensions]}
+        filename="untitled.py"
+      />
       <Resize />
       <PythonRun />
       <Console />
@@ -60,7 +72,11 @@ export const PythonRecord: React.FC<{
 
   return (
     <CodeBooth recorder={CodeRecording.recorder}>
-      <Record content={props.content} extensions={[python(), basicSetup, ...extensions]} filename="untitled.py" />
+      <Record
+        content={props.content}
+        extensions={[python(), basicSetup, ...extensions]}
+        filename="untitled.py"
+      />
       <Resize />
       <PythonRun />
       <Console />
@@ -68,7 +84,7 @@ export const PythonRecord: React.FC<{
         <Run />
         <Clear />
       </Buttons>
-    </CodeBooth >
+    </CodeBooth>
   );
 };
 
@@ -99,10 +115,20 @@ export const PythonReplay: React.FC<{
   return (
     <CodeBooth>
       <EditorGroup id="replay">
-        <Replay content={props.content} extensions={[basicSetup, python(), ...extensions]} filename="untitled.py" replay={props.replay} start={props.start} />
+        <Replay
+          content={props.content}
+          extensions={[basicSetup, python(), ...extensions]}
+          filename="untitled.py"
+          replay={props.replay}
+          start={props.start}
+        />
       </EditorGroup>
       <EditorGroup id="playground">
-        <Editor content={props.content} extensions={[basicSetup, python(), ...extensions]} filename="untitled.py" />
+        <Editor
+          content={props.content}
+          extensions={[basicSetup, python(), ...extensions]}
+          filename="untitled.py"
+        />
       </EditorGroup>
       <Resize />
       <PythonRun />
@@ -117,7 +143,7 @@ export const PythonReplay: React.FC<{
         <Clear />
       </Buttons>
       {props.children}
-    </CodeBooth >
+    </CodeBooth>
   );
 };
 
@@ -126,21 +152,30 @@ export const PythonRun: React.FC = () => {
   const store = useBoothStore();
 
   useEffect(() => {
-    return store.subscribe(state => state.run, () => {
-      const state = store.getState();
-      const view = state.getActiveView();
-      const code = view.state.doc.toString();
-      let output: React.ReactNode[] = [];
-      try {
-        output = interpreter.runSync(code).map((log) => <pre key={Math.random()}>{log}</pre>);
-      } catch (e) {
-        const msg = `Error (line ${e.traceback[0].lineno}): ${e.args.v[0].v}`;
-        output = [<pre className="error" key={Math.random()}>{msg}</pre>];
+    return store.subscribe(
+      (state) => state.run,
+      () => {
+        const state = store.getState();
+        const view = state.getActiveView();
+        const code = view.state.doc.toString();
+        let output: React.ReactNode[] = [];
+        try {
+          output = interpreter
+            .runSync(code)
+            .map((log) => <pre key={Math.random()}>{log}</pre>);
+        } catch (e) {
+          const msg = `Error (line ${e.traceback[0].lineno}): ${e.args.v[0].v}`;
+          output = [
+            <pre className="error" key={Math.random()}>
+              {msg}
+            </pre>,
+          ];
+        }
+        store.setState((prev) => ({
+          messages: [...prev.messages, ...output],
+        }));
       }
-      store.setState(prev => ({
-        messages: [...prev.messages, ...output]
-      }));
-    });
+    );
   }, []);
   return null;
 };

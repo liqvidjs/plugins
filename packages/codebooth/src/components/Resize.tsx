@@ -5,7 +5,11 @@ import {useMemo, useRef} from "react";
 /**
  * Component for adjusting the vertical editor/console split.
  */
-export const Resize: React.FC<{
+export function Resize({
+  dir = "ew",
+  max = 0.75,
+  min = 0.25,
+}: {
   /**
    * Resize direction, east-west or north-south.
    * @default "ew"
@@ -23,33 +27,43 @@ export const Resize: React.FC<{
    * @default 0.25
    */
   min?: number;
-}> = ({dir = "ew", max = 0.75, min = 0.25}) => {
+}): JSX.Element {
   const ref = useRef<HTMLDivElement>();
 
   /* event handlers */
   const resizeEvents = useMemo(() => {
     let container: HTMLDivElement;
-    return onDrag((e, {x, y}) => {
-      const rect = container.getBoundingClientRect();
+    return onDrag(
+      (e, {x, y}) => {
+        const rect = container.getBoundingClientRect();
 
-      if (dir === "ew") {
-        container.style.setProperty("--split", clamp(min, (x - rect.left) / rect.width, max) * 100 + "%");
-      } else if (dir === "ns") {
-        container.style.setProperty("--v-split", clamp(min, (rect.bottom - y) / rect.height, max) * 100 + "%");
+        if (dir === "ew") {
+          container.style.setProperty(
+            "--split",
+            clamp(min, (x - rect.left) / rect.width, max) * 100 + "%"
+          );
+        } else if (dir === "ns") {
+          container.style.setProperty(
+            "--v-split",
+            clamp(min, (rect.bottom - y) / rect.height, max) * 100 + "%"
+          );
+        }
+      },
+      () => {
+        container = ref.current.closest(".lqv-codebooth") as HTMLDivElement;
+        container.classList.add("dragging");
+      },
+      () => {
+        container.classList.remove("dragging");
       }
-    }, () => {
-      container = ref.current.closest(".lqv-codebooth") as HTMLDivElement;
-      container.classList.add("dragging");
-    }, () => {
-      container.classList.remove("dragging");
-    });
+    );
   }, []);
 
   return (
     <div
       {...resizeEvents}
       ref={ref}
-      className={`ui-resizable-handle ui-resizable-${dir}`} style={{zIndex: 90}}
+      className={`ui-resizable-handle ui-resizable-${dir}`}
     />
   );
-};
+}

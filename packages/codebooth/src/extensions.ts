@@ -1,10 +1,37 @@
-import {acceptCompletion, autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap} from "@codemirror/autocomplete";
-import {defaultKeymap, history, historyKeymap, indentWithTab} from "@codemirror/commands";
-import {bracketMatching, defaultHighlightStyle, foldGutter, foldKeymap, indentOnInput, syntaxHighlighting} from "@codemirror/language";
+import {
+  acceptCompletion,
+  autocompletion,
+  closeBrackets,
+  closeBracketsKeymap,
+  completionKeymap,
+} from "@codemirror/autocomplete";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab,
+} from "@codemirror/commands";
+import {
+  bracketMatching,
+  defaultHighlightStyle,
+  foldGutter,
+  foldKeymap,
+  indentOnInput,
+  syntaxHighlighting,
+} from "@codemirror/language";
 import {lintKeymap} from "@codemirror/lint";
 import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
 import {Compartment, EditorState, Extension} from "@codemirror/state";
-import {drawSelection, dropCursor, highlightActiveLine, highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers, rectangularSelection} from "@codemirror/view";
+import {
+  drawSelection,
+  dropCursor,
+  highlightActiveLine,
+  highlightActiveLineGutter,
+  highlightSpecialChars,
+  keymap,
+  lineNumbers,
+  rectangularSelection,
+} from "@codemirror/view";
 
 export const basicSetup: Extension = [
   lineNumbers(),
@@ -33,12 +60,12 @@ export const basicSetup: Extension = [
     ...completionKeymap,
     {
       key: "Tab",
-      run: acceptCompletion
+      run: acceptCompletion,
     },
     indentWithTab,
-    ...lintKeymap
-  ])
+    ...lintKeymap,
+  ]),
 ];
 
-export const recording = new Compartment;
-export const shortcuts = new Compartment;
+export const recording = new Compartment();
+export const shortcuts = new Compartment();

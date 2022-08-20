@@ -17,19 +17,24 @@ export const EditorPanel: React.FC<{
    * @default "default"
    */
   group?: string;
-}
-> = (props) => {
-  const {
-    filename,
-    group = "default"
-  } = props;
+}> = (props) => {
+  const {filename, group = "default"} = props;
   const store = useBoothStore();
-  const active = useStore(store, state => state.groups[group]?.activeFile === filename);
+  const active = useStore(
+    store,
+    (state) => state.groups[group]?.activeFile === filename
+  );
 
   return (
-    <div aria-expanded={active} aria-labelledby={ids.fileTab({filename, group})} hidden={!active}
-    className="lqv-editor-panel" id={ids.editorPanel({filename, group})} role="tabpanel">
-       {Children.map(props.children, node => {
+    <div
+      aria-expanded={active}
+      aria-labelledby={ids.fileTab({filename, group})}
+      hidden={!active}
+      className="lqv-editor-panel"
+      id={ids.editorPanel({filename, group})}
+      role="tabpanel"
+    >
+      {Children.map(props.children, (node) => {
         if (typeof node === "object" && "props" in node) {
           return cloneElement(node, {filename, group});
         }

@@ -2,11 +2,19 @@ import {css} from "@codemirror/lang-css";
 import {html} from "@codemirror/lang-html";
 import {javascript} from "@codemirror/lang-javascript";
 import {Extension} from "@codemirror/state";
-import {CodeRecording} from "@lqv/codemirror/recording";
-import {useEffect, useRef} from "react";
+import {CodeRecorder, CodeRecording} from "@lqv/codemirror/recording";
+import React, {useEffect, useRef} from "react";
 import {useStore} from "zustand";
 import {CodeBooth} from "..";
-import {Buttons, Clear, Copy, Reset, Run, Tab, TabList} from "../components/buttons";
+import {
+  Buttons,
+  Clear,
+  Copy,
+  Reset,
+  Run,
+  Tab,
+  TabList,
+} from "../components/buttons";
 import {Console} from "../components/Console";
 import {Editor} from "../components/Editor";
 import {EditorGroup} from "../components/EditorGroup";
@@ -20,6 +28,8 @@ import {State, useBoothStore} from "../store";
 
 /** HTML demo */
 export function HTMLDemo(props: {
+  children?: React.ReactNode;
+
   /**
    * CodeMirror extensions to add.
    * @default []
@@ -36,11 +46,18 @@ export function HTMLDemo(props: {
   return (
     <CodeBooth>
       <FileTabs />
-      {Object.keys(props.files).map(filename =>
+      {Object.keys(props.files).map((filename) => (
         <EditorPanel filename={filename} key={filename}>
-          <Editor content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
+          <Editor
+            content={props.files[filename]}
+            extensions={[
+              basicSetup,
+              extensionFromFilename(filename),
+              ...extensions,
+            ]}
+          />
         </EditorPanel>
-      )}
+      ))}
       <Resize />
       <Resize dir="ns" />
       <HTMLPreview />
@@ -50,6 +67,7 @@ export function HTMLDemo(props: {
         <Run />
         <Clear />
       </Buttons>
+      {props.children}
     </CodeBooth>
   );
 }
@@ -82,19 +100,32 @@ export const HTMLReplay: React.FC<{
     <CodeBooth>
       <FileTabs />
       <EditorGroup id="replay">
-        {Object.keys(props.files).map(filename =>
+        {Object.keys(props.files).map((filename) => (
           <EditorPanel filename={filename} key={filename}>
-            <Replay content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
+            <Replay
+              content={props.files[filename]}
+              extensions={[
+                basicSetup,
+                extensionFromFilename(filename),
+                ...extensions,
+              ]}
+            />
           </EditorPanel>
-        )}
+        ))}
         <ReplayMultiple replay={props.replay} start={props.start} />
       </EditorGroup>
       <EditorGroup id="playground">
-        {Object.keys(props.files).map(filename =>
+        {Object.keys(props.files).map((filename) => (
           <EditorPanel filename={filename} key={filename}>
-            <Editor extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
+            <Editor
+              extensions={[
+                basicSetup,
+                extensionFromFilename(filename),
+                ...extensions,
+              ]}
+            />
           </EditorPanel>
-        )}
+        ))}
       </EditorGroup>
       <Resize />
       <Resize dir="ns" />
@@ -110,12 +141,14 @@ export const HTMLReplay: React.FC<{
         <Clear />
       </Buttons>
       {props.children}
-    </CodeBooth >
+    </CodeBooth>
   );
 };
 
 /** Record HTML demos. */
 export const HTMLRecord: React.FC<{
+  children?: React.ReactNode;
+
   /**
    * CodeMirror extensions to add.
    * @default []
@@ -124,17 +157,30 @@ export const HTMLRecord: React.FC<{
 
   /** Map of filenames to file contents. */
   files: Record<string, string>;
+
+  /**
+   * Recorder to use.
+   * @default CodeRecording.recorder
+   */
+  recorder: CodeRecorder;
 }> = (props) => {
-  const {extensions = []} = props;
+  const {extensions = [], recorder = CodeRecording.recorder} = props;
 
   return (
-    <CodeBooth recorder={CodeRecording.recorder}>
+    <CodeBooth recorder={recorder}>
       <FileTabs />
-      {Object.keys(props.files).map(filename =>
+      {Object.keys(props.files).map((filename) => (
         <EditorPanel filename={filename} key={filename}>
-          <Record content={props.files[filename]} extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
+          <Record
+            content={props.files[filename]}
+            extensions={[
+              basicSetup,
+              extensionFromFilename(filename),
+              ...extensions,
+            ]}
+          />
         </EditorPanel>
-      )}
+      ))}
       <Resize />
       <Resize dir="ns" />
       <HTMLPreview />
@@ -143,7 +189,8 @@ export const HTMLRecord: React.FC<{
         <Run />
         <Clear />
       </Buttons>
-    </CodeBooth >
+      {props.children}
+    </CodeBooth>
   );
 };
 
@@ -174,14 +221,18 @@ export function HTMLPreview() {
     /* messaging */
     function update(msg: MessageEvent) {
       if (msg.data.type === "console.log") {
-        store.setState(prev => ({
+        store.setState((prev) => ({
           ...prev,
-          messages: prev.messages.concat(<pre key={Math.random()}>{msg.data.content.map((item: unknown) => formatLog(item))}</pre>)
+          messages: prev.messages.concat(
+            <pre key={Math.random()}>
+              {msg.data.content.map((item: unknown) => formatLog(item))}
+            </pre>
+          ),
         }));
       } else if (msg.data.type === "console.clear") {
-        store.setState(prev => ({
+        store.setState((prev) => ({
           ...prev,
-          messages: []
+          messages: [],
         }));
       }
     }
@@ -192,14 +243,19 @@ export function HTMLPreview() {
     });
 
     // subscribe to run event
-    unsubs.push(store.subscribe(state => state.run, () => {
-      render();
-      // iframe.current.contentWindow.postMessage({
-      //   type: "update-css",
-      //   filename: file.filename,
-      //   content
-      // }, "*");
-    }));
+    unsubs.push(
+      store.subscribe(
+        (state) => state.run,
+        () => {
+          render();
+          // iframe.current.contentWindow.postMessage({
+          //   type: "update-css",
+          //   filename: file.filename,
+          //   content
+          // }, "*");
+        }
+      )
+    );
 
     // unsubscribe
     return () => {
@@ -210,7 +266,11 @@ export function HTMLPreview() {
   }, []);
 
   return (
-    <iframe className="lqv-preview" ref={iframe} sandbox="allow-popups allow-scripts" />
+    <iframe
+      className="lqv-preview"
+      ref={iframe}
+      sandbox="allow-popups allow-scripts"
+    />
   );
 }
 
@@ -222,12 +282,15 @@ export function HTMLPreview() {
  */
 export function transform(html: string, files: Record<string, string>) {
   // transform <script>s
-  html = html.replace(/<script\s*src=(['"])(?:\.\/)?([^\1]+?\.js)\1\s*><\/script>/gi, (match, q, src) => {
-    if (src in files) {
-      return "<script>" + files[src] + "</script>";
+  html = html.replace(
+    /<script\s*src=(['"])(?:\.\/)?([^\1]+?\.js)\1\s*><\/script>/gi,
+    (match, q, src) => {
+      if (src in files) {
+        return "<script>" + files[src] + "</script>";
+      }
+      return match;
     }
-    return match;
-  });
+  );
 
   // transform <link>s
   html = html.replace(/<link([^>]+?)>/gi, (match, attrs) => {
@@ -311,8 +374,7 @@ export function extensionFromFilename(filename: string): Extension {
  */
 function getFileContents(state: State): Record<string, string> {
   const ret: Record<string, string> = {};
-  if (!(state.groups[state.activeGroup]))
-    return ret;
+  if (!state.groups[state.activeGroup]) return ret;
   const {files} = state.groups[state.activeGroup];
   for (const file of files) {
     ret[file.filename] = file.view.state.doc.toString();
@@ -325,21 +387,55 @@ function getFileContents(state: State): Record<string, string> {
  * @param o Message or object to log.
  * @param formatString Whether to format the log entry.
  */
-function formatLog(o: unknown, formatString = false): string | JSX.Element {
+function formatLog(o: unknown, formatString = false): JSX.Element | string {
   if (o instanceof Array) {
-    return <span className="array" key={key()}>Array [ <ol>{o.map((entry, i) => <li key={i}>{formatLog(entry, true)}</li>)}</ol> ]</span>;
+    return (
+      <span className="array" key={key()}>
+        Array [{" "}
+        <ol>
+          {o.map((entry, i) => (
+            <li key={i}>{formatLog(entry, true)}</li>
+          ))}
+        </ol>{" "}
+        ]
+      </span>
+    );
   } else if (typeof o === "object") {
-    return <span className="object" key={key()}>Object &#123; <ol>{Object.keys(o).map((k, i) => <li key={i}>{k}: {formatLog((o as Record<string, unknown>)[k], true)}</li>)}</ol> &#125;</span>;
+    return (
+      <span className="object" key={key()}>
+        Object &#123;{" "}
+        <ol>
+          {Object.keys(o).map((k, i) => (
+            <li key={i}>
+              {k}: {formatLog((o as Record<string, unknown>)[k], true)}
+            </li>
+          ))}
+        </ol>{" "}
+        &#125;
+      </span>
+    );
   } else if (typeof o === "number") {
-    return <span className="number" key={key()}>{o}</span>;
+    return (
+      <span className="number" key={key()}>
+        {o}
+      </span>
+    );
   } else if (typeof o === "string") {
     if (formatString) {
-      return <span className="string" key={key()}>&quot;{o}&quot;</span>;
+      return (
+        <span className="string" key={key()}>
+          &quot;{o}&quot;
+        </span>
+      );
     } else {
       return <span key={key()}>{o}</span>;
     }
   } else if (typeof o === "undefined") {
-    return <span className="undefined" key={key()}>undefined</span>;
+    return (
+      <span className="undefined" key={key()}>
+        undefined
+      </span>
+    );
   }
   return o.toString();
 }
@@ -354,13 +450,11 @@ function key(): number {
  */
 export const HTMLConsole: React.FC = () => {
   const store = useBoothStore();
-  const messages = useStore(store, state => state.messages);
+  const messages = useStore(store, (state) => state.messages);
 
   return (
     <section className="lqv-console">
-      <output>
-        {messages}
-      </output>
+      <output>{messages}</output>
     </section>
   );
 };

@@ -27,10 +27,7 @@ export function Editor(props: {
    */
   group?: string;
 }) {
-  const {
-    editable = true,
-    group: groupId = "default"
-  } = props;
+  const {editable = true, group: groupId = "default"} = props;
   const store = useBoothStore();
 
   const ref = useRef<HTMLDivElement>();
@@ -38,7 +35,11 @@ export function Editor(props: {
   useEffect(() => {
     // be idempotent
     const state = store.getState();
-    if (state.groups[groupId]?.files.some(file => file.filename === props.filename)) {
+    if (
+      state.groups[groupId]?.files.some(
+        (file) => file.filename === props.filename
+      )
+    ) {
       return;
     }
 
@@ -50,16 +51,19 @@ export function Editor(props: {
           recording.of([]),
           shortcuts.of([]),
           ...(editable ? [] : [EditorView.editable.of(false)]),
-          ...(props.extensions ?? [])
-        ]
-      })
+          ...(props.extensions ?? []),
+        ],
+      }),
     });
 
     ref.current.replaceWith(view.dom);
 
     // insert into state
-    store.setState(prev => {
-      const group = prev.groups[groupId] ?? {activeFile: props.filename, files: []};
+    store.setState((prev) => {
+      const group = prev.groups[groupId] ?? {
+        activeFile: props.filename,
+        files: [],
+      };
 
       return {
         activeGroup: prev.activeGroup || groupId,
@@ -72,14 +76,14 @@ export function Editor(props: {
               {
                 editable,
                 filename: props.filename,
-                view
-              }
-            ]
-          }
-        }
+                view,
+              },
+            ],
+          },
+        },
       };
     });
   }, []);
 
-  return (<div ref={ref} />);
+  return <div ref={ref} />;
 }
