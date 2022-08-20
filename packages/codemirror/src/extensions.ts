@@ -5,9 +5,9 @@ import {Keymap} from "@liqvid/keymap";
  * Handle key sequences in `seqs` even if key capture is suspended.
  * @param keymap {@link Keymap} to handle key sequences.
  * @param seqs Key sequences to handle.
-*/
+ */
 export function passThrough(keymap: Keymap, seqs: string[] = []): KeyBinding[] {
-  return seqs.map(key => {
+  return seqs.map((key) => {
     const can = cm2lv(key);
 
     // argh
@@ -21,16 +21,16 @@ export function passThrough(keymap: Keymap, seqs: string[] = []): KeyBinding[] {
           cb(fake);
         }
         return false;
-      }
+      },
     } as KeyBinding;
   });
 }
 
 /**
-Convert CodeMirror key sequences to Liqvid format.
-**/
+ * Convert CodeMirror key sequences to Liqvid format.
+ */
 const mac = navigator.platform === "MacIntel";
-function cm2lv(seq: string) {
+function cm2lv(seq: string): string {
   seq = seq.replace("Mod", mac ? "Meta" : "Ctrl");
   seq = seq.replace(/-/g, "+");
   return Keymap.normalize(seq);

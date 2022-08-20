@@ -19,21 +19,20 @@ interface Change {
 }
 
 export type OldFormat = ReplayData<
-  ["command", string] |
-  ["cursor", CMPosition] |
-  ["selection", CMSelection] |
-  ["text", Change]
+  ["command", string] | ["cursor", CMPosition] | ["selection", CMSelection] | ["text", Change]
 >;
 
-export type Action = string | [changes: ChangeSet, selection?: [number, number]];
+export type Action = string | [changes: [number, ...string[]], selection?: [number, number]];
 export type NewFormat = ReplayData<Action>;
 
-/** Convert CM5 recording data to CM6 */
-export function convert(oldFormat: OldFormat) {
+/**
+ * Convert CM5 recording data to CM6
+ */
+export function convert(oldFormat: OldFormat): NewFormat {
   // document being built
   let doc = Text.of([""]);
 
-  const newFormat = [];
+  const newFormat: NewFormat = [];
 
   for (let i = 0; i < oldFormat.length; ++i) {
     const entry = oldFormat[i];
@@ -66,10 +65,7 @@ export function convert(oldFormat: OldFormat) {
       case "text":
         const from = convertPosition(action[1].from, doc);
         const to = convertPosition(action[1].to, doc);
-        const cs = ChangeSet.of(
-          {from, to, insert: action[1].text.join("\n")},
-          doc.length
-        );
+        const cs = ChangeSet.of({from, to, insert: action[1].text.join("\n")}, doc.length);
         doc = cs.apply(doc);
         newFormat.push([time, [cs.toJSON()]]);
         break;
@@ -79,7 +75,7 @@ export function convert(oldFormat: OldFormat) {
   return newFormat;
 }
 
-function convertPosition(position: CMPosition, doc: Text) {
+function convertPosition(position: CMPosition, doc: Text): number {
   if (position.line >= doc.lines) {
     return doc.length;
   }

@@ -1,7 +1,7 @@
 import {ChangeSet, Text} from "@codemirror/state";
 import type {EditorView} from "@codemirror/view";
 import type {ReplayData} from "@liqvid/utils/replay-data";
-import type {EventEmitter} from "events";
+import {MediaElement} from "@lqv/playback";
 import {FakeSelection, Range} from "./fake-selection";
 
 type Action = string | [changes: ChangeSet, selection?: [number, number]];
@@ -11,33 +11,47 @@ export const selectCmd = "file:";
 
 /**
  * Replay typing in CodeMirror.
+ * @returns Unsubscription function.
  */
-export function cmReplay(
-  {data, handle, playback, start, view}:
-    Omit<Parameters<typeof cmReplayMultiple>[0], "handle" | "views"> & {
-      /**
-       * Function for handling special commands.
-       * @param cmd Command to handle.
-       * @param doc CodeMirror document.
-       */
-      handle?: (cmd: string, doc: Text) => void;
+export function cmReplay({
+  data,
+  handle,
+  playback,
+  start,
+  view,
+}: Omit<Parameters<typeof cmReplayMultiple>[0], "handle" | "views"> & {
+  /**
+   * Function for handling special commands.
+   * @param cmd Command to handle.
+   * @param doc CodeMirror document.
+   */
+  handle?: (cmd: string, doc: Text) => void;
 
-      /** CodeMirror instance to sync with. */
-      view: EditorView;
-    }
-): () => void {
+  /** CodeMirror instance to sync with. */
+  view: EditorView;
+}): () => void {
   return cmReplayMultiple({
     data: [[0, selectCmd + "default"], ...data],
     handle: (key, docs) => handle(key, docs["default"]),
-    playback, start,
+    playback,
+    start,
     views: {
-      "default": view
-    }
+      default: view,
+    },
   });
 }
 
-/** Replay typing to several CodeMirror instances in parallel. */
-export function cmReplayMultiple({data, handle, playback, start = 0, views}: {
+/**
+ * Replay typing to several CodeMirror instances in parallel.
+ * @returns Unsubscription function.
+ */
+export function cmReplayMultiple({
+  data,
+  handle,
+  playback,
+  start = 0,
+  views,
+}: {
   /** Recording data to replay. */
   data: ReplayData<Action>;
 
@@ -49,36 +63,44 @@ export function cmReplayMultiple({data, handle, playback, start = 0, views}: {
   handle?: (cmd: string, docs: Record<string, Text>) => void;
 
   /** Playback to sync with. */
-  playback: EventEmitter;
+  playback: MediaElement;
 
   /**
-   * Time playback should start.
+   * Time *in seconds* playback should start.
    * @default 0
    */
   start?: number;
 
   /** CodeMirror instances to sync with. */
   views: Record<string, EditorView>;
-}) {
+}): () => void {
   /** Current file being replayed into */
   let file: string = undefined;
 
   // validation
-  if (!(data.length > 0 && data[0][0] === 0 && typeof data[0][1] === "string" && data[0][1].startsWith(selectCmd))) {
+  if (
+    !(
+      data.length > 0 &&
+      data[0][0] === 0 &&
+      typeof data[0][1] === "string" &&
+      data[0][1].startsWith(selectCmd)
+    )
+  ) {
     throw new Error("First command must have time 0 and select the file");
   }
 
+  // we're going to mess with data, clone it
+  data = JSON.parse(JSON.stringify(data));
+
   /* unpackage */
   // decompress times
-  const times = data.map(_ => _[0]);
+  const times = data.map((_) => _[0]);
 
-  for (let i = 1; i < times.length; ++i)
-    times[i] += times[i - 1];
+  for (let i = 1; i < times.length; ++i) times[i] += times[i - 1];
 
   // deserialize changesets
   for (const entry of data) {
-    if (typeof entry[1] !== "string")
-      entry[1][0] = ChangeSet.fromJSON(entry[1][0]);
+    if (typeof entry[1] !== "string") entry[1][0] = ChangeSet.fromJSON(entry[1][0]);
   }
 
   // initialize inverses
@@ -108,8 +130,9 @@ export function cmReplayMultiple({data, handle, playback, start = 0, views}: {
   let index = 0;
   let lastTime = 0;
 
-  const repaint = (t: number) => {
-    const progress = t - start;
+  const repaint = (): void => {
+    const t = playback.currentTime;
+    const progress = (t - start) * 1000;
 
     const changes: Record<string, ChangeSet> = {};
     for (const key in views) {
@@ -176,12 +199,12 @@ export function cmReplayMultiple({data, handle, playback, start = 0, views}: {
   };
 
   /* subscribe */
-  playback.on("seek", repaint);
-  playback.on("timeupdate", repaint);
+  playback.addEventListener("seeking", repaint);
+  playback.addEventListener("timeupdate", repaint);
 
   return () => {
-    playback.off("seek", repaint);
-    playback.off("timeupdate", repaint);
+    playback.removeEventListener("seeking", repaint);
+    playback.removeEventListener("timeupdate", repaint);
   };
 }
 

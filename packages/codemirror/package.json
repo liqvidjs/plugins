@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codemirror",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Codemirror 6 recording and replaying",
   "exports": {
     ".": {
@@ -38,12 +38,13 @@
   },
   "homepage": "https://github.com/liqvidjs/plugins/tree/main/packages/codemirror",
   "scripts": {
-    "build": "pnpm build:clean; eslint --fix src; pnpm build:js; pnpm build:postclean",
+    "build": "pnpm build:clean; pnpm lint; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -rf dist",
     "build:js": "pnpm build:cjs; pnpm build:esm; node ../../build.mjs",
     "build:cjs": "tsc --outDir dist/cjs --module commonjs",
     "build:esm": "tsc",
-    "build:postclean": "rm dist/tsconfig.tsbuildinfo"
+    "build:postclean": "rm dist/tsconfig.tsbuildinfo",
+    "lint": "eslint --fix src"
   },
   "peerDependencies": {
     "@codemirror/state": ">=6.0.0",
@@ -74,11 +75,10 @@
   "devDependencies": {
     "@codemirror/state": ">=6.0.0",
     "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.1.3",
-    "@types/react": "^18.0.15",
-    "strict-event-emitter-types": "^2.0.0"
+    "@liqvid/keymap": "^1.1.3"
   },
   "dependencies": {
-    "@liqvid/utils": "^1.6.3"
+    "@liqvid/utils": "^1.8.0",
+    "@lqv/playback": "workspace:^"
   }
 }
