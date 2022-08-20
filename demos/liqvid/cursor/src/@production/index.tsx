@@ -2,7 +2,8 @@ import {getJSON, loadAllJSON} from "@liqvid/utils/json";
 import {Cursor} from "@lqv/cursor/react";
 import {Playback, Player} from "liqvid";
 import {useCallback, useState} from "react";
-import * as ReactDOM from "react-dom";
+import {createRoot} from "react-dom/client";
+
 import {Words} from "../words";
 
 const playback = new Playback({duration: 15000});
@@ -33,6 +34,7 @@ function Lesson() {
   }, []);
 
   const thumbs = {
+    frequency: 1,
     path: "./thumbs/%s.png"
   };
 
@@ -48,4 +50,4 @@ function Lesson() {
   );
 }
 
-loadAllJSON().then(() => void ReactDOM.render(<Lesson />, document.querySelector("main")));
+loadAllJSON().then(() => void createRoot(document.querySelector("main")).render(<Lesson />));

@@ -1,11 +1,11 @@
-import {AudioRecording, RecordingControl, VideoRecording} from "@liqvid/recording";
+import {AudioRecording, RecordingControl} from "@liqvid/recording";
 import {CursorRecording} from "@lqv/cursor/recording";
 import {Playback, Player, usePlayer} from "liqvid";
 import {useEffect} from "react";
-import * as ReactDOM from "react-dom";
+import {createRoot} from "react-dom/client";
 import {Words} from "../words";
 
-const controls = [<RecordingControl plugins={[AudioRecording, CursorRecording, VideoRecording]} />];
+const controls = [<RecordingControl plugins={[AudioRecording, CursorRecording]} />];
 
 const playback = new Playback({duration: 10000});
 
@@ -18,7 +18,7 @@ function Lesson() {
   );
 }
 
-ReactDOM.render(<Lesson />, document.querySelector("main"));
+createRoot(document.querySelector("main")).render(<Lesson />);
 
 function SetRecordingTarget() {
   const player = usePlayer();
