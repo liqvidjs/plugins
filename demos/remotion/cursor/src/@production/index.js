@@ -1,9 +1,11 @@
+import "../style.css";
+
 import {Cursor} from "@lqv/cursor/react";
 import {Bridge} from "@lqv/remotion";
 import {Player} from "@remotion/player";
+
 import {Targets} from "../content";
 import {duration, fps} from "../metadata";
-import "../style.css";
 
 const recordingData = fetch("./recordings.json").then(res => res.json());
 

@@ -2,7 +2,7 @@ import {StrictMode} from "react";
 import {createRoot} from "react-dom/client";
 
 function importBuildTarget() { 
-  if (process.env.RECORD_ENV === "record") { 
+  if (process.env.REACT_APP_MODE === "record") { 
     return import("./@development/index.js"); 
   } else { 
     return import("./@production/index.js");

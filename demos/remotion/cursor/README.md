@@ -13,6 +13,29 @@ cd demos/remotion/cursor
 yarn install
 ```
 
+## Directory structure
+
+- `build/`  
+  Compiled interactive video to upload to your site.
+
+- `public/`  
+  Shared public assets.
+
+- `shared/`  
+  Code shared between the interactive and static renders.
+
+- `src/`  
+  Web-only code.
+
+  - `src/@development/`  
+    Code for recording.
+
+  - `src/@production/`  
+    Code for the interactive playback with [`@remotion/player`](https://www.remotion.dev/docs/player).
+
+- `video/`  
+  Code for the rendered video.
+
 ## Recording
 
 1. Start the development server with `yarn start` or `yarn record`.
