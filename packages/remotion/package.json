@@ -1,6 +1,6 @@
 {
   "name": "@lqv/remotion",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Remotion compatibility layer for Liqvid plugins",
   "exports": {
     ".": {
@@ -22,7 +22,7 @@
     "build:clean": "rm -rf dist",
     "build:js": "tsc",
     "build:postclean": "find dist -name tsconfig.tsbuildinfo -delete",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint --ext ts,tsx --fix src"
   },
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
   "license": "MIT",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@lqv/playback": "workspace:^",
+    "@remotion/player": "^3.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remotion": "^3.1.2"
