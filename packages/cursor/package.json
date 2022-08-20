@@ -1,6 +1,6 @@
 {
   "name": "@lqv/cursor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Cursor recording and replaying for Liqvid",
   "exports": {
     "./*": {
@@ -24,7 +24,8 @@
     "build:js": "pnpm build:cjs; pnpm build:esm; node ../../build.mjs",
     "build:cjs": "tsc --outDir dist/cjs --module commonjs",
     "build:esm": "tsc",
-    "build:postclean": "rm dist/tsconfig.tsbuildinfo"
+    "build:postclean": "rm dist/tsconfig.tsbuildinfo",
+    "lint": "eslint --ext ts,tsx --fix src"
   },
   "repository": {
     "type": "git",
@@ -52,16 +53,15 @@
   },
   "peerDependencies": {
     "@liqvid/recording": "^0.1.0",
-    "@lqv/playback": "workspace:^",
     "@types/react": ">=18.0.0",
     "liqvid": "^2.1.7",
     "react": ">=18.1.0"
   },
   "devDependencies": {
-    "@liqvid/recording": "^0.1.0",
-    "@lqv/playback": "workspace:^"
+    "@liqvid/recording": "^0.1.0"
   },
   "dependencies": {
-    "@liqvid/utils": "^1.6.0"
+    "@liqvid/utils": "^1.8.0",
+    "@lqv/playback": "workspace:^"
   }
 }

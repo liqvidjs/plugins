@@ -11,30 +11,27 @@ export class CursorRecorder extends ReplayDataRecorder<[number, number]> {
     bind(this, ["captureMouse"]);
   }
 
-  beginRecording() {
+  beginRecording(): void {
     // DO NOT FORGET TO CALL super
     super.beginRecording();
     document.body.addEventListener("mousemove", this.captureMouse);
   }
 
-  endRecording() {
+  endRecording(): void {
     document.body.removeEventListener("mousemove", this.captureMouse);
   }
 
-  captureMouse(e: MouseEvent) {
+  captureMouse(e: MouseEvent): void {
     const t = this.manager.getTime();
 
-    if (this.manager.paused)
-      return;
+    if (this.manager.paused) return;
 
     const {left, top, height, width} = this.target.getBoundingClientRect();
 
-    this.capture(t,
-      [
-        (e.pageX - left) / width * 100,
-        (e.pageY - top) / height * 100
-      ] as [number, number]
-    );
+    this.capture(t, [((e.pageX - left) / width) * 100, ((e.pageY - top) / height) * 100] as [
+      number,
+      number
+    ]);
   }
 
   finalizeRecording(data: ReplayData<[number, number]>): ReplayData<[number, number]> {
@@ -45,10 +42,11 @@ export class CursorRecorder extends ReplayDataRecorder<[number, number]> {
 const CursorSaveComponent: React.FC<{data: ReplayData<[number, number]>}> = (props) => {
   return (
     <>
-      {props.data ?
-        <textarea readOnly value={JSON.stringify(props.data)}></textarea> :
+      {props.data ? (
+        <textarea readOnly value={JSON.stringify(props.data)}></textarea>
+      ) : (
         "Cursor data not yet available."
-      }
+      )}
     </>
   );
 };
@@ -60,11 +58,15 @@ const icon = (
   </g>
 );
 
-export const CursorRecording: RecorderPlugin<[number, [number, number]], ReplayData<[number, number]>, CursorRecorder> = {
+export const CursorRecording: RecorderPlugin<
+  [number, [number, number]],
+  ReplayData<[number, number]>,
+  CursorRecorder
+> = {
   icon,
   key: "cursor",
   name: "Cursor",
-  recorder: new CursorRecorder,
+  recorder: new CursorRecorder(),
   saveComponent: CursorSaveComponent,
   title: "Record cursor",
 };

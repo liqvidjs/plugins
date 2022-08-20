@@ -1,13 +1,19 @@
 import {replay} from "@liqvid/utils/animation";
-import {between} from "@liqvid/utils/misc";
 import {length, ReplayData} from "@liqvid/utils/replay-data";
-import type {Playback} from "@lqv/playback";
+import type {MediaElement} from "@lqv/playback";
 
 /** Alignment string shortcut */
 export type AlignmentString =
-  "top left" | "top center" | "top right" |
-  "center left" | "center" | "center center" | "center right" |
-  "bottom left" | "bottom center" | "bottom right";
+  | "bottom center"
+  | "bottom left"
+  | "bottom right"
+  | "center center"
+  | "center left"
+  | "center right"
+  | "center"
+  | "top center"
+  | "top left"
+  | "top right";
 
 /**
  * Move an image along a recorder cursor path.
@@ -25,8 +31,8 @@ export function cursorReplay(opts: {
   /** Cursor data to replay. */
   data: ReplayData<[number, number]>;
 
-  /** {@link Playback} to sync with. */
-  playback: Playback;
+  /** {@link MediaElement} to sync with. */
+  playback: MediaElement;
 
   /**
    * When the cursor should first appear.
@@ -43,15 +49,8 @@ export function cursorReplay(opts: {
   /** Element to sync with */
   target: HTMLElement;
 }): () => void {
-  const {
-    align = "center",
-    data,
-    target,
-    start = 0,
-    end = start + length(data),
-    playback
-  } = opts;
-  const [alignX, alignY] = (typeof align === "string") ? parseAlignment(align) : align;
+  const {align = "center", data, target, start = 0, end = start + length(data), playback} = opts;
+  const [alignX, alignY] = typeof align === "string" ? parseAlignment(align) : align;
 
   // styles
   target.style.pointerEvents = "none";
@@ -82,7 +81,7 @@ export function cursorReplay(opts: {
 
   // initialize height and width
   remeasure();
-  
+
   /* remeasure image in case not loaded yet. Both of these calls are necessary due to possible switching of image */
   target.addEventListener("load", () => {
     // need to unhide and display:block to measure
@@ -104,13 +103,14 @@ export function cursorReplay(opts: {
       Object.assign(target.style, {
         opacity: 1,
         left: `calc(${x}% - ${width * alignX}px)`,
-        top: `calc(${y}% - ${height * alignY}px)`
+        top: `calc(${y}% - ${height * alignY}px)`,
       });
     },
     inactive: () => {
       target.style.opacity = "0";
     },
-    compressed: true
+    compressed: true,
+    units: 1000,
   });
 
   const unsubscribeFromPlayback = subscribe(playback, update);
@@ -126,7 +126,8 @@ export function cursorReplay(opts: {
  * @param align Alignment string like "top"
  */
 function parseAlignment(align: AlignmentString): [number, number] {
-  let x = 0, y = 0;
+  let x = 0,
+    y = 0;
 
   if (align === "center") {
     return [0.5, 0.5];
@@ -160,22 +161,23 @@ function parseAlignment(align: AlignmentString): [number, number] {
   return [x, y];
 }
 
-
 /**
-  * Synchronize with playback.
-  * @param playback {@link Playback} to synchronize with.
-  * @param update Callback function.
+ * Synchronize with playback.
+ * @param playback {@link MediaElement} to synchronize with.
+ * @param update Callback function.
  */
- function subscribe(playback: Playback, update: (t: number) => void): () => void {
-  // subscribe
-  playback.on("seek", update);
-  playback.on("timeupdate", update);
+function subscribe(playback: MediaElement, update: (t: number) => void): () => void {
+  const callback = (): void => update(playback.currentTime);
 
-  update(playback.currentTime);
+  // subscribe
+  playback.addEventListener("seeking", callback);
+  playback.addEventListener("timeupdate", callback);
+
+  callback();
 
   // return unsubscription
   return () => {
-    playback.off("seek", update);
-    playback.off("timeupdate", update);
+    playback.removeEventListener("seeking", callback);
+    playback.removeEventListener("timeupdate", callback);
   };
 }
