@@ -1,22 +1,25 @@
+export type {MediaElement, MediaElementEventMap} from "./MediaElement";
+
 export interface PlaybackEvents {
-  "bufferupdate": [];
-  "cuechange": [];
-  "durationchange": [];
-  "pause": [];
-  "play": [];
-  "seek": [number];
-  "seeked": [];
-  "seeking": [];
-  "stop": [];
-  "ratechange": [];
-  "timeupdate": [number];
-  "volumechange": [];
+  bufferupdate: [];
+  cuechange: [];
+  durationchange: [];
+  pause: [];
+  play: [];
+  seek: [number];
+  seeked: [];
+  seeking: [];
+  stop: [];
+  ratechange: [];
+  timeupdate: [number];
+  volumechange: [];
 }
 
 /**
  * Class pretending to be a media element advancing in time.
  *
  * Imitates {@link HTMLMediaElement} to a certain extent, although it does not implement that interface.
+ * @deprecated Use MediaElement instead.
  */
 export interface Playback {
   /** Subscribe to events */
@@ -31,15 +34,15 @@ export interface Playback {
     **Warning:** {@link HTMLMediaElement.currentTime} measures this property in *seconds*.
   */
   currentTime: number;
-  
+
   /** Flag indicating whether playback is currently paused. */
   paused: boolean;
 
   /**
-    * Length of the playback in milliseconds.
-    *
-    * **Warning:** {@link HTMLMediaElement.duration} measures this in *seconds*.
-  */
+   * Length of the playback in milliseconds.
+   *
+   * **Warning:** {@link HTMLMediaElement.duration} measures this in *seconds*.
+   */
   get duration(): number;
 
   /** @emits durationchange */
@@ -53,7 +56,7 @@ export interface Playback {
 
   /** Gets or sets the current rate of speed for the playback. */
   get playbackRate(): number;
-  
+
   /** @emits ratechange */
   set playbackRate(val: number);
 

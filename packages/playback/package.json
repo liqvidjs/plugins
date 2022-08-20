@@ -1,6 +1,6 @@
 {
   "name": "@lqv/playback",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Playback interface for Liqvid-compatible plugins",
   "exports": {
     "./react": {
@@ -18,12 +18,13 @@
   "files": [
     "dist/*"
   ],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
   "license": "MIT",
-  "devDependencies": {
-    "typescript": "^4.6.2"
+  "scripts": {
+    "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
+    "build:clean": "rm -rf dist",
+    "build:js": "tsc --module esnext --outDir dist/esm; tsc --module commonjs --outDir dist/cjs",
+    "build:postclean": "rm dist/*/tsconfig.tsbuildinfo",
+    "lint": "eslint --fix src/*"
   }
 }
