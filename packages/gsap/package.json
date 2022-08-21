@@ -1,11 +1,11 @@
 {
   "name": "@lqv/gsap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "GSAP compatibility layer for Liqvid plugins",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
     }
   },
   "typesVersions": {
@@ -21,7 +21,7 @@
   "scripts": {
     "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -rf dist",
-    "build:js": "tsc --module esnext --outDir dist/esm; tsc --module commonjs --outDir dist/cjs",
+    "build:js": "tsc --module esnext --outDir dist/esm; tsc --module commonjs --outDir dist/cjs; node ../../build.mjs",
     "build:postclean": "find dist -name tsconfig.tsbuildinfo -delete",
     "lint": "eslint --ext ts,tsx --fix src"
   },
