@@ -44,4 +44,23 @@ export const PlaybackMEProxy: ProxyHandler<Playback> = {
     }
     return true;
   },
+  // this is important so that we don't Proxy our Proxy
+  has(target, p) {
+    switch (p) {
+      case "currentTime":
+      case "duration":
+      case "muted":
+      case "pause":
+      case "paused":
+      case "play":
+      case "playbackRate":
+      case "seeking":
+      case "volume":
+      case "addEventListener":
+      case "removeEventListener":
+        return true;
+      default:
+        return false;
+    }
+  },
 };
