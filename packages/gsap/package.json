@@ -1,16 +1,17 @@
 {
   "name": "@lqv/gsap",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "GSAP compatibility layer for Liqvid plugins",
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     }
   },
   "typesVersions": {
     "*": {
       "*": [
-        "./dist/*"
+        "./dist/types/*"
       ]
     }
   },
@@ -20,15 +21,12 @@
   "scripts": {
     "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -rf dist",
-    "build:js": "tsc",
+    "build:js": "tsc --module esnext --outDir dist/esm; tsc --module commonjs --outDir dist/cjs",
     "build:postclean": "find dist -name tsconfig.tsbuildinfo -delete",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint --ext ts,tsx --fix src"
   },
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
   "license": "MIT",
-  "dependencies": {
-    "@liqvid/utils": "^1.6.3"
-  },
   "devDependencies": {
     "@lqv/playback": "workspace:^",
     "gsap": "^3.10.4"
@@ -36,7 +34,7 @@
   "peerDependencies": {
     "@lqv/playback": "workspace:^",
     "gsap": ">=3.0.0",
-    "react": ">=18.1.0"
+    "react": ">=18.0.0"
   },
   "peerDependenciesMeta": {
     "react": {
