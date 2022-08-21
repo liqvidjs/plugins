@@ -1,0 +1,94 @@
+/* this mostly replicates VSCode's Dark+ theme. */
+
+.cm-editor {
+  background-color: #1e1e1e;
+  color: #fff;
+  font-family: "Monaco", monospace;
+}
+.cm-activeLine {
+  background: rgba(255,255,255,0.067);
+}
+.cm-activeLineGutter {
+  background: #333;
+  color: #fff;
+}
+.lqv-codebooth .cm-cursor {
+  border-left: 1px solid #f8f8f0;
+}
+.lqv-codebooth .cm-gutter {
+  background-color: #1e1e1e;
+}
+
+.lqv-codebooth .cm-gutters {
+  border-right: none;
+  margin-right: 1em;
+}
+
+.lqv-codebooth .cm-activeLineGutter {
+  background: none;
+}
+
+.lqv-codebooth .cm-activeLine {
+  background: none;
+  outline: 1px solid #333;
+}
+
+
+.cm-selectionBackground,
+body.dark.cm-focused .cm-selectionBackground {
+  background: #005ca4 !important;
+}
+.lqv-codebooth .cm-tooltip {
+  background: #222;
+  color: #fff;
+}
+.lqv-codebooth .cm-matchingBracket,
+.lqv-codebooth .cm-focused .cm-matchingBracket {
+  background: rgba(255,255,255,0.067);
+  outline: 1px solid rgba(255,255,255,0.133);
+}
+
+/* tokens */
+.tok-keyword {
+  color: #b688be;
+}
+.tok-atom {
+  color: #CE9178;
+}
+.tok-bool {
+  color: #ff0;
+}
+.tok-className {
+  color: #00b7ff;
+}
+.tok-comment {
+  color: #6A9955;
+}
+.tok-labelName {
+  color: #ec4646;
+}
+.tok-literal {
+  color: #afff6e;
+}
+.tok-meta {
+  color: #ffa500;
+}
+.tok-number {
+  color: #bccdaa;
+}
+.tok-string,
+.tok-string2 {
+  color: #CE9178;
+}
+.tok-propertyName {
+  color: #b3dbfc;
+}
+.tok-punctuation {
+  color: #666;
+}
+.tok-typeName {
+  color: #739bd3;
+}
+.tok-variableName {
+  color: #e0d48c;
+}

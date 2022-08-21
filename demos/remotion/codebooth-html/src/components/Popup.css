@@ -1,0 +1,48 @@
+.draggable {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+body.dragging, body.dragging .draggable, .dragging {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+body.dragging iframe, body.resizing iframe {
+  pointer-events: none;
+}
+
+.popup {
+  box-shadow: .1em .1em .4em #000;
+  border-radius: 2px 2px;
+  resize: both;
+  position: absolute;
+  display: flex;
+  flex-direction:column;
+  flex-flow: column;
+  /* initial */
+  height: 80%;
+  width: 40%;
+  left: 58%;
+  top: 5%;
+}
+
+.popup-content {
+  border-radius: 0 0 2px 2px;
+  flex: 1;
+  position: relative;
+}
+
+.lqv-codebooth .popup > header {
+  background: #555;
+  border-radius: 2px 2px 0 0;
+  color: #fff;
+  font-family: sans-serif;
+  font-variant: small-caps;
+  padding: .1em .2em;
+  flex: 0;
+}
+
+.popup > .ui-resizable-handle {
+  /* background-color: blue; */
+}

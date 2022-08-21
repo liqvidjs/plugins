@@ -1,0 +1,7 @@
+.lqv-codebooth:not(.show-preview) .popup {
+  display: none;
+}
+
+.lqv-codebooth:not(.show-console) .lqv-console {
+  display: none;
+}

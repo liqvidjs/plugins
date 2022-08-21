@@ -1,0 +1,228 @@
+/* layout */
+.lqv-codebooth {
+  height: 100%;
+  width: 100%;
+  --split: 15%;
+  --v-split: 20%;
+}
+
+.lqv-editor-panel {
+  position: absolute;
+  top: 0;
+  left: var(--split);
+  height: 100%;
+  width: calc(100% - var(--split));
+}
+
+.lqv-editor-group > *, .lqv-editor-panel > * {
+  height: 100%;
+  width: 100%;
+}
+
+/* sidebar */
+.lqv-sidebar {
+  background: #252526;
+  color: #fff;
+  height: 100%;
+  width: var(--split);
+  position: absolute;
+}
+
+.lqv-sidebar h2 {
+  font-family: sans-serif;
+  font-size: .8em;
+  margin: .5em 0 .5em .5em;
+  text-transform: uppercase;
+}
+
+/* views */
+.lqv-group-tabs {
+  display: flex;
+  margin: .5em auto;
+  width: 90%;
+}
+
+.lqv-group-tabs > button {
+  border: none;
+  cursor: pointer;
+  flex: 1;
+  font-size: 1.2em;
+  padding: .2em;
+}
+
+.lqv-group-tabs > button[aria-selected="true"] {
+  background-color: #171717;
+  color: #fff;
+}
+
+.lqv-group-tabs > button[aria-selected="false"] {
+  background-color: #2d2d2d;
+  color: #555;
+}
+
+.lqv-group-tabs > button:first-child {
+  border-radius: .2em 0 0 .2em;
+}
+
+.lqv-group-tabs > button:last-child {
+  border-radius: 0 .2em .2em 0;
+}
+
+/* file listing */
+.lqv-file-tabs {
+  margin-bottom: 1em;
+}
+.lqv-file-tabs > [role="tab"] {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  display: block;
+  font-family: sans-serif;
+  font-size: 1rem;
+  margin-right: 1px;
+  padding: .4em 1em .4em 2em;
+  position: relative;
+  text-align: left;
+  width: 100%;
+}
+
+.lqv-file-tabs > [role="tab"][aria-selected="true"] {
+  background: #37373d;
+  color: #FFF;
+}
+
+*[class*="lqv-filetype-"]::before {
+	font-family: monospace;
+	font-weight: bold;
+	left: 0.5em;
+	width: 1em;
+	text-align: center;
+	position: absolute;
+}
+
+/* specific filetypes */
+.lqv-filetype-html::before {
+  content: "<>";
+  color: #F66;
+}
+
+.lqv-filetype-js::before {
+  content: "JS";
+  color: yellow;
+}
+
+.lqv-filetype-css::before {
+  content: "#";
+  color: #1a69b5;
+}
+
+/* buttons */
+.lqv-cb-buttons {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.lqv-cb-buttons > button {
+  cursor: pointer;
+  font-size: 1.2em;
+  margin: .2em 0;
+  padding: .2em;
+}
+
+/* preview */
+.lqv-preview {
+  background: #FFF;
+  border-radius: 0 0 2px 2px;
+  display: block;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+/* console */
+.lqv-console {
+  background-color: #1a1a1af8;
+  position: absolute;
+  bottom: 0;
+  left: var(--split);
+  height: var(--v-split);
+  width: calc(100% - var(--split));
+}
+
+.lqv-console > header {
+  background-color: #111;
+  color: #fff;
+  font-family: sans-serif;
+  padding: .1em .2em;
+  font-variant: small-caps;
+}
+
+.lqv-console > output pre {
+  border-bottom: 1px solid #545454;
+  padding: .1em .2em;
+}
+
+.lqv-console > output pre span {
+  color: #fff;
+}
+
+.lqv-console > output pre span.array,
+.lqv-console > output pre span.object {
+  color: #479bee;
+}
+
+.lqv-console > output pre span.number {
+  color: #008000;
+}
+
+.lqv-console > output pre span.string {
+  color: #e438bc;
+}
+
+/* resizing - taken from jQuery UI */
+.ui-resizable {
+  position: relative;
+}
+
+.ui-resizable-handle {
+  position: absolute;
+  font-size: 0.1px;
+  display: block;
+  -ms-touch-action: none;
+  touch-action: none;
+  z-index: 90;
+}
+
+.ui-resizable-e, .ui-resizable-ew {
+  cursor: ew-resize;
+  height: 100%;
+  top: 0;
+  width: 7px;
+}
+
+.ui-resizable-s, .ui-resizable-ns {
+  height: 7px;
+  cursor: ns-resize;
+}
+
+.ui-resizable-se {
+  cursor: se-resize;
+  width: 12px;
+  height: 12px;
+  right: 1px;
+  bottom: 1px;
+}
+
+/* specific resize handles */
+.lqv-codebooth > .ui-resizable-ew {
+  left: calc(var(--split) - 3.5px);
+}
+
+.lqv-codebooth > .ui-resizable-ns {
+  bottom: calc(var(--v-split) - 3.5px);
+  left: var(--split);
+  width: calc(100% - var(--split));
+}
