@@ -6,11 +6,11 @@ module.exports = {
   entry: `./src/@${env}/index.tsx`,
   output: {
     filename: "bundle.js",
-    path: path.join(__dirname, "static")
+    path: path.join(__dirname, "static"),
   },
 
   externals: {
-    "@babel/standalone": "Babel"
+    "@babel/standalone": "Babel",
   },
 
   mode: env,
@@ -19,8 +19,8 @@ module.exports = {
     rules: [
       {
         test: /\.[jt]sx?$/,
-        loader: "ts-loader"
-      }
+        loader: "ts-loader",
+      },
     ],
   },
 
@@ -29,25 +29,20 @@ module.exports = {
 
   optimization: {
     emitOnErrors: true,
-    minimize: false
-    // minimizer: [
-    //   new TerserPlugin({
-    //     parallel: true,
-    //     terserOptions: {
-    //       safari10: true
-    //     }
-    //   })
-    // ]
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          safari10: true,
+        },
+      }),
+    ],
   },
-  
+
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
     alias: {
-      "@env": path.join(__dirname, "src", "@" + env)
-    }
+      "@env": path.join(__dirname, "src", "@" + env),
+    },
   },
-
-  snapshot: {
-    managedPaths: []
-  }
 };
