@@ -1,6 +1,6 @@
 {
   "name": "@lqv/playback",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Playback interface for Liqvid-compatible plugins",
   "exports": {
     "./react": {
