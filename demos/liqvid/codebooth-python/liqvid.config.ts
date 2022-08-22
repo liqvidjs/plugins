@@ -3,14 +3,16 @@ import type {LiqvidConfig} from "@liqvid/cli";
 const scripts = {
 };
 
+const port = process.env.PORT || 3000;
+
 const config: LiqvidConfig = {
   build: {scripts},
   render: {
     output: "video.mp4",
-    url: "http://localhost:3003/dist/"
+    url: `http://localhost:${port}/dist/`
   },
   serve: {
-    port: 3003,
+    port,
     scripts
   },
   thumbs: {
@@ -20,7 +22,7 @@ const config: LiqvidConfig = {
     frequency: 1,
     imageFormat: "png",
     output: "./dist/thumbs/%s.png",
-    url: "http://localhost:3003/dist/"
+    url: `http://localhost:${port}/dist/`
   }
 };
 
