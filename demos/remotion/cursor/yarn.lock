@@ -1544,9 +1544,9 @@
     "@lqv/playback" "^0.1.0"
 
 "@lqv/playback@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@lqv/playback/-/playback-0.1.0.tgz#0f4697fb11a0baeb8e91c8005d7303e2dc82342a"
-  integrity sha512-L2OyhvKxXpBFTVIYI+SNVh6qP1wCOY4lPRVRxAJGSFL11LNw/Ewbyr9u0ydvlRctS8Yxfc+Tt7NUu9a6/PjyiA==
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@lqv/playback/-/playback-0.1.2.tgz#2fc25fd3650baefc6a4073e91690c4d7916bc238"
+  integrity sha512-OMpoxw2EFBBnDysg0FZP71kPBMjebVvC51w7YvuRE2vSIFVYAsA/D/OMLZYxe8gFZAF+7Uiu5HZHUrN4lE4S+g==
 
 "@lqv/remotion@^0.1.0":
   version "0.1.0"
@@ -2057,9 +2057,9 @@
   integrity sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==
 
 "@types/node@*":
-  version "18.7.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.8.tgz#6bbf2be6fbf9c187a5040d4277d24a06a18957a1"
-  integrity sha512-/YP55EMK2341JkODUb8DM9O0x1SIz2aBvyF33Uf1c76St3VpsMXEIW0nxuKkq/5cxnbz0RD9cfwNZHEAZQD3ag==
+  version "18.7.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.9.tgz#180bfc495c91dc62573967edf047e15dbdce1491"
+  integrity sha512-0N5Y1XAdcl865nDdjbO0m3T6FdmQ4ijE89/urOHLREyTXbpMWbSafx9y7XIsgWGtwUP2iYTinLyyW3FatAxBLQ==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -3050,9 +3050,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001370, caniuse-lite@^1.0.30001373:
-  version "1.0.30001379"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001379.tgz#c42f61d3ee45152ad0fa5005a6b5b34c27797a07"
-  integrity sha512-zXf+qxuN8OJrK5Bl5HbJg8cc5/Zm01WNW4ooVWUh92YlKqQZW3fwN5lXLB+kI8wkP5vTWkIIN+rutZuJhf4ykw==
+  version "1.0.30001381"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001381.tgz#e62955310e6e69cdf4b40bc5bc0895aa24bc4b8b"
+  integrity sha512-fEnkDOKpvp6qc+olg7+NzE1SqyfiyKf4uci7fAU38M3zxs0YOyKOxW/nMZ2l9sJbt7KZHcDIxUnbI0Iime7V4w==
 
 case-sensitive-paths-webpack-plugin@^2.4.0:
   version "2.4.0"
