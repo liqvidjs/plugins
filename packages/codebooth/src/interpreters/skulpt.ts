@@ -1,28 +1,6 @@
-interface Skulpt {
-  builtinFiles: {
-    files: {
-      [filename: string]: string;
-    };
-  };
+/// <reference path="skulpt.d.ts" />
 
-  configure(o: {
-    output(text: string): void;
-    read(filename: string): string;
-  }): void;
-
-  importMainWithBody(
-    name: string,
-    dumpJS: boolean,
-    body: string,
-    canSuspend: boolean
-  ): void;
-
-  misceval: {
-    asyncToPromise(callback: unknown): Promise<unknown>;
-  };
-}
-
-declare const Sk: Skulpt;
+import Sk from "skulpt";
 
 export class PythonInterpreter {
   constructor() {

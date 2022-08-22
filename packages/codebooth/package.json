@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codebooth",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "GUI for interactive coding tutorials with CodeMirror",
   "exports": {
     ".": {
@@ -64,6 +64,7 @@
     "@codemirror/state": "^6.1.1",
     "@codemirror/view": "^6.2.0",
     "@lqv/codemirror": "workspace:^",
+    "skulpt": "^1.2.0",
     "tsc-esm-fix": "^2.20.0"
   },
   "peerDependencies": {
@@ -80,7 +81,8 @@
     "@codemirror/view": ">=6.0.0",
     "@liqvid/recording": "^0.1.0",
     "@lqv/codemirror": "workspace:^",
-    "react": ">=18.0.0"
+    "react": ">=18.0.0",
+    "skulpt": "^1.2.0"
   },
   "peerDependenciesMeta": {
     "@codemirror/lang-css": {
@@ -96,6 +98,9 @@
       "optional": true
     },
     "@codemirror/lang-sql": {
+      "optional": true
+    },
+    "skulpt": {
       "optional": true
     }
   },

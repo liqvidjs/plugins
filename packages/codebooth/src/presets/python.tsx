@@ -68,7 +68,6 @@ export const PythonRecord: React.FC<{
   extensions?: Extension[];
 }> = (props) => {
   const {extensions = []} = props;
-  console.log(python());
 
   return (
     <CodeBooth recorder={CodeRecording.recorder}>
@@ -166,7 +165,7 @@ export const PythonRun: React.FC = () => {
         } catch (e) {
           const msg = `Error (line ${e.traceback[0].lineno}): ${e.args.v[0].v}`;
           output = [
-            <pre className="error" key={Math.random()}>
+            <pre className="error" key={`${msg}-${Math.random()}`}>
               {msg}
             </pre>,
           ];
