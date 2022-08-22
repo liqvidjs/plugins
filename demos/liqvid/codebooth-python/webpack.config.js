@@ -10,7 +10,7 @@ module.exports = {
   },
 
   externals: {
-    "@babel/standalone": "Babel"
+    "skulpt": "Sk"
   },
 
   mode: env,
