@@ -7,21 +7,25 @@ import {syntaxHighlighting} from "@codemirror/language";
 import {classHighlighter} from "@lezer/highlight";
 import {basicSetup, CodeBooth, Console, EditorGroup, EditorPanel, FileTabs, Replay, ReplayMultiple} from "@lqv/codebooth";
 import {extensionFromFilename, HTMLPreview} from "@lqv/codebooth/html";
-import {Bridge, ReplaySequence} from "@lqv/remotion";
+import {Bridge} from "@lqv/remotion";
 import {Audio, Sequence, staticFile} from "remotion";
 
 import {Popup} from "../src/components/Popup";
 import {files} from "../src/files";
-
-import audio from "../public/audio.mp4";
 import {durationInFrames} from "../src/metadata";
+
+// Chromium doesn't support mp4. If you're using actual Chrome,
+// you may be able to use audio.mp4 instead.
+// https://www.remotion.dev/docs/media-playback-error#codec-not-supported-by-chromium
+import audio from "../public/audio.webm";
+
 const recordingData = fetch(staticFile("recordings.json")).then(res => res.json());
 
 export const Demo: React.FC = () => {
 	return (
 		<div style={{flex: 1, backgroundColor: "white"}}>
+			<Audio src={audio} />
 			<Bridge>
-				<Audio src={audio} />
 				{/**
 				 * we don't use {@link ReplaySequence} here because the code recording
 				 * is shorter than the audio recording, and we want it to stay visible

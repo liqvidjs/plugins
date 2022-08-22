@@ -46,7 +46,7 @@ export function RecordingControl() {
 
   return (
     <div className="lqv-recording">
-      <h3>Recording</h3>
+      <h2>Recording</h2>
       <button aria-pressed={active} onClick={toggleRecording}>
         <svg aria-hidden="true" viewBox="-2 -2 4 4">
           <circle fill={active ? "red" : "#aaa"} cx="0" cy="0" r="1" />
