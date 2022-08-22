@@ -18,7 +18,9 @@ if (!(symbol in globalThis)) {
  */
 export function useME(): MediaElement {
   const playback = usePlayback();
-  if (playback?.constructor.name === "Playback" && "__advance" in playback) {
+  // do not use playback.constructor.name === "Playback"
+  // because minimization can mangle that
+  if ("__advance" in playback) {
     return new Proxy(usePlayback(), PlaybackMEProxy) as unknown as MediaElement;
   }
   return playback as unknown as MediaElement;
