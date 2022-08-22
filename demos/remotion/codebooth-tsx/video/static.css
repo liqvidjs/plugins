@@ -1,0 +1,8 @@
+.lqv-codebooth {
+  --v-split: 10% !important;
+}
+
+.lqv-editor-panel {
+  left: 0;
+  width: 100%;
+}

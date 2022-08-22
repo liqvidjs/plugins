@@ -58,7 +58,7 @@ The easiest way to get started is to clone one of the demos.
         <a href="https://github.com/liqvidjs/plugins/tree/main/demos/liqvid/codebooth-tsx">Demo</a>
       </td>
       <td>
-        -
+        <a href="https://github.com/liqvidjs/plugins/tree/main/demos/remotion/codebooth-tsx">Demo</a>
       </td>
       <td>
         -

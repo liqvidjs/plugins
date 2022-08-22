@@ -1,0 +1,42 @@
+.lqv-cb-toggle {
+  border-radius: .1em;
+  border: none;
+  cursor: pointer;
+  display: block;
+  font-size: 1.2em;
+  padding: .1em;
+  margin: .5em auto;
+  width: 90%;
+}
+
+.lqv-cb-toggle[aria-pressed="true"] {
+  background-color: #fff;
+}
+
+.lqv-cb-toggle[aria-pressed="true"]:hover {
+  background-color: #f0f0f0;
+}
+
+.lqv-cb-toggle[aria-pressed="true"]:active {
+  background-color: #e0e0e0;
+}
+
+.lqv-cb-toggle[aria-pressed="false"] {
+  background-color: #2f2f2f;
+  color: #555;
+}
+
+.lqv-cb-toggle[aria-pressed="false"]:hover {
+  background-color: #2d2d2d;
+}
+
+.lqv-cb-toggle[aria-pressed="false"]:active {
+  background-color: #2a2a2a;
+}
+
+.lqv-cb-toggle > img {
+  display: inline;
+  height: 1em;
+  margin-right: .5em;
+  vertical-align: baseline;
+}
