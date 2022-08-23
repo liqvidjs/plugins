@@ -1,6 +1,6 @@
 {
   "name": "@lqv/playback",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Playback interface for Liqvid-compatible plugins",
   "exports": {
     "./react": {
@@ -25,6 +25,7 @@
     "build:clean": "rm -rf dist",
     "build:js": "tsc --module esnext --outDir dist/esm; tsc --module commonjs --outDir dist/cjs",
     "build:postclean": "rm dist/*/tsconfig.tsbuildinfo",
-    "lint": "eslint --fix src/*"
+    "lint": "eslint --fix src/*",
+    "test": "jest"
   }
 }

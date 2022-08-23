@@ -20,7 +20,7 @@ export function useME(): MediaElement {
   const playback = usePlayback();
   // do not use playback.constructor.name === "Playback"
   // because minimization can mangle that
-  if ("__advance" in playback) {
+  if (playback && "__advance" in playback) {
     return new Proxy(usePlayback(), PlaybackMEProxy) as unknown as MediaElement;
   }
   return playback as unknown as MediaElement;
