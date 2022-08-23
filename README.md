@@ -62,7 +62,7 @@ The easiest way to get started is to clone one of the demos.
         <a href="https://github.com/liqvidjs/plugins/tree/main/demos/remotion/codebooth-tsx">Demo</a>
       </td>
       <td>
-        -
+        <a href="https://github.com/liqvidjs/plugins/tree/main/demos/gsap/codebooth-tsx">Demo</a>
       </td>
     </tr>
   </tbody>
