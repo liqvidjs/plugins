@@ -1,0 +1,27 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+iframe {
+  border: 0;
+}
+
+html, body, #root, .App {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-size: 18px;
+}
+
+/* iframe embed asplodes without this, will file bug with Remotion. */
+.__remotion-player {
+  margin-left: 0 !important;
+	margin-top: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	transform: none !important;
+}
