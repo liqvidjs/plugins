@@ -1,11 +1,11 @@
 {
   "name": "@lqv/playback",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Playback interface for Liqvid-compatible plugins",
   "exports": {
     "./react": {
-      "import": "./dist/esm/react.js",
-      "require": "./dist/cjs/react.js"
+      "import": "./dist/esm/react.mjs",
+      "require": "./dist/cjs/react.cjs"
     }
   },
   "typesVersions": {
@@ -23,7 +23,7 @@
   "scripts": {
     "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -rf dist",
-    "build:js": "tsc --module esnext --outDir dist/esm; tsc --module commonjs --outDir dist/cjs",
+    "build:js": "tsc --module esnext --outDir dist/esm; tsc --module commonjs --outDir dist/cjs; node ../../build.mjs",
     "build:postclean": "rm dist/*/tsconfig.tsbuildinfo",
     "lint": "eslint --fix src/*",
     "test": "jest"

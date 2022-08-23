@@ -13,5 +13,6 @@
     "pretty": true,
     "removeComments": false,
     "target": "esnext"
-  }
+  },
+  "include": ["src/**/*"]
 }
