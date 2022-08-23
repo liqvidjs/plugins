@@ -52,7 +52,9 @@ class GSAPPlayback extends EventEmitter implements MediaElement {
   }
 
   set currentTime(value: number) {
-    this.tl.time(value);
+    this.tl.time(value, false);
+    this.emit("seeking");
+    this.emit("seeked");
   }
 
   get duration(): number {
@@ -73,9 +75,11 @@ class GSAPPlayback extends EventEmitter implements MediaElement {
 
   pause(): void {
     this.tl.pause();
+    this.emit("pause");
   }
 
   async play(): Promise<void> {
-    this.tl.play();
+    this.tl.play(null, false);
+    this.emit("play");
   }
 }
