@@ -1,7 +1,7 @@
 import {AudioRecording, RecordingControl, VideoRecording} from "@liqvid/recording";
 import {CodeRecording} from "@lqv/codemirror/recording";
 import {Playback, Player} from "liqvid";
-import * as ReactDOM from "react-dom";
+import {createRoot} from "react-dom/client";
 import {UI} from "./ui";
 
 const controls = [<RecordingControl plugins={[AudioRecording, CodeRecording, VideoRecording]} />];
@@ -16,4 +16,4 @@ function Lesson() {
   );
 }
 
-ReactDOM.render(<Lesson />, document.querySelector("main"));
+createRoot(document.querySelector("main")).render(<Lesson />);

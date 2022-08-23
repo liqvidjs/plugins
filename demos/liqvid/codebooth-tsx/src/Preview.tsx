@@ -1,6 +1,7 @@
 import * as Babel from "@babel/standalone";
-import {useBoothStore} from "@lqv/codebooth";
-import {useRef, useEffect} from "react";
+import {State, useBoothStore} from "@lqv/codebooth";
+import {useEffect, useRef} from "react";
+import {htmlTemplate, tsxTemplate} from "./files";
 
 declare global {
   interface Window {
@@ -8,19 +9,29 @@ declare global {
   }
 }
 
+/**
+ * Preview of TSX document.
+ */
 export function Preview() {
-  const ref = useRef<HTMLOutputElement>();
+  /* this is largely taken from HTMLPreview in @lqv/codebooth/html */
   const store = useBoothStore();
 
-  useEffect(() => {
-    store.subscribe(state => state.run, () => {
-      const state = store.getState();
-      console.log(state);
-      const file = state.groups[state.activeGroup].files[0];
-      const tsx = file.view.state.doc.toString();
+  /** <iframe> containing preview document */
+  const iframe = useRef<HTMLIFrameElement>();
 
+  /* rendering */
+  useEffect(() => {
+    /* re-render */
+    function render() {
+      const files = getFileContents(store.getState());
+      if (!("index.tsx" in files)) {
+        return;
+      }
+      const tsx = tsxTemplate(files["index.tsx"]);
+
+      // babel transform
       const opts: any = {
-        filename: file.filename,
+        filename: "index.tsx",
         plugins: [
           ["transform-modules-umd", {
             "globals": {
@@ -32,12 +43,41 @@ export function Preview() {
         presets: ["env", "react", "typescript"]
       };
       try {
-        eval(Babel.transform(tsx, opts).code);
+        const {code} = Babel.transform(tsx, opts);
+        console.log(code);
+        iframe.current.srcdoc = htmlTemplate(code);
       } catch (e) {
-        console.error(e);
-      }
-    });
-  }, []);
 
-  return <output id="demo" ref={ref} />;
+      }
+    }
+
+    // initial render
+    render();
+    // subscribe to run event
+
+    return store.subscribe((state) => state.run, render);
+  }, [store]);
+
+  return (
+    <iframe
+      className="lqv-preview"
+      ref={iframe}
+      sandbox="allow-popups allow-scripts"
+      title="TSX Preview"
+    />
+  );
+}
+
+/**
+ * Get record of filenames to file contents.
+ * @param state Booth state.
+ */
+function getFileContents(state: State): Record<string, string> {
+  const ret: Record<string, string> = {};
+  if (!state.groups[state.activeGroup]) return ret;
+  const {files} = state.groups[state.activeGroup];
+  for (const file of files) {
+    ret[file.filename] = file.view.state.doc.toString();
+  }
+  return ret;
 }

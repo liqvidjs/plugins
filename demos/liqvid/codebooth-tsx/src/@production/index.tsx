@@ -2,7 +2,8 @@ import {Audio, Playback, Player} from "liqvid";
 import * as ReactDOM from "react-dom";
 import {UI} from "./ui";
 
-const playback = new Playback({duration: 30000});
+const playback = new Playback({duration: 100.86 * 1000});
+console.log("asdf")
 
 function Lesson() {
   const thumbs = {
