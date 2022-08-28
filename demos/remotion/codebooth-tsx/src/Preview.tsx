@@ -44,7 +44,6 @@ export function Preview() {
       };
       try {
         const {code} = Babel.transform(tsx, opts);
-        console.log(code);
         iframe.current.srcdoc = htmlTemplate(code);
       } catch (e) {
 

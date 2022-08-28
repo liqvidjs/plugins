@@ -61,8 +61,6 @@ export function Popup(props: {
 
           let {height, width} = rect;
 
-          // console.log(dx, width);
-
           if (dragDir.current.includes("e")) width += dx;
           if (dragDir.current.includes("s")) height += dy;
 
