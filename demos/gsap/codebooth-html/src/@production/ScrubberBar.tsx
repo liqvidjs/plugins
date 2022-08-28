@@ -60,7 +60,7 @@ export function ScrubberBar(): JSX.Element {
       >{document.fullscreenElement ? unFullscreenIcon : fullscreenIcon}</button>
     </div>
   );
-};
+}
 
 const fullscreenIcon = <svg viewBox="0 0 36 36"><path fill="black" d="M 10 16 h 2 v -4 h 4 v -2 h -6 v 6 z"></path><path fill="black" d="M 20 10 v 2 h 4 v 4 h 2 v -6 h -6 z"></path><path fill="black" d="M 24 24 h -4 v 2 h 6 v -6 h -2 v 4 z"></path><path fill="black" d="M 12 20 h -2 v 6 h 6 v -2 h -4 v -4 z"></path></svg>;
 const unFullscreenIcon = <svg viewBox="0 0 36 36"><path fill="black" d="M 14 14 h -4 v 2 h 6 v -6 h -2 v 4 z"></path><path fill="black" d="M 22 14 v -4 h -2 v 6 h 6 v -2 h -4 z"></path><path fill="black" d="M 20 26 h 2 v -4 h 4 v -2 h -6 v 6 z"></path><path fill="black" d="M 10 22 h 4 v 4 h 2 v -6 h -6 v 2 z"></path></svg>;

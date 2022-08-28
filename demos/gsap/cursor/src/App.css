@@ -3,6 +3,12 @@ html, body, #root, .App {
   width: 100%;
 }
 
+/* scale font size with video */
+#root {
+  background-color: #fff;
+  font-size: calc(5vw / 6);
+}
+
 .lv-cursor {
   height: 2em;
 }
@@ -31,58 +37,4 @@ select {
   position: absolute;
   left: 45%;
   top: 50%;
-}
-
-/* scrubber bar */
-#scrubber {
-  position: absolute;
-  bottom: 5%;
-  width: 50%;
-  left: 25%;
-}
-
-#scrubber > * {
-  vertical-align: middle;
-}
-
-#scrubber > button {
-  cursor: pointer;
-  font-size: 1em;
-  margin: 0 .1em;
-  text-align: center;
-  width: 2em;
-}
-
-#scrubber > input {
-  width: 90%;
-}
-
-/* recording control */
-.recording {
-  background: #0001;
-  border-radius: 0 0 3px 0;
-  box-shadow: 2px 2px 2px #3336;
-  left: 0;
-  padding: .5em;
-  position: absolute;
-  overflow: hidden;
-  top: 0;
-  width: 20%;
-}
-
-.recording button {
-  font-size: 1.5rem;
-  vertical-align: middle;
-  margin-right: .5em;
-  width: 1.5em;
-}
-
-.recording textarea {
-  height: 1em;
-  display: block;
-  overflow-y: auto;
-  max-height: 5em;
-  min-height: 5em;
-  max-width: calc(100% - 1em);
-  min-width: calc(100% - 1em);
 }

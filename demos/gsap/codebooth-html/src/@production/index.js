@@ -19,8 +19,6 @@ import {ScrubberBar} from "./ScrubberBar";
 
 const tl = gsap.timeline({duration, paused: true});
 const recordingData = fetch("./recordings.json").then(res => res.json());
-console.log("duck");
-window.tl = tl;
 
 function App() {
   return (

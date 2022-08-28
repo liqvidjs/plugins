@@ -1,3 +1,5 @@
+import "./Record.css";
+
 import {RecordingManager} from "@liqvid/recording";
 import {CursorRecorder} from "@lqv/cursor/recording";
 import {useCallback, useState} from "react";

@@ -18,7 +18,6 @@ export function Audio(props: React.PropsWithChildren<React.AudioHTMLAttributes<H
     }
 
     function syncTime() {
-      console.log(playback.currentTime);
       (audio.current as HTMLAudioElement).currentTime = playback.currentTime;
     }
 

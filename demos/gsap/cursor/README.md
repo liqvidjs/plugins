@@ -16,10 +16,7 @@ yarn install
 ```
 
 ## Recording
-1. Start the development server with
-  ```bash
-  yarn start
-  ```
+1. Start the development server with `yarn record`.
 
 2. Click (or focus and Enter) on the circle in the top left to start recording.
 
@@ -29,15 +26,11 @@ yarn install
 
 ## Viewing the recording
 
-1. Make a production build with
-```bash
-yarn build
-```
+Preview the final product with `yarn replay`.
 
-2. View the production build with
-```bash
-yarn global add serve
-serve -s build
-```
+## Deploying
 
-3. Alternatively, you can change the import logic in `src/index.tsx`. This is useful if you want to develop on the production view.
+1. Make a production build with `yarn build`.
+
+2. Upload the `build` directory to your server.
+
