@@ -1,5 +1,5 @@
 {
-  "name": "demo-remotion-codebooth-html",
+  "name": "demo-remotion-codebooth-python",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -35,6 +35,7 @@
     "@codemirror/state": "^6.1.1",
     "@codemirror/view": "^6.2.0"
   },
+  "homepage": "./",
   "scripts": {
     "start": "REACT_APP_MODE=record react-scripts start",
     "build": "react-scripts build",

@@ -7,9 +7,9 @@ Download this directory and install the packages:
 ```bash
 git clone git@github.com:liqvidjs/plugins.git --no-checkout liqvid-plugins
 cd liqvid-plugins
-git sparse-checkout set demos/remotion/cursor
+git sparse-checkout set demos/remotion/codebooth-html
 git checkout
-cd demos/remotion/cursor
+cd demos/remotion/codebooth-html
 yarn install
 ```
 

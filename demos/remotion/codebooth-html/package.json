@@ -15,9 +15,9 @@
     "@codemirror/view": "^6.2.0",
     "@lezer/highlight": "^1.0.0",
     "@liqvid/recording": "^0.1.0",
-    "@lqv/codebooth": "^0.2.2",
+    "@lqv/codebooth": "^0.2.3",
     "@lqv/codemirror": "^0.3.0",
-    "@lqv/playback": "^0.1.2",
+    "@lqv/playback": "^0.1.4",
     "@lqv/remotion": "^0.1.0",
     "@remotion/bundler": "^3.2.4",
     "@remotion/cli": "^3.2.4",
@@ -32,6 +32,7 @@
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
+  "homepage": "./",
   "resolutions": {
     "@codemirror/state": "^6.1.1",
     "@codemirror/view": "^6.2.0"

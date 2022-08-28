@@ -17,73 +17,11 @@ body {
   font-size: 18px;
 }
 
-/* recording control */
-.lqv-recording {
-  color: #fff;
-  font-family: sans-serif;
-}
-
-.lqv-recording button {
-  background: none;
-  border-radius: 3px;
-  border: 1px solid #666;
-  color: #fff;
-  cursor: pointer;
-  display: block;
-  font-size: 1.1em;
-  height: 2em;
-  margin: 0 auto .5em;
-  padding: .1em .4em .2em 0;
-  width: 90%;
-  align-items: center;
-  display: flex;
-}
-
-.lqv-recording button:hover {
-  background: #fff1;
-  border-color: #999;
-}
-
-.lqv-recording button:active {
-  background: #0003;
-  border-color: #444;
-}
-
-.lqv-recording > button > svg {
-  height: 100%;
-}
-
-.lqv-recording > output {
-  background: #202020;
-  border-radius: 0 0 0 2px;
-  box-shadow: 0 0 2px #0005 inset;
-  padding: .2em .4em 1em;
-  position: absolute;
-  right: 0;
-  top: calc(5 * var(--file-tabs) - 1px);
-  width: 100%;
-}
-
-.lqv-recording > output > p {
-  margin: .5em 0;
-}
-
-.lqv-recording > output a[download="audio.webm"] {
-  background-color: #335bd3;
-  color: #fff;
-  display: block;
-  margin: .5em auto;
-  padding: .5em;
-  text-decoration: none;
-}
-
-.lqv-recording textarea {
-  height: 1em;
-  display: block;
-  overflow-y: auto;
-  max-height: 5em;
-  min-height: 5em;
-  resize: none;
-  max-width: calc(100% - 1em);
-  min-width: calc(100% - 1em);
+/* iframe embed asplodes without this */
+.__remotion-player {
+  margin-left: 0 !important;
+	margin-top: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	transform: none !important;
 }

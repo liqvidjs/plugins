@@ -6,6 +6,7 @@ import {javascript} from "@codemirror/lang-javascript";
 import {syntaxHighlighting} from "@codemirror/language";
 import {classHighlighter} from "@lezer/highlight";
 import {basicSetup, Buttons, Clear, CodeBooth, EditorPanel, Record, Resize, Run} from "@lqv/codebooth";
+
 import {Popup} from "../components/Popup";
 import {file} from "../files";
 import {Preview} from "../Preview";
@@ -35,6 +36,7 @@ function App() {
             extensions={extensions}
           />
         </EditorPanel>
+
         <Resize min={.1} max={.3} />
         <Popup title="Preview">
           <Preview />

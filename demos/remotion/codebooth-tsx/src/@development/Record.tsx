@@ -1,3 +1,5 @@
+import "./Record.css";
+
 import {AudioRecorder, RecordingManager} from "@liqvid/recording";
 import {length} from "@liqvid/utils/replay-data";
 import {CodeRecorder} from "@lqv/codemirror/recording";

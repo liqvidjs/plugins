@@ -5,12 +5,23 @@
 }
 
 html, body, #root, .App {
+  background-color: #fff;
   height: 100%;
   width: 100%;
 }
 
 .lv-cursor {
   height: 2em;
+}
+
+/* iframe embed asplodes without this, will file bug with Remotion. */
+.__remotion-player {
+  background-color: #fff;
+  margin-left: 0 !important;
+	margin-top: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	transform: none !important;
 }
 
 #watch {

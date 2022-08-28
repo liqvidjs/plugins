@@ -20,6 +20,11 @@ function App() {
         <section className="lqv-sidebar">
           <h2>Files</h2>
           <FileTabs />
+          <h2>Code</h2>
+          <Buttons>
+            <Run />
+            <Clear />
+          </Buttons>
           <RecordingControl />
         </section>
         {Object.keys(files).map((filename) => (
@@ -40,10 +45,6 @@ function App() {
           <HTMLPreview />
         </Popup>
         <Console />
-        <Buttons>
-          <Run />
-          <Clear />
-        </Buttons>
       </CodeBooth>
     </div>
   );
