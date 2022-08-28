@@ -9,6 +9,12 @@ module.exports = {
     path: path.join(__dirname, "static")
   },
 
+  externals: {
+    "liqvid": "Liqvid",
+    "react": "React",
+    "react-dom": "ReactDOM"
+  },
+
   mode: env,
 
   module: {

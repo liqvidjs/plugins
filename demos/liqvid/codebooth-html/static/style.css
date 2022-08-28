@@ -22,6 +22,10 @@ body.dragging .draggable,
   display: none;
 }
 
+body.dragging iframe, body.resizing iframe {
+  pointer-events: none;
+}
+
 /* preview */
 output {
   background: #FFF;

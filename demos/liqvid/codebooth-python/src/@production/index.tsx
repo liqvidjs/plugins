@@ -8,7 +8,7 @@ const playback = new Playback({duration: 36658});
 function Lesson() {
   const thumbs = {
     frequency: 1,
-    path: "./thumbs/%s.png"
+    path: `${MEDIA_URL}/thumbs/%s.png`
   };
 
   return (

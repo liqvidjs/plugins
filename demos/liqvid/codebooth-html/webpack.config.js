@@ -10,7 +10,9 @@ module.exports = {
   },
 
   externals: {
-    "@babel/standalone": "Babel",
+    "liqvid": "Liqvid",
+    "react": "React",
+    "react-dom": "ReactDOM",
   },
 
   mode: env,

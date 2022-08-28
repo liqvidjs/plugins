@@ -581,9 +581,9 @@
   integrity sha512-Bl5AFp7Igu1mjpthNtGfXlL/EBojKthmL7nRdpzj0ZlX4FRTosEyOJrjXaMellEyAwqzLX8gN/wuctUvKb+WZA==
 
 "@lqv/playback@^0.1.0", "@lqv/playback@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@lqv/playback/-/playback-0.1.2.tgz#2fc25fd3650baefc6a4073e91690c4d7916bc238"
-  integrity sha512-OMpoxw2EFBBnDysg0FZP71kPBMjebVvC51w7YvuRE2vSIFVYAsA/D/OMLZYxe8gFZAF+7Uiu5HZHUrN4lE4S+g==
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@lqv/playback/-/playback-0.1.3.tgz#a62f36806c88a46f92440ee0ffb552a7f2ef3db1"
+  integrity sha512-N7iX76yI775mcvAMOjDUdlk6i39jIWa4Zbf7EkhAWOJ9WuZDyiFAZ+I1xyho/ypHBYGVwJEpakiAwE8tSkWAkQ==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"

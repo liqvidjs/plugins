@@ -8,7 +8,14 @@ const playback = new Playback({duration: 220166});
 function Lesson() {
   const thumbs = {
     frequency: 1,
-    path: "./thumbs/%s.png"
+    highlights: [
+      {time: 30000, title: "Rainbow effect"},
+      {time: 92000, title: "<canvas>"},
+      {time: 144000, title: "Face"},
+      {time: 180000, title: "Eyes"},
+      {time: 225000, title: "Smile"}
+    ],
+    path: `${MEDIA_URL}/thumbs/%s.png`
   };
 
   return (
