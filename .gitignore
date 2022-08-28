@@ -1,6 +1,12 @@
 # generated files
 node_modules
+build
 dist
+bundle.js
+
+# static files
+*.mp4
+*.webm
 
 # Node stuff
 
