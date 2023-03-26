@@ -1,11 +1,16 @@
 import type {Extension} from "@codemirror/state";
-import {EditorView, keymap} from "@codemirror/view";
+import {EditorView, keymap, ViewPlugin} from "@codemirror/view";
 import {RecorderPlugin, ReplayDataRecorder} from "@liqvid/recording";
 import {bind} from "@liqvid/utils/misc";
 import {ReplayData} from "@liqvid/utils/replay-data";
+import {scrollCmd} from ".";
 import {icon} from "./icon";
 
-type CaptureData = [number, number][] | string;
+export type EditorChange = [[number, ...(EditorChange | number | string)[]], [number, number]];
+export type SpecialKey = string;
+export type ScrollAction = [typeof scrollCmd, number, number] | [typeof scrollCmd, number];
+
+export type CaptureData = EditorChange | ScrollAction | SpecialKey;
 
 // the actual thingy that gets exported
 export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
@@ -24,6 +29,38 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
     if (specialKeys instanceof Array) {
       specialKeys = Object.fromEntries(specialKeys.map((key) => [key, key]));
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const $this = this;
+
+    const scrollListener = ViewPlugin.fromClass(
+      class {
+        constructor(view: EditorView) {
+          view.scrollDOM.addEventListener("scroll", () => {
+            if (!$this.manager || $this.manager.paused || !$this.manager.active) return;
+            const time = $this.manager.getTime();
+
+            const fontSize = parseFloat(
+              getComputedStyle(view.scrollDOM).getPropertyValue("font-size")
+            );
+
+            // vertical scroll is more common so we put it first and omit
+            // horizontal scroll if it's zero
+            const action: ScrollAction = [
+              scrollCmd,
+              view.scrollDOM.scrollTop / fontSize,
+              view.scrollDOM.scrollLeft / fontSize,
+            ];
+            if (action[2] === 0) {
+              action.pop();
+            }
+
+            $this.capture(time, action);
+          });
+        }
+      }
+    );
+
     // record document changes
     const updateListener = EditorView.updateListener.of((update) => {
       if (!this.manager || this.manager.paused || !this.manager.active) return;
@@ -41,7 +78,8 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
       // empty events can break replay
       if (update.changes.empty && transactions.length === 0) return;
 
-      this.capture(this.manager.getTime(), [update.changes.toJSON(), ...transactions]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.capture(this.manager.getTime(), [update.changes.toJSON(), ...transactions] as any);
     });
 
     // record special key presses
@@ -57,7 +95,7 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
       }))
     );
 
-    return [updateListener, keyListener];
+    return [scrollListener, updateListener, keyListener];
   }
 }
 
