@@ -13,7 +13,7 @@ type CodeData = Parameters<typeof cmReplay>[0]["data"];
  * Editor to replay recorded coding.
  */
 export function Replay(
-  props: Pick<Parameters<typeof cmReplay>[0], "scrollBehavior"> &
+  props: Pick<Parameters<typeof cmReplay>[0], "scrollBehavior" | "shouldScroll"> &
     React.ComponentProps<typeof Editor> & {
       /**
        * Callback to handle special commands.
@@ -36,7 +36,15 @@ export function Replay(
   const store = useBoothStore();
   const playback = useME();
 
-  const {extensions = [], handle, replay, scrollBehavior, start = 0, ...attrs} = props;
+  const {
+    extensions = [],
+    handle,
+    replay,
+    scrollBehavior,
+    shouldScroll,
+    start = 0,
+    ...attrs
+  } = props;
 
   const __handle = useCallback(
     (cmd: string, doc: Text) => {
@@ -67,6 +75,7 @@ export function Replay(
                 handle: __handle,
                 playback,
                 scrollBehavior,
+                shouldScroll,
                 start,
                 view,
               })
@@ -77,6 +86,7 @@ export function Replay(
               handle: __handle,
               playback,
               scrollBehavior,
+              shouldScroll,
               start,
               view,
             });
@@ -96,7 +106,7 @@ export function Replay(
  * Replay coding to multiple editors.
  */
 export function ReplayMultiple(
-  props: Pick<Parameters<typeof cmReplayMultiple>[0], "scrollBehavior"> & {
+  props: Pick<Parameters<typeof cmReplayMultiple>[0], "scrollBehavior" | "shouldScroll"> & {
     /** Editor group to replay. */
     group?: string;
 
@@ -168,6 +178,7 @@ export function ReplayMultiple(
           handle,
           playback,
           scrollBehavior: props.scrollBehavior,
+          shouldScroll: props.shouldScroll,
           start,
           views,
         })
@@ -178,6 +189,7 @@ export function ReplayMultiple(
         handle,
         playback,
         scrollBehavior: props.scrollBehavior,
+        shouldScroll: props.shouldScroll,
         start,
         views,
       });
