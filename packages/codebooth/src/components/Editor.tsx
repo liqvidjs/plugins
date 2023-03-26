@@ -35,11 +35,7 @@ export function Editor(props: {
   useEffect(() => {
     // be idempotent
     const state = store.getState();
-    if (
-      state.groups[groupId]?.files.some(
-        (file) => file.filename === props.filename
-      )
-    ) {
+    if (state.groups[groupId]?.files.some((file) => file.filename === props.filename)) {
       return;
     }
 

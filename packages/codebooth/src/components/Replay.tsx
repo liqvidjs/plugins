@@ -1,13 +1,9 @@
 import {Extension, Text} from "@codemirror/state";
 import {drawSelection, EditorView, ViewPlugin} from "@codemirror/view";
-import {
-  cmReplay,
-  cmReplayMultiple,
-  fakeSelection,
-  selectCmd,
-} from "@lqv/codemirror";
+import {cmReplay, cmReplayMultiple, fakeSelection, selectCmd} from "@lqv/codemirror";
 import {useME} from "@lqv/playback/react";
 import {useCallback, useEffect, useMemo} from "react";
+
 import {Store, useBoothStore} from "../store";
 import {Editor} from "./Editor";
 
@@ -17,29 +13,30 @@ type CodeData = Parameters<typeof cmReplay>[0]["data"];
  * Editor to replay recorded coding.
  */
 export function Replay(
-  props: React.ComponentProps<typeof Editor> & {
-    /**
-     * Callback to handle special commands.
-     * @param useStore The CodeBooth store.
-     * @param cmd The command to handle.
-     * @param doc The CodeMirror document.
-     */
-    handle?: (useStore: Store, cmd: string, doc: Text) => void;
+  props: Pick<Parameters<typeof cmReplay>[0], "scrollBehavior"> &
+    React.ComponentProps<typeof Editor> & {
+      /**
+       * Callback to handle special commands.
+       * @param useStore The CodeBooth store.
+       * @param cmd The command to handle.
+       * @param doc The CodeMirror document.
+       */
+      handle?: (useStore: Store, cmd: string, doc: Text) => void;
 
-    /** Coding data to replay. */
-    replay?: CodeData | Promise<CodeData>;
+      /** Coding data to replay. */
+      replay?: CodeData | Promise<CodeData>;
 
-    /**
-     * Time to start replaying.
-     * @default 0
-     */
-    start?: number;
-  }
+      /**
+       * Time to start replaying.
+       * @default 0
+       */
+      start?: number;
+    }
 ): JSX.Element {
   const store = useBoothStore();
   const playback = useME();
 
-  const {extensions = [], handle, replay, start = 0, ...attrs} = props;
+  const {extensions = [], handle, replay, scrollBehavior, start = 0, ...attrs} = props;
 
   const __handle = useCallback(
     (cmd: string, doc: Text) => {
@@ -69,6 +66,7 @@ export function Replay(
                 data,
                 handle: __handle,
                 playback,
+                scrollBehavior,
                 start,
                 view,
               })
@@ -78,6 +76,7 @@ export function Replay(
               data: replay,
               handle: __handle,
               playback,
+              scrollBehavior,
               start,
               view,
             });
@@ -96,29 +95,31 @@ export function Replay(
 /**
  * Replay coding to multiple editors.
  */
-export function ReplayMultiple(props: {
-  /** Editor group to replay. */
-  group?: string;
+export function ReplayMultiple(
+  props: Pick<Parameters<typeof cmReplayMultiple>[0], "scrollBehavior"> & {
+    /** Editor group to replay. */
+    group?: string;
 
-  /**
-   * Callback to handle special commands.
-   * @param store The CodeBooth store.
-   * @param cmd The command to handle.
-   * @param docs CodeMirror documents.
-   */
-  handle?: (store: Store, cmd: string, docs: Record<string, Text>) => void;
+    /**
+     * Callback to handle special commands.
+     * @param store The CodeBooth store.
+     * @param cmd The command to handle.
+     * @param docs CodeMirror documents.
+     */
+    handle?: (store: Store, cmd: string, docs: Record<string, Text>) => void;
 
-  /**
-   * Coding data to replay.
-   */
-  replay: CodeData | Promise<CodeData>;
+    /**
+     * Coding data to replay.
+     */
+    replay: CodeData | Promise<CodeData>;
 
-  /**
-   * Time to start replaying.
-   * @default 0
-   */
-  start?: number;
-}): null {
+    /**
+     * Time to start replaying.
+     * @default 0
+     */
+    start?: number;
+  }
+): null {
   const playback = useME();
   const store = useBoothStore();
   const {start = 0} = props;
@@ -166,6 +167,7 @@ export function ReplayMultiple(props: {
           data,
           handle,
           playback,
+          scrollBehavior: props.scrollBehavior,
           start,
           views,
         })
@@ -175,6 +177,7 @@ export function ReplayMultiple(props: {
         data: props.replay,
         handle,
         playback,
+        scrollBehavior: props.scrollBehavior,
         start,
         views,
       });

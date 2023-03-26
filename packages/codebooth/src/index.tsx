@@ -18,8 +18,7 @@ export {Record} from "./components/Record";
 export {Replay, ReplayMultiple} from "./components/Replay";
 export {Resize} from "./components/Resize";
 export * from "./extensions";
-export {State, Store, useBoothStore} from "./store";
-
+export {type State, type Store, useBoothStore} from "./store";
 
 /**
  * Container for code editing/recording/replaying.
