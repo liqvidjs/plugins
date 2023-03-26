@@ -49,7 +49,7 @@
   "peerDependencies": {
     "@codemirror/state": ">=6.0.0",
     "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.1.3",
+    "@liqvid/keymap": "^1.1.4",
     "@liqvid/recording": "^0.1.0",
     "@types/react": ">=18.0.0",
     "liqvid": "^2.1.7",
@@ -75,7 +75,7 @@
   "devDependencies": {
     "@codemirror/state": ">=6.0.0",
     "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.1.3"
+    "@liqvid/keymap": "^1.1.4"
   },
   "dependencies": {
     "@liqvid/utils": "^1.8.0",

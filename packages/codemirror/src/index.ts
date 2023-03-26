@@ -26,15 +26,24 @@ export function cmReplay({
   handle,
   playback,
   scrollBehavior,
+  shouldScroll = () => true,
   start,
   view,
-}: Omit<Parameters<typeof cmReplayMultiple>[0], "handle" | "views"> & {
+}: Omit<Parameters<typeof cmReplayMultiple>[0], "handle" | "shouldScroll" | "views"> & {
   /**
    * Function for handling special commands.
    * @param cmd Command to handle.
    * @param doc CodeMirror document.
    */
   handle?: (cmd: string, doc: Text) => void;
+
+  /**
+   * Callback for determining whether to replay scrolling. You can have this
+   * return `false` to relinquish scrolling control back to the viewer.
+   * By default, always returns `true`, i.e. scrolls are always replayed.
+   */
+  shouldScroll?: () => boolean;
+
   /** CodeMirror instance to sync with. */
   view: EditorView;
 }): () => void {
@@ -43,6 +52,7 @@ export function cmReplay({
     handle: (key, docs) => handle(key, docs["default"]),
     playback,
     scrollBehavior,
+    shouldScroll,
     start,
     views: {
       default: view,
@@ -59,6 +69,7 @@ export function cmReplayMultiple({
   handle,
   playback,
   scrollBehavior = "auto",
+  shouldScroll = () => true,
   start = 0,
   views,
 }: {
@@ -77,6 +88,14 @@ export function cmReplayMultiple({
    * @default "auto"
    */
   scrollBehavior?: ScrollBehavior;
+
+  /**
+   * Callback for determining whether to replay scrolling for a given file.
+   * You can have this return `false` to relinquish scrolling control back
+   * to the viewer.
+   * By default, always returns `true`, i.e. scrolls are always replayed.
+   */
+  shouldScroll?: (filename: string) => boolean;
 
   /** Playback to sync with. */
   playback: MediaElement;
@@ -197,14 +216,16 @@ export function cmReplayMultiple({
           handle(action, docs);
         } else {
           if (action[0] === scrollCmd) {
-            // scroll
-            const [, y, x = 0] = action;
-            const fontSize = getFontSize(views[file]);
-            views[file].scrollDOM.scrollTo({
-              left: x * fontSize,
-              top: y * fontSize,
-              behavior: scrollBehavior,
-            });
+            if (shouldScroll(file)) {
+              // scroll
+              const [, y, x = 0] = action;
+              const fontSize = getFontSize(views[file]);
+              views[file].scrollDOM.scrollTo({
+                left: x * fontSize,
+                top: y * fontSize,
+                behavior: scrollBehavior,
+              });
+            }
           } else {
             // editor change
             changes[file] = changes[file].compose(action[0]);
@@ -230,13 +251,15 @@ export function cmReplayMultiple({
           }
           // scroll
           else if (inverses[file][i].length === 2) {
-            const [y, x] = inverses[file][i] as [number, number];
-            const fontSize = getFontSize(views[file]);
-            views[file].scrollDOM.scrollTo({
-              left: x * fontSize,
-              top: y * fontSize,
-              behavior: scrollBehavior,
-            });
+            if (shouldScroll(file)) {
+              const [y, x] = inverses[file][i] as [number, number];
+              const fontSize = getFontSize(views[file]);
+              views[file].scrollDOM.scrollTo({
+                left: x * fontSize,
+                top: y * fontSize,
+                behavior: scrollBehavior,
+              });
+            }
           }
         } else if (data[i][1] === selectCmd + file) {
           // find file to replay into
@@ -257,7 +280,7 @@ export function cmReplayMultiple({
 
     for (const key in views) {
       const effects = selections[key] ? [FakeSelection.of(selections[key])] : undefined;
-      const scrollIntoView = !hasScroll[key];
+      const scrollIntoView = !hasScroll[key] && shouldScroll(key);
 
       views[key].dispatch(
         views[key].state.update({
