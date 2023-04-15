@@ -280,16 +280,49 @@ export function cmReplayMultiple({
 
     for (const key in views) {
       const effects = selections[key] ? [FakeSelection.of(selections[key])] : undefined;
-      const scrollIntoView = !hasScroll[key] && shouldScroll(key);
+      const view = views[key];
 
-      views[key].dispatch(
-        views[key].state.update({
+      view.dispatch(
+        view.state.update({
           changes: changes[key],
           effects,
-          selection: scrollIntoView ? selections[key] : undefined,
-          scrollIntoView,
         })
       );
+
+      // scrolling for legacy recordings
+      const scrollIntoView = !hasScroll[key] && shouldScroll(key);
+
+      if (scrollIntoView) {
+        // get position of last change
+        let pos;
+        changes[key].iterChangedRanges((fromA, toA, fromB, toB) => {
+          pos = toB;
+        });
+
+        // changes can be empty
+        if (pos === undefined) {
+          return;
+        }
+
+        const {scrollDOM} = view;
+        const rect = scrollDOM.getBoundingClientRect();
+
+        // it isn't possible to measure things that are offscreen
+        const line = view.state.doc.lineAt(pos);
+        const wordTop = view.defaultLineHeight * (line.number - 1);
+
+        if (wordTop < scrollDOM.scrollTop) {
+          scrollDOM.scrollTo({
+            behavior: scrollBehavior,
+            top: wordTop,
+          });
+        } else if (wordTop > scrollDOM.scrollTop + rect.height) {
+          scrollDOM.scrollTo({
+            behavior: scrollBehavior,
+            top: wordTop - rect.height + view.defaultLineHeight,
+          });
+        }
+      }
     }
 
     lastTime = t;
