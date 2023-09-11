@@ -30,6 +30,7 @@ export function useME(): MediaElement {
  * {@link React.Context} used to access ambient {@link MediaElement} or (deprecated) {@link Playback}
  */
 export const PlaybackContext = (globalThis as unknown as GlobalThis)[symbol];
+PlaybackContext.displayName = "Playback";
 
 /**
  * Access the ambient {@link Playback}.
