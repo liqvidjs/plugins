@@ -10,12 +10,8 @@ import "liqvid/dist/liqvid.min.css";
 const controls = [<RecordingControl plugins={[TldrawRecording]} />];
 
 const playback = new Playback({duration: 60000});
-import recording from "./duck.json";
+import recording from "./recording.json";
 import {TldrawReplay} from "./plugin/react";
-
-window.rec = recording;
-import { objDiff } from "./plugin/utils";
-window.objDiff = objDiff;
 
 export default function App() {
   return (
@@ -31,14 +27,14 @@ export default function App() {
       >
         <Tldraw>
           <TldrawReplay data={recording} />
-          <Honk />
+          <AttachEditor />
         </Tldraw>
       </div>
     </Player>
   );
 }
 
-function Honk() {
+function AttachEditor() {
   const editor = useEditor();
   TldrawRecording.recorder.provideEditor(editor);
   (window as any).ed = editor;

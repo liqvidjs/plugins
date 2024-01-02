@@ -207,8 +207,3 @@ export function applyDiff(a: any, b: any) {
 
   return copy;
 }
-
-export function log<T>(x: T): T {
-  // console.log(x);
-  return x;
-}

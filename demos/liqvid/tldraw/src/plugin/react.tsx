@@ -8,7 +8,7 @@ import {TldrawData} from "./recording";
 import {getCursorSvgs} from "./utils";
 
 /**
- * Move an image along a recorder cursor path. React version of {@link cursorReplay}.
+ * Replay Tldraw canvas. React version of {@link tldrawReplay}.
  */
 export function TldrawReplay(
   props: Omit<
