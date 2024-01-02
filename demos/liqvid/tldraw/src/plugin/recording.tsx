@@ -11,9 +11,9 @@ import {
 import {objDiff} from "./utils";
 
 /** Pointer events have compressed syntax since they're so common */
-type TldrawPointerEvent = [number, number];
-type TldrawShapeEvent = [`shape:${string}`, TLShape | null];
-type TldrawInstanceEvent = ["instance", object];
+export type TldrawPointerEvent = [number, number];
+export type TldrawShapeEvent = [`shape:${string}`, TLShape | null];
+export type TldrawInstanceEvent = ["instance", object];
 
 export type TldrawEvent =
   | TldrawInstanceEvent
@@ -108,7 +108,6 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
   }
 
   finalizeRecording(data: ReplayData<TldrawEvent>): ReplayData<TldrawEvent> {
-    return data;
     return compress(data, 4);
   }
 }

@@ -1,9 +1,15 @@
 import {length, ReplayData} from "@liqvid/utils/replay-data";
 import type {MediaElement} from "@lqv/playback";
-import {Editor, TLShapeId} from "@tldraw/tldraw";
+import {Editor, TLShape, TLShapeId} from "@tldraw/tldraw";
 import {isInstance, isPointer, isShape} from "./record-types";
-import {TldrawEvent} from "./recording";
-import {applyDiff, CursorName, log} from "./utils";
+import {
+  TldrawData,
+  TldrawEvent,
+  TldrawPointerEvent,
+  TldrawShapeEvent,
+} from "./recording";
+import {applyDiff, CursorName, objDiff} from "./utils";
+import {subscribe} from "./plugin-utils";
 
 export type PointerHandler = (args: {
   kind?: CursorName;
@@ -18,7 +24,6 @@ export function tldrawReplay({
   data,
   playback,
   start = 0,
-  end = start + length(data),
   editor,
   handlePointer,
 }: {
@@ -35,12 +40,6 @@ export function tldrawReplay({
    */
   start?: number;
 
-  /**
-   * When the cursor should end
-   * @default `start` + total duration of `data`
-   */
-  end?: number;
-
   /** Element to sync with */
   editor: Editor;
 
@@ -53,13 +52,48 @@ export function tldrawReplay({
     [] as number[],
   );
 
-  // initialize inverses
-
-  // compute inverses
+  /** Array of inverse operations */
+  const inverses = computeInverses(data);
+  console.log(data.length, inverses.length);
 
   /* main logic */
   let index = 0;
   let lastTime = 0;
+
+  function commit(event: TldrawEvent) {
+    if (isPointer(event)) {
+      handlePointer({x: event[0], y: event[1]});
+      return;
+    }
+
+    const [type, update] = event;
+    switch (true) {
+      case isInstance(type, update):
+        //   editor.updateInstanceState(applyDiff(editor.instanceState, update));
+        return;
+      case isShape(type, update): {
+        const shape = editor.store.get(type as TLShapeId);
+
+        // new shape
+        if (!shape) {
+          editor.createShape(update);
+          return;
+        }
+
+        // delete shape
+        if (update === null) {
+          editor.deleteShape(shape.id);
+          return;
+        }
+        // update shape
+        editor.updateShape({
+          id: shape.id,
+          props: applyDiff(shape, update).props,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any);
+      }
+    }
+  }
 
   const update = (): void => {
     const t = playback.currentTime;
@@ -69,75 +103,78 @@ export function tldrawReplay({
     if (lastTime <= t && index < times.length) {
       let i = index;
       for (; i < data.length && times[i] <= progress; ++i) {
-        const event = data[i][1];
-
-        if (isPointer(event)) {
-          handlePointer({x: event[0], y: event[1]});
-          continue;
-        }
-
-        const [type, update] = event;
-        switch (true) {
-          case isInstance(type, update):
-            editor.updateInstanceState(applyDiff(editor.instanceState, update));
-            break;
-          case isShape(type, update):
-            const shape = editor.store.get(type as TLShapeId);
-            if (shape) {
-              if (update === null) {
-                editor.deleteShape(shape.id);
-              } else {
-                // update shape
-                editor.updateShape({
-                  id: shape.id,
-                  props: applyDiff(shape, update).props,
-                });
-              }
-            } else {
-              // new shape
-              editor.createShape(update);
-            }
-            break;
-        }
+        commit(data[i][1]);
       }
       index = i;
     } else if (t < lastTime && 0 < index) {
       // backward
       let i = index - 1;
-      for (; 0 <= i && progress < times[i]; --i) {}
+      for (; 0 <= i && progress < times[i]; --i) {
+        commit(inverses[i]);
+      }
       index = i + 1;
     }
+
+    lastTime = t;
   };
 
-  // editor.updateInstanceState({isReadonly: true});
-
-  const unsubscribeFromPlayback = subscribe(playback, update);
-
-  return function unsubscribe() {
-    unsubscribeFromPlayback();
-  };
+  return subscribe(playback, update);
 }
 
 /**
- * Synchronize with playback.
- * @param playback {@link MediaElement} to synchronize with.
- * @param update Callback function.
+ * Compute array of inverses for an array of Tldraw events.
  */
-function subscribe(
-  playback: MediaElement,
-  update: (t: number) => void,
-): () => void {
-  const callback = (): void => update(playback.currentTime);
+function computeInverses(data: TldrawData): TldrawEvent[] {
+  const inverses: TldrawEvent[] = [];
 
-  // subscribe
-  playback.addEventListener("seeking", callback);
-  playback.addEventListener("timeupdate", callback);
+  // states to keep track of
+  let pointerState: TldrawPointerEvent | undefined = undefined;
+  const shapeCache = new Map<string, TLShape>();
 
-  callback();
+  for (let i = 0; i < data.length; ++i) {
+    const event = data[i][1];
 
-  // return unsubscription
-  return () => {
-    playback.removeEventListener("seeking", callback);
-    playback.removeEventListener("timeupdate", callback);
-  };
+    let inverse: TldrawEvent;
+
+    // first pointer event defines the initial state
+    if (isPointer(event)) {
+      inverse = pointerState ?? event;
+      pointerState = event;
+    } else {
+      // https://github.com/microsoft/TypeScript/issues/26916
+      const [type, update] = event;
+      switch (true) {
+        // shape event
+        case isShape(type, update):
+          {
+            const shape = shapeCache.get(type);
+
+            if (shape) {
+              // shape deleted
+              if (update === null) {
+                inverse = [type, shape];
+              }
+              // shape updated
+              else {
+                const newShape = applyDiff(shape, update);
+                inverse = [type, objDiff(newShape, shape)] as TldrawShapeEvent;
+                shapeCache.set(type, newShape);
+              }
+            }
+            // shape added
+            else {
+              inverse = [type, null] as TldrawShapeEvent;
+              shapeCache.set(type, update);
+            }
+          }
+          break;
+        default:
+          inverse = event;
+      }
+    }
+
+    inverses.push(inverse);
+  }
+
+  return inverses;
 }

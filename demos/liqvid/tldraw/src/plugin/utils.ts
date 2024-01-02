@@ -188,13 +188,21 @@ export function applyDiff(a: any, b: any) {
     const parts = key.split(".");
     let target = copy;
     for (let i = 0; i < parts.length - 1; ++i) {
-      if (!target.hasOwnProperty(parts[i])) {
+      if (!Object.prototype.hasOwnProperty.call(target, parts[i])) {
         target[parts[i]] = {};
       }
       target = target[parts[i]];
     }
 
-    target[parts.at(-1)!] = b[key];
+    if (b[key] === undefined) {
+      if (target instanceof Array) {
+        target.splice(parseInt(parts.at(-1)!), 1);
+      } else {
+        delete target[parts.at(-1)!];
+      }
+    } else {
+      target[parts.at(-1)!] = b[key];
+    }
   }
 
   return copy;

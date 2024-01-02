@@ -1,11 +1,11 @@
 import {useME} from "@lqv/playback/react";
 import {useEditor} from "@tldraw/tldraw";
 import {useCallback, useEffect, useMemo, useRef} from "react";
-import {PointerHandler, tldrawReplay} from ".";
+import {tldrawReplay, type PointerHandler} from ".";
 import {layerCanvas} from "./layers";
+import {isCamera} from "./record-types";
 import {TldrawData} from "./recording";
 import {getCursorSvgs} from "./utils";
-import {isCamera} from "./record-types";
 
 /**
  * Move an image along a recorder cursor path. React version of {@link cursorReplay}.
@@ -48,7 +48,7 @@ export function TldrawReplay(
         }px)`;
       }
     },
-    [cursors],
+    [cursors, editor.camera],
   );
 
   // subscribe to replay
@@ -72,7 +72,7 @@ export function TldrawReplay(
     } else {
       return subscribe(props.data);
     }
-  }, [editor, playback, props.data]);
+  }, [editor, handlePointer, playback, props, props.data]);
 
   // keep viewport in sync
   useEffect(
@@ -92,7 +92,7 @@ export function TldrawReplay(
           layer.style.transform = `translate(${x * z}px, ${y * z}px)`;
         }
       }),
-    [],
+    [editor.camera, editor.store],
   );
 
   const layerRef = useRef<HTMLDivElement>(null);
