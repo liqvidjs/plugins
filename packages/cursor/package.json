@@ -1,6 +1,6 @@
 {
   "name": "@lqv/cursor",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Cursor recording and replaying for Liqvid",
   "exports": {
     "./*": {
@@ -52,13 +52,13 @@
     }
   },
   "peerDependencies": {
-    "@liqvid/recording": "^0.1.0",
+    "@liqvid/recording": ">=0.1.0",
     "@types/react": ">=18.0.0",
     "liqvid": "^2.1.7",
     "react": ">=18.1.0"
   },
   "devDependencies": {
-    "@liqvid/recording": "^0.1.0"
+    "@liqvid/recording": "^0.2.1"
   },
   "dependencies": {
     "@liqvid/utils": "^1.8.0",
