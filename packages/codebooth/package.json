@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codebooth",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "GUI for interactive coding tutorials with CodeMirror",
   "exports": {
     ".": {
@@ -79,7 +79,7 @@
     "@codemirror/search": ">=6.0.0",
     "@codemirror/state": ">=6.0.0",
     "@codemirror/view": ">=6.0.0",
-    "@liqvid/recording": "^0.1.0",
+    "@liqvid/recording": ">=0.1.0",
     "@lqv/codemirror": "workspace:^",
     "react": ">=18.0.0",
     "skulpt": "^1.2.0"
