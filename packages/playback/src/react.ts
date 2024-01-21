@@ -1,3 +1,5 @@
+"use client";
+
 import {createContext, useContext, useEffect, useRef} from "react";
 import type {Playback} from ".";
 import {PlaybackMEProxy} from "./hack";
