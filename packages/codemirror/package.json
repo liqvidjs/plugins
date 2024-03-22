@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codemirror",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Codemirror 6 recording and replaying",
   "exports": {
     ".": {
@@ -49,10 +49,10 @@
   "peerDependencies": {
     "@codemirror/state": ">=6.0.0",
     "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.1.4",
-    "@liqvid/recording": ">=0.1.0",
+    "@liqvid/keymap": "^1.2.1",
+    "@liqvid/recording": "^0.2.1",
     "@types/react": ">=18.0.0",
-    "liqvid": "^2.1.7",
+    "liqvid": "^2.1.9",
     "react": ">=18.0.0"
   },
   "peerDependenciesMeta": {
@@ -75,7 +75,9 @@
   "devDependencies": {
     "@codemirror/state": ">=6.0.0",
     "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.1.4"
+    "@liqvid/keymap": "^1.2.1",
+    "@liqvid/recording": "^0.2.1",
+    "liqvid": "^2.1.9"
   },
   "dependencies": {
     "@liqvid/utils": "^1.8.0",
