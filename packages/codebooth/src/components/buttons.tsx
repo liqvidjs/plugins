@@ -1,16 +1,21 @@
 import {onClick} from "@liqvid/utils/react";
+import classNames from "classnames";
 import {useCallback, useEffect, useMemo, useRef} from "react";
 import {useStore} from "zustand";
 import {useBoothStore} from "../store";
 import {ids} from "../utils";
 
 /** Div to hold buttons. */
-export const Buttons: React.FC<{children?: React.ReactNode}> = (props) => {
-  return <div className="lqv-cb-buttons">{props.children}</div>;
-};
+export function Buttons({className, children}: {className?: string; children?: React.ReactNode}) {
+  return <div className={classNames("lqv-cb-buttons", className)}>{children}</div>;
+}
 
 /** Button for clearing the output/console. */
-export const Clear: React.FC = () => {
+export function Clear({
+  className,
+  children,
+  ...attrs
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const store = useBoothStore();
 
   const clear = useCallback(() => {
@@ -38,34 +43,41 @@ export const Clear: React.FC = () => {
 
   return (
     <button
-      className="lqv-cb-clear"
-      {...events}
       aria-label={label}
+      className={classNames("lqv-cb-clear", className)}
       title={label}
+      {...events}
+      {...attrs}
     >
-      Clear
+      {children ?? label}
     </button>
   );
-};
+}
 
 /** Button for copying the contents of one group to another. */
-export const Copy: React.FC<{
+export function Copy({
+  children,
+  className,
+  from: fromGroup,
+  to: toGroup,
+  ...attrs
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** Source editor group. */
   from: string;
 
   /** Target editor group. */
   to: string;
-}> = (props) => {
+}) {
   const store = useBoothStore();
 
   const copy = useCallback(() => {
     const {groups} = store.getState();
 
-    const from = groups[props.from],
-      to = groups[props.to];
+    const from = groups[fromGroup],
+      to = groups[toGroup];
 
     if (!(from && to)) {
-      console.error(`Could not copy from ${props.from} to ${props.to}`);
+      console.error(`Could not copy from ${fromGroup} to ${toGroup}`);
       return;
     }
 
@@ -87,14 +99,18 @@ export const Copy: React.FC<{
   const events = useMemo(() => onClick(copy), []);
 
   return (
-    <button className="lqv-cb-copy" {...events}>
-      Copy
+    <button className={classNames("lqv-cb-copy", className)} {...events} {...attrs}>
+      {children ?? "Copy"}
     </button>
   );
-};
+}
 
 /** Button for resetting editor contents to initial state. */
-export const Reset: React.FC = () => {
+export function Reset({
+  className,
+  children,
+  ...attrs
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const store = useBoothStore();
   const contents = useRef<Record<string, Record<string, string>>>({});
 
@@ -132,20 +148,25 @@ export const Reset: React.FC = () => {
   const resetEvents = useMemo(() => onClick(reset), []);
 
   const label = "Reset";
+
   return (
     <button
-      className="lqv-cb-reset"
-      aria-label={label}
+      className={classNames("lqv-cb-reset", className)}
       title={label}
       {...resetEvents}
+      {...attrs}
     >
-      Reset
+      {children ?? "Reset"}
     </button>
   );
-};
+}
 
 /** Button for running the code. */
-export const Run: React.FC = () => {
+export function Run({
+  className,
+  children,
+  ...attrs
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const store = useBoothStore();
 
   // run callback
@@ -173,11 +194,11 @@ export const Run: React.FC = () => {
   const events = useMemo(() => onClick(run), []);
 
   return (
-    <button className="lqv-cb-run" {...events}>
-      Run
+    <button className={classNames("lqv-cb-run", className)} {...events} {...attrs}>
+      {children ?? "Run"}
     </button>
   );
-};
+}
 
 /** Group selection tab. */
 export const Tab: React.FC<
@@ -202,8 +223,8 @@ export const Tab: React.FC<
   return (
     <button
       aria-controls={ids.editorGroup({group: id})}
-      id={ids.groupTab({group: id})}
       aria-selected={active}
+      id={ids.groupTab({group: id})}
       role="tab"
       {...events}
       {...attrs}
@@ -214,9 +235,7 @@ export const Tab: React.FC<
 };
 
 /** Holds a list of {@link Tab}s. */
-export const TabList: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
-  props
-) => {
+export const TabList: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
   const {children, ...attrs} = props;
   return (
     <div role="tablist" {...attrs}>

@@ -1,17 +1,19 @@
+import classNames from "classnames";
 import {Children, cloneElement, useEffect} from "react";
 import {useStore} from "zustand";
 import {useBoothStore} from "../store";
 import {ids} from "../utils";
 
 /** Holds a group of editors. */
-export const EditorGroup: React.FC<
-  React.HTMLAttributes<HTMLDivElement> & {
-    /** ID of this group. */
-    id: string;
-  }
-> = (props) => {
-  const {children, id, ...attrs} = props;
-
+export function EditorGroup({
+  children,
+  className,
+  id,
+  ...attrs
+}: React.HTMLAttributes<HTMLDivElement> & {
+  /** ID of this group. */
+  id: string;
+}) {
   const store = useBoothStore();
   const active = useStore(store, (state) => state.activeGroup === id);
 
@@ -27,7 +29,7 @@ export const EditorGroup: React.FC<
       aria-expanded={active}
       aria-labelledby={ids.groupTab({group: id})}
       hidden={!active}
-      className="lqv-editor-group"
+      className={classNames("lqv-editor-group", className)}
       id={ids.editorGroup({group: id})}
       role="tabpanel"
       {...attrs}
@@ -40,4 +42,4 @@ export const EditorGroup: React.FC<
       })}
     </div>
   );
-};
+}

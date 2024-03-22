@@ -3,15 +3,7 @@ import {Extension} from "@codemirror/state";
 import {CodeRecording} from "@lqv/codemirror/recording";
 import {useEffect} from "react";
 import {CodeBooth} from "..";
-import {
-  Buttons,
-  Clear,
-  Copy,
-  Reset,
-  Run,
-  Tab,
-  TabList,
-} from "../components/buttons";
+import {Buttons, Clear, Copy, Reset, Run, Tab, TabList} from "../components/buttons";
 import {Console} from "../components/Console";
 import {Editor} from "../components/Editor";
 import {EditorGroup} from "../components/EditorGroup";
@@ -159,9 +151,7 @@ export const PythonRun: React.FC = () => {
         const code = view.state.doc.toString();
         let output: React.ReactNode[] = [];
         try {
-          output = interpreter
-            .runSync(code)
-            .map((log) => <pre key={Math.random()}>{log}</pre>);
+          output = interpreter.runSync(code).map((log) => <pre key={Math.random()}>{log}</pre>);
         } catch (e) {
           const msg = `Error (line ${e.traceback[0].lineno}): ${e.args.v[0].v}`;
           output = [

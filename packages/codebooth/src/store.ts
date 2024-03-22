@@ -1,3 +1,5 @@
+"use client";
+
 import {EditorView, KeyBinding} from "@codemirror/view";
 import type {CodeRecorder} from "@lqv/codemirror/recording";
 import {createContext, useContext} from "react";

@@ -1,7 +1,7 @@
 import {Extension} from "@codemirror/state";
 import {keymap} from "@codemirror/view";
-import {useKeymap} from "@liqvid/keymap/react";
 import {selectCmd} from "@lqv/codemirror";
+import {useKeymap} from "@liqvid/keymap/react";
 import {passThrough} from "@lqv/codemirror/extensions";
 import {useEffect, useMemo} from "react";
 import {recording} from "../extensions";
@@ -40,10 +40,7 @@ export const Record: React.FC<
   const lqvKeymap = useKeymap();
 
   const newExtensions = useMemo(
-    () =>
-      lqvKeymap
-        ? [keymap.of(passThrough(lqvKeymap, passKeys)), ...extensions]
-        : extensions,
+    () => (lqvKeymap ? [keymap.of(passThrough(lqvKeymap, passKeys)), ...extensions] : extensions),
     [passKeys]
   );
 
@@ -51,9 +48,7 @@ export const Record: React.FC<
   // the `shortcuts` Compartment will abort further handling of the sequence
   useEffect(() => {
     const state = store.getState();
-    const {view} = state.groups[group].files.find(
-      (file) => file.filename === props.filename
-    );
+    const {view} = state.groups[group].files.find((file) => file.filename === props.filename);
 
     view.dispatch({
       effects: recording.reconfigure([
@@ -65,9 +60,7 @@ export const Record: React.FC<
     includeFilenameInRecording(state);
   }, []);
 
-  return (
-    <Editor content={props.content} extensions={newExtensions} {...attrs} />
-  );
+  return <Editor content={props.content} extensions={newExtensions} {...attrs} />;
 };
 
 /* NOOOOOOOOOO */

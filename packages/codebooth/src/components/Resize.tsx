@@ -59,11 +59,5 @@ export function Resize({
     );
   }, []);
 
-  return (
-    <div
-      {...resizeEvents}
-      ref={ref}
-      className={`ui-resizable-handle ui-resizable-${dir}`}
-    />
-  );
+  return <div {...resizeEvents} ref={ref} className={`ui-resizable-handle ui-resizable-${dir}`} />;
 }
