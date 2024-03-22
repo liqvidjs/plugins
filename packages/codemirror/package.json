@@ -1,15 +1,17 @@
 {
   "name": "@lqv/codemirror",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Codemirror 6 recording and replaying",
   "exports": {
     ".": {
       "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs"
+      "require": "./dist/cjs/index.cjs",
+      "types": "./dist/types/index.d.ts"
     },
     "./*": {
       "import": "./dist/esm/*.mjs",
-      "require": "./dist/cjs/*.cjs"
+      "require": "./dist/cjs/*.cjs",
+      "types": "./dist/types/*.d.ts"
     }
   },
   "typesVersions": {
@@ -49,7 +51,7 @@
   "peerDependencies": {
     "@codemirror/state": ">=6.0.0",
     "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.2.1",
+    "@liqvid/keymap": "^1.2.2",
     "@liqvid/recording": "^0.2.1",
     "@types/react": ">=18.0.0",
     "liqvid": "^2.1.9",
@@ -75,7 +77,7 @@
   "devDependencies": {
     "@codemirror/state": ">=6.0.0",
     "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.2.1",
+    "@liqvid/keymap": "^1.2.2",
     "@liqvid/recording": "^0.2.1",
     "liqvid": "^2.1.9"
   },
