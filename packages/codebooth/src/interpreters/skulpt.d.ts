@@ -5,16 +5,13 @@ declare module "skulpt" {
     };
   };
 
-  function configure(o: {
-    output(text: string): void;
-    read(filename: string): string;
-  }): void;
+  function configure(o: {output(text: string): void; read(filename: string): string}): void;
 
   function importMainWithBody(
     name: string,
     dumpJS: boolean,
     body: string,
-    canSuspend: boolean
+    canSuspend: boolean,
   ): void;
 
   const misceval: {

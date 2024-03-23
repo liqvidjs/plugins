@@ -40,12 +40,12 @@ export function Resize({
         if (dir === "ew") {
           container.style.setProperty(
             "--split",
-            clamp(min, (x - rect.left) / rect.width, max) * 100 + "%"
+            clamp(min, (x - rect.left) / rect.width, max) * 100 + "%",
           );
         } else if (dir === "ns") {
           container.style.setProperty(
             "--v-split",
-            clamp(min, (rect.bottom - y) / rect.height, max) * 100 + "%"
+            clamp(min, (rect.bottom - y) / rect.height, max) * 100 + "%",
           );
         }
       },
@@ -55,7 +55,7 @@ export function Resize({
       },
       () => {
         container.classList.remove("dragging");
-      }
+      },
     );
   }, []);
 

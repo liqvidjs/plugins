@@ -1,11 +1,13 @@
-import {Extension} from "@codemirror/state";
+import type {Extension} from "@codemirror/state";
 import {keymap} from "@codemirror/view";
-import {selectCmd} from "@lqv/codemirror";
 import {useKeymap} from "@liqvid/keymap/react";
+import {selectCmd} from "@lqv/codemirror";
 import {passThrough} from "@lqv/codemirror/extensions";
 import {useEffect, useMemo} from "react";
+
 import {recording} from "../extensions";
-import {State, useBoothStore} from "../store";
+import {type State, useBoothStore} from "../store";
+
 import {Editor} from "./Editor";
 
 /** Recording editor. */
@@ -41,7 +43,7 @@ export const Record: React.FC<
 
   const newExtensions = useMemo(
     () => (lqvKeymap ? [keymap.of(passThrough(lqvKeymap, passKeys)), ...extensions] : extensions),
-    [passKeys]
+    [passKeys],
   );
 
   // attach recording extensions --- this has to be done this way because

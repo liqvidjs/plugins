@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import {Children, cloneElement, useEffect} from "react";
 import {useStore} from "zustand";
+
 import {useBoothStore} from "../store";
 import {ids} from "../utils";
 

@@ -2,6 +2,7 @@ import {onClick} from "@liqvid/utils/react";
 import classNames from "classnames";
 import {useCallback, useEffect, useMemo, useRef} from "react";
 import {useStore} from "zustand";
+
 import {useBoothStore} from "../store";
 import {ids} from "../utils";
 
@@ -91,7 +92,7 @@ export function Copy({
             to: target.state.doc.length,
             insert: source.state.doc,
           },
-        })
+        }),
       );
     }
   }, []);
@@ -138,7 +139,7 @@ export function Reset({
                 to: file.view.state.doc.length,
                 insert: contents.current[groupName][file.filename],
               },
-            })
+            }),
           );
         }
       }
@@ -217,7 +218,7 @@ export const Tab: React.FC<
       onClick(() => {
         store.setState({activeGroup: id});
       }),
-    []
+    [],
   );
 
   return (

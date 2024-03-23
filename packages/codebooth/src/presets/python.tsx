@@ -1,7 +1,8 @@
 import {python} from "@codemirror/lang-python";
-import {Extension} from "@codemirror/state";
+import type {Extension} from "@codemirror/state";
 import {CodeRecording} from "@lqv/codemirror/recording";
 import {useEffect} from "react";
+
 import {CodeBooth} from "..";
 import {Buttons, Clear, Copy, Reset, Run, Tab, TabList} from "../components/buttons";
 import {Console} from "../components/Console";
@@ -163,7 +164,7 @@ export const PythonRun: React.FC = () => {
         store.setState((prev) => ({
           messages: [...prev.messages, ...output],
         }));
-      }
+      },
     );
   }, []);
   return null;

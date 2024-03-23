@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import {useStore} from "zustand";
+
 import {useBoothStore} from "../store";
 
 /** Component for displaying console logs. */

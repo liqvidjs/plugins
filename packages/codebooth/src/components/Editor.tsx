@@ -1,6 +1,7 @@
-import {EditorState, Extension} from "@codemirror/state";
+import {EditorState, type Extension} from "@codemirror/state";
 import {EditorView} from "@codemirror/view";
 import {useEffect, useRef} from "react";
+
 import {recording, shortcuts} from "../extensions";
 import {useBoothStore} from "../store";
 

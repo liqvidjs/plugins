@@ -1,6 +1,6 @@
 "use client";
 
-import {EditorView, KeyBinding} from "@codemirror/view";
+import type {EditorView, KeyBinding} from "@codemirror/view";
 import type {CodeRecorder} from "@lqv/codemirror/recording";
 import {createContext, useContext} from "react";
 import {createStore} from "zustand";
@@ -80,7 +80,7 @@ export const makeStore = (state: Partial<State> = {}) =>
       run: 0,
       shortcuts: {},
       ...state,
-    }))
+    })),
   );
 
 export type Store = ReturnType<typeof makeStore>;

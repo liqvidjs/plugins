@@ -3,7 +3,8 @@ import {selectCmd} from "@lqv/codemirror";
 import classNames from "classnames";
 import {useCallback, useEffect, useMemo} from "react";
 import {useStore} from "zustand";
-import {State, useBoothStore} from "../store";
+
+import {useBoothStore, type State} from "../store";
 import {ids} from "../utils";
 
 const selector = (state: State) => [state.activeGroup, state.groups[state.activeGroup]?.activeFile];
@@ -20,6 +21,7 @@ export function FileTabs({className}: {className?: string}) {
   const select = useCallback(
     (filename: string) => {
       // record event
+      // @ts-expect-error TODO fix this
       if (recorder?.manager?.active) {
         recorder.capture(undefined, selectCmd + filename);
       }
@@ -38,14 +40,14 @@ export function FileTabs({className}: {className?: string}) {
       // focus editor
       const state = store.getState();
       const view = state.groups[state.activeGroup]?.files.find(
-        (_) => _.filename === filename
+        (_) => _.filename === filename,
       )?.view;
       if (view) {
         // XXX yikes
         setTimeout(() => view.focus());
       }
     },
-    [recorder]
+    [recorder],
   );
 
   const events = useMemo(
@@ -53,7 +55,7 @@ export function FileTabs({className}: {className?: string}) {
       onClick<HTMLButtonElement>((e) => {
         select(e.currentTarget.textContent.trim());
       }),
-    [select]
+    [select],
   );
 
   // set class

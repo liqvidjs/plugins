@@ -1,10 +1,11 @@
-import {Extension, Text} from "@codemirror/state";
-import {drawSelection, EditorView, ViewPlugin} from "@codemirror/view";
+import type {Extension, Text} from "@codemirror/state";
+import {drawSelection, type EditorView, ViewPlugin} from "@codemirror/view";
 import {cmReplay, cmReplayMultiple, fakeSelection, selectCmd} from "@lqv/codemirror";
 import {useME} from "@lqv/playback/react";
 import {useCallback, useEffect, useMemo} from "react";
 
-import {Store, useBoothStore} from "../store";
+import {type Store, useBoothStore} from "../store";
+
 import {Editor} from "./Editor";
 
 type CodeData = Parameters<typeof cmReplay>[0]["data"];
@@ -31,7 +32,7 @@ export function Replay(
        * @default 0
        */
       start?: number;
-    }
+    },
 ): JSX.Element {
   const store = useBoothStore();
   const playback = useME();
@@ -60,7 +61,7 @@ export function Replay(
         props.handle(store, cmd, doc);
       }
     },
-    [handle]
+    [handle],
   );
 
   const __extensions: Extension[] = useMemo(
@@ -78,7 +79,7 @@ export function Replay(
                 shouldScroll,
                 start,
                 view,
-              })
+              }),
             );
           } else {
             cmReplay({
@@ -96,7 +97,7 @@ export function Replay(
       }),
       ...extensions,
     ],
-    [extensions, replay, start]
+    [extensions, replay, start],
   );
 
   return <Editor editable={false} extensions={__extensions} {...attrs} />;
@@ -128,7 +129,7 @@ export function ReplayMultiple(
      * @default 0
      */
     start?: number;
-  }
+  },
 ): null {
   const playback = useME();
   const store = useBoothStore();
@@ -160,7 +161,7 @@ export function ReplayMultiple(
         props.handle(store, cmd, docs);
       }
     },
-    [props.handle]
+    [props.handle],
   );
 
   useEffect(() => {
@@ -181,7 +182,7 @@ export function ReplayMultiple(
           shouldScroll: props.shouldScroll,
           start,
           views,
-        })
+        }),
       );
     } else {
       cmReplayMultiple({

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="skulpt.d.ts" />
 
 import Sk from "skulpt";
@@ -8,10 +9,7 @@ export class PythonInterpreter {
   }
 
   read(filename: string): string {
-    if (
-      Sk.builtinFiles === undefined ||
-      Sk.builtinFiles["files"][filename] === undefined
-    )
+    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][filename] === undefined)
       throw "File not found: '" + filename + "'";
     return Sk.builtinFiles["files"][filename];
   }

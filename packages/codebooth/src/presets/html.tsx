@@ -1,20 +1,13 @@
 import {css} from "@codemirror/lang-css";
 import {html} from "@codemirror/lang-html";
 import {javascript} from "@codemirror/lang-javascript";
-import {Extension} from "@codemirror/state";
-import {CodeRecorder, CodeRecording} from "@lqv/codemirror/recording";
+import type {Extension} from "@codemirror/state";
+import {type CodeRecorder, CodeRecording} from "@lqv/codemirror/recording";
 import React, {useEffect, useRef} from "react";
 import {useStore} from "zustand";
+
 import {CodeBooth} from "..";
-import {
-  Buttons,
-  Clear,
-  Copy,
-  Reset,
-  Run,
-  Tab,
-  TabList,
-} from "../components/buttons";
+import {Buttons, Clear, Copy, Reset, Run, Tab, TabList} from "../components/buttons";
 import {Console} from "../components/Console";
 import {Editor} from "../components/Editor";
 import {EditorGroup} from "../components/EditorGroup";
@@ -24,7 +17,7 @@ import {Record} from "../components/Record";
 import {Replay, ReplayMultiple} from "../components/Replay";
 import {Resize} from "../components/Resize";
 import {basicSetup} from "../extensions";
-import {State, useBoothStore} from "../store";
+import {type State, useBoothStore} from "../store";
 
 /** HTML demo */
 export function HTMLDemo(props: {
@@ -50,11 +43,7 @@ export function HTMLDemo(props: {
         <EditorPanel filename={filename} key={filename}>
           <Editor
             content={props.files[filename]}
-            extensions={[
-              basicSetup,
-              extensionFromFilename(filename),
-              ...extensions,
-            ]}
+            extensions={[basicSetup, extensionFromFilename(filename), ...extensions]}
           />
         </EditorPanel>
       ))}
@@ -104,11 +93,7 @@ export const HTMLReplay: React.FC<{
           <EditorPanel filename={filename} key={filename}>
             <Replay
               content={props.files[filename]}
-              extensions={[
-                basicSetup,
-                extensionFromFilename(filename),
-                ...extensions,
-              ]}
+              extensions={[basicSetup, extensionFromFilename(filename), ...extensions]}
             />
           </EditorPanel>
         ))}
@@ -117,13 +102,7 @@ export const HTMLReplay: React.FC<{
       <EditorGroup id="playground">
         {Object.keys(props.files).map((filename) => (
           <EditorPanel filename={filename} key={filename}>
-            <Editor
-              extensions={[
-                basicSetup,
-                extensionFromFilename(filename),
-                ...extensions,
-              ]}
-            />
+            <Editor extensions={[basicSetup, extensionFromFilename(filename), ...extensions]} />
           </EditorPanel>
         ))}
       </EditorGroup>
@@ -173,11 +152,7 @@ export const HTMLRecord: React.FC<{
         <EditorPanel filename={filename} key={filename}>
           <Record
             content={props.files[filename]}
-            extensions={[
-              basicSetup,
-              extensionFromFilename(filename),
-              ...extensions,
-            ]}
+            extensions={[basicSetup, extensionFromFilename(filename), ...extensions]}
           />
         </EditorPanel>
       ))}
@@ -226,7 +201,7 @@ export function HTMLPreview() {
           messages: prev.messages.concat(
             <pre key={Math.random()}>
               {msg.data.content.map((item: unknown) => formatLog(item))}
-            </pre>
+            </pre>,
           ),
         }));
       } else if (msg.data.type === "console.clear") {
@@ -253,8 +228,8 @@ export function HTMLPreview() {
           //   filename: file.filename,
           //   content
           // }, "*");
-        }
-      )
+        },
+      ),
     );
 
     // unsubscribe
@@ -265,13 +240,7 @@ export function HTMLPreview() {
     };
   }, []);
 
-  return (
-    <iframe
-      className="lqv-preview"
-      ref={iframe}
-      sandbox="allow-popups allow-scripts"
-    />
-  );
+  return <iframe className="lqv-preview" ref={iframe} sandbox="allow-popups allow-scripts" />;
 }
 
 /**
@@ -289,7 +258,7 @@ export function transform(html: string, files: Record<string, string>) {
         return "<script>" + files[src] + "</script>";
       }
       return match;
-    }
+    },
   );
 
   // transform <link>s
