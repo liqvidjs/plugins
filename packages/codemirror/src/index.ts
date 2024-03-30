@@ -286,7 +286,7 @@ export function cmReplayMultiple({
         view.state.update({
           changes: changes[key],
           effects,
-        })
+        }),
       );
 
       // scrolling for legacy recordings

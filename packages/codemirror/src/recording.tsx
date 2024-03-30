@@ -1,10 +1,12 @@
 import type {Extension} from "@codemirror/state";
 import {EditorView, keymap, ViewPlugin} from "@codemirror/view";
-import {RecorderPlugin, ReplayDataRecorder} from "@liqvid/recording";
+import {ReplayDataRecorder, type RecorderPlugin} from "@liqvid/recording";
 import {bind} from "@liqvid/utils/misc";
-import {ReplayData} from "@liqvid/utils/replay-data";
-import {scrollCmd} from ".";
+import type {ReplayData} from "@liqvid/utils/replay-data";
+
 import {icon} from "./icon";
+
+import {scrollCmd} from ".";
 
 export type EditorChange = [[number, ...(EditorChange | number | string)[]], [number, number]];
 export type SpecialKey = string;
@@ -41,7 +43,7 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
             const time = $this.manager.getTime();
 
             const fontSize = parseFloat(
-              getComputedStyle(view.scrollDOM).getPropertyValue("font-size")
+              getComputedStyle(view.scrollDOM).getPropertyValue("font-size"),
             );
 
             // vertical scroll is more common so we put it first and omit
@@ -58,7 +60,7 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
             $this.capture(time, action);
           });
         }
-      }
+      },
     );
 
     // record document changes
@@ -92,7 +94,7 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
           }
           return false;
         },
-      }))
+      })),
     );
 
     return [scrollListener, updateListener, keyListener];
