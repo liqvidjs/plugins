@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // export type ObjectDifference<T> = {
 //   /** Added */
 //   a?: Partial<T>;
 
-import {structuredClone} from "@tldraw/tldraw";
+import {structuredClone} from "@tldraw/utils";
 
 //   /** Removed */
 //   r?: Partial<T>;
@@ -41,38 +42,6 @@ import {structuredClone} from "@tldraw/tldraw";
 
 //   return data;
 // }
-
-function cmp(a: unknown, b: unknown): a is typeof b {
-  if (typeof a !== typeof b) return false;
-
-  switch (typeof a) {
-    case "bigint":
-    case "boolean":
-    case "function":
-    case "number":
-    case "string":
-    case "symbol":
-    case "undefined":
-      return a === b;
-  }
-
-  if (a === null || b === null) return a === b;
-
-  assertObject(a);
-  assertObject(b);
-
-  const keysA = Object.keys(a);
-  const keysB = new Set(Object.keys(b));
-
-  if (keysA.length !== keysB.size) return false;
-  return keysA.every((key) => keysB.has(key) && cmp(a[key], b[key]));
-}
-
-function assertObject(a: unknown): asserts a is Record<string, unknown> {
-  if (typeof a !== "object" || a === null) {
-    throw new TypeError(`Expected object, got ${typeof a}`);
-  }
-}
 
 const CURSOR_NAMES = ["cross"] as const;
 export type CursorName = (typeof CURSOR_NAMES)[number];
@@ -132,78 +101,45 @@ function isStyleRule(rule: CSSRule): rule is CSSStyleRule {
   return rule.constructor.name === "CSSStyleRule";
 }
 
-export function objDiff(a: any, b: any): object {
-  const ret = {} as any;
-
-  const keysA = Object.keys(a);
-  const keysB = new Set(Object.keys(b));
-
-  for (const key of keysA) {
-    if (!keysB.has(key)) {
-      ret[key] = undefined;
-      continue;
-    }
-
-    const valueA = a[key];
-    const valueB = b[key];
-
-    if (typeof valueA !== typeof valueB) {
-      console.warn("Expected same type");
-    } else {
-      if (!cmp(valueA, valueB)) {
-        switch (typeof valueA) {
-          case "string":
-          case "number":
-          case "boolean":
-          case "bigint":
-            ret[key] = valueB;
-            break;
-          case "object":
-            if (valueA === null || valueB === null) {
-              ret[key] = valueB;
-            } else {
-              const nested = objDiff(valueA, valueB) as any;
-              for (const subkey of Object.keys(nested)) {
-                ret[`${key}.${subkey}`] = nested[subkey];
-              }
-            }
-            break;
-        }
-      }
-    }
-    keysB.delete(key);
-  }
-
-  for (const key of keysB) {
-    ret[key] = b[key];
-  }
-
-  return ret;
+/**
+ * Pick certain fields from an object.
+ * @param obj Object to pick fields from.
+ * @param keys Keys to pick.
+ */
+export function pick<T extends object, K extends keyof T>(
+  obj: T,
+  ...keys: (K | K[])[]
+): Pick<T, K> {
+  keys = keys.flat() as K[];
+  return Object.fromEntries(
+    (Object.keys(obj) as (keyof T)[])
+      .filter((key) => (keys as (keyof T)[]).includes(key))
+      .map((key) => [key, obj[key]]),
+  ) as Pick<T, K>;
 }
 
-export function applyDiff(a: any, b: any) {
-  const copy = structuredClone(a);
+/**
+ * Omit certain fields from an object.
+ * @param obj Object to omit fields from.
+ * @param keys Keys to omit.
+ */
+export function omit<T extends object, K extends keyof T>(
+  obj: T,
+  ...keys: (K | K[])[]
+): Omit<T, K> {
+  keys = keys.flat() as K[];
+  return Object.fromEntries(
+    (Object.keys(obj) as (keyof T)[])
+      .filter((key) => !(keys as (keyof T)[]).includes(key))
+      .map((key) => [key, obj[key]]),
+  ) as Omit<T, K>;
+}
 
-  for (const key of Object.keys(b)) {
-    const parts = key.split(".");
-    let target = copy;
-    for (let i = 0; i < parts.length - 1; ++i) {
-      if (!Object.prototype.hasOwnProperty.call(target, parts[i])) {
-        target[parts[i]] = {};
-      }
-      target = target[parts[i]];
-    }
+export function assertSameType<K>(a: unknown, b: K): asserts a is K {
+  a;
+  b;
+}
 
-    if (b[key] === undefined) {
-      if (target instanceof Array) {
-        target.splice(parseInt(parts.at(-1)!), 1);
-      } else {
-        delete target[parts.at(-1)!];
-      }
-    } else {
-      target[parts.at(-1)!] = b[key];
-    }
-  }
-
-  return copy;
+export function assertType<K>(a: unknown): asserts a is K {
+  a;
 }

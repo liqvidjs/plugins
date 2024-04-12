@@ -1,123 +1,81 @@
 import {useME} from "@lqv/playback/react";
-import {useEditor} from "@tldraw/tldraw";
-import {useCallback, useEffect, useMemo, useRef} from "react";
-import {tldrawReplay, type PointerHandler} from ".";
-import {layerCanvas} from "./layers";
-import {isCamera} from "./record-types";
-import {TldrawData} from "./recording";
-import {getCursorSvgs} from "./utils";
+import {Editor, Tldraw, useEditor} from "@tldraw/tldraw";
+import {useEffect, useRef, useState} from "react";
+import {tldrawReplay} from ".";
+import {CanvasLayer} from "./react/CanvasLayer";
+import {CursorImage} from "./react/CursorImage";
+import type {TldrawData} from "./types";
 
 /**
  * Replay Tldraw canvas. React version of {@link tldrawReplay}.
  */
-export function TldrawReplay(
-  props: Omit<
-    Parameters<typeof tldrawReplay>[0],
-    "data" | "playback" | "editor"
-  > & {
+export function TldrawReplay({
+  children,
+  start,
+  data,
+  ...props
+}: Omit<
+  Parameters<typeof tldrawReplay>[0],
+  "data" | "playback" | "editor" | "handlePointer"
+> &
+  React.ComponentPropsWithoutRef<typeof Tldraw> & {
     /** Cursor data to replay. */
     data: TldrawData | Promise<TldrawData>;
-  },
-): React.ReactNode {
+  }): React.ReactNode {
   const playback = useME();
-  const editor = useEditor();
-  const cursors = useMemo(getCursorSvgs, []);
+  const [editor, setEditor] = useState<Editor | null>(null);
 
-  /**
-   * Update the pointer position and image
-   */
-  const handlePointer: PointerHandler = useCallback(
-    (opts) => {
-      const cursor = cursorRef.current;
-      if (!cursor) return;
+  const cursorRef = useRef<React.ComponentRef<typeof CursorImage>>(null);
 
-      // update image
-      if ("kind" in opts && opts.kind !== undefined) {
-        const info = cursors.get(opts.kind);
-        if (!info) return;
-        cursor.style.backgroundImage = info.image;
-      }
-
-      // update coordinates
-      if (opts.x !== undefined && opts.y !== undefined) {
-        const {x, y} = opts;
-        const {z} = editor.camera;
-        cursorRef.current.style.willChange = "transform";
-        cursorRef.current.style.transform = `translate(${x * z - 16}px, ${
-          y * z - 16
-        }px)`;
-      }
-    },
-    [cursors, editor.camera],
-  );
+  /** Whether to follow the author's camera. */
+  const isFollowing = useRef(true);
 
   // subscribe to replay
   useEffect(() => {
-    const subscribe = (data: TldrawData) =>
-      tldrawReplay({
+    const subscribe = (data: TldrawData) => {
+      if (!editor) return () => {};
+      return tldrawReplay({
+        start,
         playback,
         editor,
-        ...props,
         data,
-        handlePointer,
+        handlePointer: cursorRef.current?.handlePointer ?? (() => {}),
+        isFollowing: () => isFollowing.current,
       });
+    };
 
     // Promise polymorphism
-    if (props.data instanceof Promise) {
+    if (data instanceof Promise) {
       let unsub: () => void;
-      props.data.then((data) => (unsub = subscribe(data)));
+      data.then((d) => (unsub = subscribe(d)));
       return () => {
         unsub?.();
       };
     } else {
-      return subscribe(props.data);
+      return subscribe(data);
     }
-  }, [editor, handlePointer, playback, props, props.data]);
-
-  // keep viewport in sync
-  useEffect(
-    () =>
-      editor.store.listen(({changes}) => {
-        const layer = layerRef.current;
-        if (!layer) return;
-
-        for (const key of Object.keys(
-          changes.updated,
-        ) as (keyof typeof changes.updated)[]) {
-          const record = changes.updated[key][1];
-          if (!isCamera(record)) continue;
-
-          const {x, y} = record;
-          const {z} = editor.camera;
-          layer.style.transform = `translate(${x * z}px, ${y * z}px)`;
-        }
-      }),
-    [editor.camera, editor.store],
-  );
-
-  const layerRef = useRef<HTMLDivElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
-
-  const cursor = cursors.get("cross");
+  }, [data, editor, playback, props, start]);
 
   return (
-    <div
-      ref={layerRef}
-      style={{
-        left: "0",
-        top: "0",
-        position: "absolute",
-        zIndex: layerCanvas,
-      }}
-    >
-      <div
-        ref={cursorRef}
-        style={{
-          backgroundImage: cursor?.image,
-          height: "32px",
-          width: "32px",
-        }}
-      />
-    </div>
+    <Tldraw>
+      {/*
+       * React explodes if we call `loadSnapshot()`, which is part of
+       * initialize(), inside <Tldraw>. So we have to do this awkward
+       * thing instead.
+       */}
+      <SetEditor setEditor={setEditor} />
+      <CanvasLayer>
+        <CursorImage ref={cursorRef} />
+      </CanvasLayer>
+      {children}
+    </Tldraw>
   );
+}
+
+function SetEditor({setEditor}: {setEditor: (editor: Editor | null) => void}) {
+  const editor = useEditor();
+  useEffect(() => {
+    setEditor(editor);
+  }, [editor, setEditor]);
+  return null;
 }

@@ -1,4 +1,13 @@
-import type {TLCamera, TLInstance, TLRecord, TLShape} from "@tldraw/tldraw";
+import type {
+  StoreSnapshot,
+  TLCamera,
+  TLDrawShape,
+  TLDrawShapeSegment,
+  TLInstance,
+  TLRecord,
+  TLUnknownShape,
+} from "@tldraw/tldraw";
+import {PointerCoords, TldrawEvent} from "./types";
 
 export function isCamera(data: TLRecord): data is TLCamera {
   return data.typeName === "camera";
@@ -11,14 +20,23 @@ export function isInstance(
   return key === "instance";
 }
 
-export function isPointer(data: unknown[]): data is [number, number] {
+export function isPointer(data: unknown): data is PointerCoords {
   return (
+    data instanceof Array &&
     data.length === 2 &&
     typeof data[0] === "number" &&
     typeof data[1] === "number"
   );
 }
 
-export function isShape(key: string, _data: unknown): _data is TLShape {
+export function isShape(key: string): key is `shape:${string}` {
   return key.startsWith("shape:");
+}
+
+export function isSnapshot(data: TldrawEvent): data is StoreSnapshot<TLRecord> {
+  return "store" in data;
+}
+
+export function isDrawShape(data: TLUnknownShape): data is TLDrawShape {
+  return data.type === "draw";
 }

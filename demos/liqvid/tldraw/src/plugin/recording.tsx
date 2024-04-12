@@ -2,24 +2,18 @@ import {compress, RecorderPlugin, ReplayDataRecorder} from "@liqvid/recording";
 import {bind} from "@liqvid/utils/misc";
 import type {ReplayData} from "@liqvid/utils/replay-data";
 import {
-  isShape,
+  RecordsDiff,
   TLShape,
+  UnknownRecord,
   type Editor,
   type HistoryEntry,
-  type TLRecord,
+  TLRecord,
 } from "@tldraw/tldraw";
-import {objDiff} from "./utils";
-
-/** Pointer events have compressed syntax since they're so common */
-export type TldrawPointerEvent = [number, number];
-export type TldrawShapeEvent = [`shape:${string}`, TLShape | null];
-export type TldrawInstanceEvent = ["instance", object];
-
-export type TldrawEvent =
-  | TldrawInstanceEvent
-  | TldrawPointerEvent
-  | TldrawShapeEvent;
-export type TldrawData = ReplayData<TldrawEvent>;
+import {defaultShape} from "./defaults";
+import {isShape} from "./record-types";
+import {TldrawEvent} from "./types";
+import {assertSameType, assertType} from "./utils";
+import {objDiff} from "./diff";
 
 export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
   #editor: Editor | undefined;
@@ -39,6 +33,7 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
       throw new Error("TldrawRecorder: editor not provided");
     }
 
+    this.capture(0, this.#editor.store.getSnapshot("all"));
     this.#unlisten = this.#editor.store.listen(this.captureEvent);
   }
 
@@ -58,11 +53,31 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
 
     if (this.manager.paused) return;
 
+    console.info(changes);
+    // if (Object.keys(changes.removed).length > 0) {
+    console.log(changes.updated);
+    // }
+
+    for (const compressed of this.#compressChanges(changes)) {
+      this.capture(t, compressed);
+    }
+  }
+
+  finalizeRecording(data: ReplayData<TldrawEvent>): ReplayData<TldrawEvent> {
+    return compress(data, 4);
+  }
+
+  #compressChanges(changes: RecordsDiff<UnknownRecord>): TldrawEvent[] {
+    const events: TldrawEvent[] = [];
+
     for (const [key, created] of Object.entries(changes.added)) {
       switch (true) {
-        case isShape(created):
-          this.capture(t, [key, created] as TldrawEvent);
+        case isShape(key): {
+          assertType<TLShape>(created);
+          // @todo this type is not really correct
+          events.push({[key]: objDiff(defaultShape, created) as TLRecord});
           break;
+        }
       }
     }
 
@@ -77,19 +92,31 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
           if (Object.keys(diff).length === 0) {
             break;
           }
-          this.capture(t, ["instance", diff]);
+          // console.log(diff);
+          //   events.push(["instance", diff]);
           break;
         }
         // pointer
         case to.typeName === "pointer":
-          this.capture(t, [to.x, to.y]);
+          events.push([to.x, to.y]);
           break;
-        case isShape(to): {
+        case isShape(key): {
+          assertType<TLShape>(from);
+          assertType<TLShape>(to);
+
           const shape = this.#shapeCache.get(to.id);
           if (shape) {
-            this.capture(t, [key, objDiff(shape, to)] as TldrawEvent);
+            const diff = objDiff(shape, to);
+
+            // appending to a shape is a common event so we compress it
+            if (isZerothSegmentAppend(diff)) {
+              const point = diff[Object.keys(diff)[0] as keyof typeof diff];
+              events.push({[key]: [point.x, point.y, point.z]});
+            } else {
+              events.push({[key]: objDiff(shape, to) as TLShape});
+            }
           } else {
-            this.capture(t, [key, to] as TldrawEvent);
+            events.push({[key]: to as TLShape});
           }
           this.#shapeCache.set(to.id, to);
           break;
@@ -99,20 +126,16 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
 
     for (const [key, removed] of Object.entries(changes.removed)) {
       switch (true) {
-        case isShape(removed):
-          this.capture(t, [key, null] as TldrawEvent);
-          // this.#shapeCache.delete(removed.id);
+        case isShape(key):
+          events.push({[key]: null});
+          this.#shapeCache.delete(removed.id);
           break;
       }
     }
-  }
 
-  finalizeRecording(data: ReplayData<TldrawEvent>): ReplayData<TldrawEvent> {
-    return compress(data, 4);
+    return events;
   }
 }
-
-function assertSameType<K>(a: unknown, _: K): asserts a is K {}
 
 const TldrawSaveComponent: React.FC<{data: ReplayData<TldrawEvent>}> = (
   props,
@@ -151,3 +174,15 @@ export const TldrawRecording: RecorderPlugin<
   saveComponent: TldrawSaveComponent,
   title: "Record Tldraw",
 };
+
+function isZerothSegmentAppend(diff: object): diff is {
+  [key: `props.segments.0.points.${number}`]: {x: number; y: number; z: number};
+} {
+  if (diff === null) return false;
+
+  const keys = Object.keys(diff);
+  if (keys.length !== 1) return false;
+  const key = keys[0];
+
+  return key.startsWith("props.segments.0.points.");
+}
