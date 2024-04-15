@@ -3,8 +3,6 @@
 //   /** Added */
 //   a?: Partial<T>;
 
-import {structuredClone} from "@tldraw/utils";
-
 //   /** Removed */
 //   r?: Partial<T>;
 

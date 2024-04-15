@@ -1,18 +1,23 @@
 import {
-  TLDrawShape,
+  TLShape,
+  TLStoreSnapshot,
   type Editor,
-  type TLDrawShapeSegment,
-  type TLRecord,
+  type TLDrawShape,
   type TLShapeId,
-  type TLShapePartial,
 } from "@tldraw/tldraw";
-import {makeReplayPlugin} from "./plugin-utils";
-import {isDrawShape, isPointer, isShape, isSnapshot} from "./record-types";
-import type {ReplayState, TldrawAction, TldrawEvent} from "./types";
-import {applyDiff, type CursorName} from "./utils";
 import {defaultShape} from "./defaults";
+import {applyDiff, mergeDiffs} from "./diff";
+import {creationDiff, deletionDiff, updateObjectDiff} from "./diff/builders";
+import {invertDiff, matchRunes, objectKeys} from "./diff/utils";
+import {makeReplayPlugin} from "./plugin-utils";
+import {isDrawShape, isPointer, isShape} from "./record-types";
+import type {Point3, ReplayState, TldrawAction, TldrawEvent} from "./types";
+import {assertType, type CursorName} from "./utils";
+import {segmentAppend} from "./zsa";
 
-type TLPointer = Extract<TLRecord, {typeName: "pointer"}>;
+// type TLPointer = Extract<TLRecord, {typeName: "pointer"}>;
+
+const deletePlaceholder = 0;
 
 export type PointerHandler = (args: {
   kind?: CursorName;
@@ -20,20 +25,27 @@ export type PointerHandler = (args: {
   y?: number;
 }) => void;
 
+type TldrawProps = {
+  /** Element to sync with */
+  editor: Editor;
+
+  /** Handle cursor updates */
+  handlePointer: PointerHandler;
+
+  /** Return whether the camera should follow the author. */
+  isFollowing: () => boolean;
+};
+
+type TldrawHistory = {
+  shapes?: Map<string, TLShape>;
+};
+
 export const tldrawReplay = makeReplayPlugin<
   TldrawEvent,
   ReplayState,
   TldrawAction,
-  {
-    /** Element to sync with */
-    editor: Editor;
-
-    /** Handle cursor updates */
-    handlePointer: PointerHandler;
-
-    /** Return whether the camera should follow the author. */
-    isFollowing: () => boolean;
-  }
+  TldrawProps,
+  TldrawHistory
 >({
   apply: (state, action) => {
     // TODO make this a deep clone
@@ -42,20 +54,22 @@ export const tldrawReplay = makeReplayPlugin<
       clone.pointer = action.pointer;
     }
 
+    if (action.diff) {
+      clone.snapshot.store = applyDiff(clone.snapshot.store, action.diff);
+    }
+
     return clone;
   },
 
   // blank state
-  blankState: () => ({pointer: [0, 0]}),
+  blankState: () => ({pointer: [0, 0], snapshot: {} as TLStoreSnapshot}),
 
   // decompress
-  decompress: (datum) => {
+  decompress: (datum, history) => {
+    history.shapes ??= new Map();
+
     if (isPointer(datum)) {
       return {pointer: datum};
-    }
-
-    if (isSnapshot(datum)) {
-      return {snapshot: datum};
     }
 
     // get unique key
@@ -70,110 +84,122 @@ export const tldrawReplay = makeReplayPlugin<
       const update = datum[key];
 
       // shape remove
-      if (update === null) {
-        return {[key]: {remove: true}};
+      if (update === deletePlaceholder) {
+        history.shapes.delete(key);
+        return {diff: deletionDiff(key)};
       }
       // shape append
       else if (Array.isArray(update)) {
-        const [x, y, z] = update;
-        return {[key]: {append: [{x, y, z}]}};
+        if (update.length === 0) {
+          console.error("Expected non-empty array");
+          return {};
+        }
+
+        if (typeof update[0] === "number") {
+          assertType<Point3>(update);
+          return {diff: updateObjectDiff(key, segmentAppend([update]))};
+        } else {
+          assertType<Point3[]>(update);
+          return {diff: updateObjectDiff(key, segmentAppend(update))};
+        }
       }
       // shape create
-      return {[key]: {init: applyDiff(defaultShape, update)}};
+      if (!history.shapes.has(key)) {
+        const shape = applyDiff(defaultShape, update);
+        history.shapes.set(key, shape);
+        return {diff: creationDiff(key, shape)};
+      }
+      // shape update
+      return {diff: updateObjectDiff(key, update)};
     }
 
     return {};
   },
+
   // commit
   commit(action, {editor, handlePointer}) {
     editor.store.mergeRemoteChanges(() => {
-      // snapshot must come first
-      if (action.snapshot) {
-        editor.store.loadSnapshot(action.snapshot);
-      }
-
       // pointer
       if (action.pointer) {
         const [x, y] = action.pointer;
         handlePointer({x, y});
       }
 
-      // other updates
-      const keys = Object.keys(action) as (keyof typeof action)[];
-      for (const key of keys) {
-        if (key === "snapshot" || key === "pointer") continue;
-
-        if (isShape(key)) {
-          const update = action[key];
-          console.log(key, update);
-
-          const shape = editor.store.get(key as TLShapeId);
-
-          // create shape
-          if ("init" in update) {
-            editor.createShape({...update.init, isLocked: true});
-          } else if ("append" in update) {
-            // validation
-            {
-              if (!shape) {
-                console.warn(`Expected shape: ${key}`);
-                continue;
+      // state diffs
+      if (action.diff) {
+        const runedKeys = objectKeys(action.diff ?? {});
+        for (const runedKey of runedKeys) {
+          matchRunes(action.diff, runedKey, {
+            add(key, value) {
+              if (isShape(key)) {
+                assertType<TLShape>(value);
+                editor.createShape({...value, isLocked: true});
               }
-
-              if (!isDrawShape(shape)) {
-                console.warn(`Cannot append to non-draw shape: ${key}`);
-                continue;
+            },
+            delete(key) {
+              if (isShape(key)) {
+                editor.updateShape({
+                  id: key as TLShapeId,
+                  isLocked: false,
+                  type: "",
+                });
+                editor.deleteShape(key as TLShapeId);
               }
-            }
+            },
+            object(key, update) {
+              if (isShape(key)) {
+                // validation
+                const shape = editor.store.get(key as TLShapeId);
+                {
+                  if (!shape) {
+                    console.warn(`Expected shape: ${runedKey}`);
+                    return;
+                  }
 
-            const zerothSegment = shape.props.segments.at(0);
-            if (!zerothSegment) {
-              console.warn(
-                `Cannot append to shape without zeroth segment: ${key}`,
-              );
-              continue;
-            }
+                  if (!isDrawShape(shape)) {
+                    console.warn(
+                      `Cannot append to non-draw shape: ${runedKey}`,
+                    );
+                    return;
+                  }
+                }
 
-            editor.updateShape<TLDrawShape>({
-              id: shape.id,
-              type: shape.type,
-              // need to put this here for the update to work
-              isLocked: true,
-              props: {
-                ...shape.props,
-                segments: [
-                  {
-                    ...zerothSegment,
-                    points: [...zerothSegment.points, ...update.append],
-                  },
-                  ...shape.props.segments.slice(1),
-                ],
-              },
-            });
-          }
-          // remove shape
-          else if ("remove" in update) {
-            shape && editor.deleteShape(shape.id);
-          }
+                editor.updateShape<TLDrawShape>(applyDiff(shape, update));
+              }
+            },
+          });
         }
       }
     });
   },
+
+  // initialize
+  initialize(state, props) {
+    props.editor.store.loadSnapshot(state.snapshot);
+  },
+
   // invert
   invert(state, action) {
     const inverse: TldrawAction = {};
+
     if (action.pointer) {
       inverse.pointer = state.pointer;
     }
 
+    if (action.diff) {
+      inverse.diff = invertDiff(state.snapshot.store, action.diff);
+    }
+
     return inverse;
   },
+
   // merge
   merge(...actions) {
     return actions.reduce((a, b) => {
       return {
         ...a,
         ...b,
+        diff: mergeDiffs(a.diff ?? {}, b.diff ?? {}),
       };
     }, {});
   },

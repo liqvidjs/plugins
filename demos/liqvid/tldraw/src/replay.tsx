@@ -16,7 +16,7 @@ export function Replay() {
           height: "var(--lv-canvas-height)",
         }}
       >
-        <TldrawReplay data={recording} />
+        <TldrawReplay replay={recording} />
       </div>
     </Player>
   );

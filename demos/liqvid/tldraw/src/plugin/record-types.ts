@@ -2,7 +2,6 @@ import type {
   StoreSnapshot,
   TLCamera,
   TLDrawShape,
-  TLDrawShapeSegment,
   TLInstance,
   TLRecord,
   TLUnknownShape,

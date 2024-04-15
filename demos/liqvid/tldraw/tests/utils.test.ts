@@ -73,6 +73,43 @@ describe("objDiff and applyDiff", () => {
     expect(applyDiff(a, diff)).toEqual(b);
   });
 
+  test("objects nested in arrays", () => {
+    const a = {
+      shapes: {
+        square: {
+          segments: [{type: "free", points: [0, 1]}],
+        },
+      },
+    };
+    const b = {
+      shapes: {
+        square: {
+          segments: [{type: "free", points: [0, 1, 2, 3]}],
+        },
+      },
+    };
+
+    const diff = objDiff(a, b);
+    expect(diff).toEqual({
+      "@shapes": {
+        "@square": {
+          "[]segments": [
+            0,
+            [
+              [
+                "@0",
+                {
+                  "[]points": [2, [], 2, 3],
+                },
+              ],
+            ],
+          ],
+        },
+      },
+    });
+    expect(applyDiff(a, diff)).toEqual(b);
+  });
+
   test("kitchen sink", () => {
     const a = {
       x: 1,
@@ -113,3 +150,5 @@ describe("objDiff and applyDiff", () => {
     expect(applyDiff(a, diff)).toEqual(b);
   });
 });
+
+describe("nested", () => {});

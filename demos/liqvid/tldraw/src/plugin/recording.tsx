@@ -3,22 +3,24 @@ import {bind} from "@liqvid/utils/misc";
 import type {ReplayData} from "@liqvid/utils/replay-data";
 import {
   RecordsDiff,
+  TLRecord,
   TLShape,
   UnknownRecord,
   type Editor,
   type HistoryEntry,
-  TLRecord,
 } from "@tldraw/tldraw";
 import {defaultShape} from "./defaults";
-import {isShape} from "./record-types";
-import {TldrawEvent} from "./types";
-import {assertSameType, assertType} from "./utils";
 import {objDiff} from "./diff";
+import {isShape} from "./record-types";
+import {Point3, ReplayState, TldrawData, TldrawEvent} from "./types";
+import {assertSameType, assertType} from "./utils";
+import {extractSegmentAppend, isSegmentAppend} from "./zsa";
 
 export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
   #editor: Editor | undefined;
   #unlisten: (() => void) | undefined;
   #shapeCache: Map<string, TLShape> = new Map();
+  #initialState: ReplayState | undefined;
 
   constructor() {
     super();
@@ -33,7 +35,10 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
       throw new Error("TldrawRecorder: editor not provided");
     }
 
-    this.capture(0, this.#editor.store.getSnapshot("all"));
+    this.#initialState = {
+      pointer: [0, 0],
+      snapshot: this.#editor.store.getSnapshot("all"),
+    };
     this.#unlisten = this.#editor.store.listen(this.captureEvent);
   }
 
@@ -53,9 +58,9 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
 
     if (this.manager.paused) return;
 
-    console.info(changes);
+    // console.info(changes);
     // if (Object.keys(changes.removed).length > 0) {
-    console.log(changes.updated);
+    // console.log(changes.updated);
     // }
 
     for (const compressed of this.#compressChanges(changes)) {
@@ -63,43 +68,52 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
     }
   }
 
-  finalizeRecording(data: ReplayData<TldrawEvent>): ReplayData<TldrawEvent> {
-    return compress(data, 4);
+  finalizeRecording(data: ReplayData<TldrawEvent>): TldrawData {
+    const initialState = this.#initialState!;
+    this.#initialState = undefined;
+
+    return {
+      version: "1.0",
+      initialState,
+      data: compress(data, 4),
+    };
   }
 
   #compressChanges(changes: RecordsDiff<UnknownRecord>): TldrawEvent[] {
     const events: TldrawEvent[] = [];
-
+    // new records
     for (const [key, created] of Object.entries(changes.added)) {
       switch (true) {
         case isShape(key): {
           assertType<TLShape>(created);
-          // @todo this type is not really correct
-          events.push({[key]: objDiff(defaultShape, created) as TLRecord});
+          events.push({[key]: objDiff(defaultShape, created)});
+          this.#shapeCache.set(created.id, created);
           break;
         }
       }
     }
 
+    // updated records
     for (const [key, update] of Object.entries(changes.updated)) {
       const [from, to] = update as [TLRecord, TLRecord];
 
       switch (true) {
         // instance
         case to.typeName === "instance": {
+          break;
           assertSameType(from, to);
           const diff = objDiff(from, to);
           if (Object.keys(diff).length === 0) {
             break;
           }
-          // console.log(diff);
-          //   events.push(["instance", diff]);
+          // events.push(["instance", diff]);
           break;
         }
         // pointer
         case to.typeName === "pointer":
           events.push([to.x, to.y]);
           break;
+        // shape
         case isShape(key): {
           assertType<TLShape>(from);
           assertType<TLShape>(to);
@@ -109,14 +123,28 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
             const diff = objDiff(shape, to);
 
             // appending to a shape is a common event so we compress it
-            if (isZerothSegmentAppend(diff)) {
-              const point = diff[Object.keys(diff)[0] as keyof typeof diff];
-              events.push({[key]: [point.x, point.y, point.z]});
+            if (isSegmentAppend(diff)) {
+              const points = extractSegmentAppend(diff);
+              if (points.length > 1) {
+                events.push({
+                  [key]: points.map(
+                    (p): Point3 =>
+                      typeof p.z === "number" ? [p.x, p.y, p.z] : [p.x, p.y],
+                  ),
+                });
+              } else {
+                const p = points[0];
+                events.push({
+                  [key]: typeof p.z === "number" ? [p.x, p.y, p.z] : [p.x, p.y],
+                });
+              }
             } else {
-              events.push({[key]: objDiff(shape, to) as TLShape});
+              events.push({[key]: objDiff(shape, to)});
             }
           } else {
-            events.push({[key]: to as TLShape});
+            // @todo is this necessary? what happens if the shape exists before recording,
+            // we need to initialize the shape cache better
+            events.push({[key]: objDiff(defaultShape, to)});
           }
           this.#shapeCache.set(to.id, to);
           break;
@@ -124,10 +152,11 @@ export class TldrawRecorder extends ReplayDataRecorder<TldrawEvent> {
       }
     }
 
+    // removed records
     for (const [key, removed] of Object.entries(changes.removed)) {
       switch (true) {
         case isShape(key):
-          events.push({[key]: null});
+          events.push({[key]: 0});
           this.#shapeCache.delete(removed.id);
           break;
       }
@@ -174,15 +203,3 @@ export const TldrawRecording: RecorderPlugin<
   saveComponent: TldrawSaveComponent,
   title: "Record Tldraw",
 };
-
-function isZerothSegmentAppend(diff: object): diff is {
-  [key: `props.segments.0.points.${number}`]: {x: number; y: number; z: number};
-} {
-  if (diff === null) return false;
-
-  const keys = Object.keys(diff);
-  if (keys.length !== 1) return false;
-  const key = keys[0];
-
-  return key.startsWith("props.segments.0.points.");
-}

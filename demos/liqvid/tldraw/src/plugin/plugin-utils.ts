@@ -1,11 +1,15 @@
 import type {MediaElement} from "@lqv/playback";
 import type {ReplayData} from "liqvid";
 
+export function dbg(x: unknown) {
+  console.log(x);
+  return x;
+}
 export type Unsubscribe = () => void;
 
-export type ReplayPluginProps<Data, Props> = Props & {
+export type ReplayPluginProps<Data, State, Props> = Props & {
   /** Data to replay */
-  data: ReplayData<Data>;
+  recording: RecordingData<Data, State>;
 
   /** {@link MediaElement} to sync with. */
   playback: MediaElement;
@@ -17,11 +21,18 @@ export type ReplayPluginProps<Data, Props> = Props & {
   start?: number;
 };
 
-export function makeReplayPlugin<Datum, State, Action, Props>({
+type RecordingData<Datum, State> = {
+  version: string;
+  initialState: State;
+  data: ReplayData<Datum>;
+};
+
+export function makeReplayPlugin<Datum, State, Action, Props, History>({
   apply,
   blankState,
   commit,
   decompress,
+  initialize,
   invert,
   merge,
 }: {
@@ -35,18 +46,26 @@ export function makeReplayPlugin<Datum, State, Action, Props>({
   blankState: () => State;
 
   /** Commit an action. */
-  commit: (action: Action, props: Props, world: World) => void;
+  commit: (action: Action, props: Props) => void;
 
   /** Decompress an action. */
-  decompress: (data: Datum) => Action;
+  decompress: (data: Datum, history: History) => Action;
+
+  /** Do something with the initial state. */
+  initialize?: (state: State, props: Props) => void;
 
   /** Invert an action with respect to a state. */
   invert: (state: State, action: Action) => Action;
 
   /** Merge two actions. */
   merge: (...actions: Action[]) => Action;
-}): (options: ReplayPluginProps<Datum, Props>) => Unsubscribe {
-  return ({data, playback, start = 0, ..._props}) => {
+}): (options: ReplayPluginProps<Datum, State, Props>) => Unsubscribe {
+  return ({
+    recording: {initialState, data},
+    playback,
+    start = 0,
+    ..._props
+  }) => {
     /** Array of times that events happen */
     const times = data.reduce(
       (acc, [duration]) => acc.concat((acc.at(-1) ?? 0) + duration),
@@ -54,26 +73,15 @@ export function makeReplayPlugin<Datum, State, Action, Props>({
     );
 
     /** Uncompressed actions */
-    const actions: Action[] = data.map(([_, event]) => decompress(event));
+    const history = {} as History;
+    const actions: Action[] = data.map(([_, event]) => {
+      const duck = decompress(event, history);
+      return duck;
+    });
 
-    let state = blankState();
+    let state = initialState ?? blankState();
     const props = _props as unknown as Props;
-
-    if (false) {
-      /** Initialization events */
-      const initEvents: InitialDatum[] = [];
-
-      /** Index of first non-initialization datum */
-      let firstEventIndex = 0;
-      for (; firstEventIndex < data.length; ++firstEventIndex) {
-        const [time, event] = data[firstEventIndex];
-        if (time !== 0) {
-          break;
-        }
-        initEvents.push(event as unknown as InitialDatum);
-      }
-    }
-    // const events = data.slice(firstEventIndex);
+    initialize?.(state, props);
 
     /** Array of inverse operations */
     const inverses: Action[] = [];
@@ -83,7 +91,6 @@ export function makeReplayPlugin<Datum, State, Action, Props>({
     }
 
     /* main logic */
-    // let index = firstEventIndex;
     let index = 0;
     let lastTime = 0;
 
@@ -91,13 +98,6 @@ export function makeReplayPlugin<Datum, State, Action, Props>({
       const t = playback.currentTime;
       const progress = (t - start) * 1000;
 
-      // if (progress <= 0) {
-      //   console.log("initializing");
-      //   initialize?.(initEvents, props);
-      //   index = firstEventIndex;
-      //   lastTime = t;
-      //   return;
-      // }
       const actionsToApply: Action[] = [];
 
       // forward
@@ -114,10 +114,12 @@ export function makeReplayPlugin<Datum, State, Action, Props>({
           actionsToApply.push(inverses[i]);
         }
         index = i + 1;
+        console.log("inverting", actionsToApply);
       }
 
       if (actionsToApply.length > 0) {
         const action = merge(...actionsToApply);
+        console.log("applying", action);
         state = apply(state, action);
         commit(action, props);
       }

@@ -12,7 +12,7 @@ import type {TldrawData} from "./types";
 export function TldrawReplay({
   children,
   start,
-  data,
+  replay,
   ...props
 }: Omit<
   Parameters<typeof tldrawReplay>[0],
@@ -20,7 +20,7 @@ export function TldrawReplay({
 > &
   React.ComponentPropsWithoutRef<typeof Tldraw> & {
     /** Cursor data to replay. */
-    data: TldrawData | Promise<TldrawData>;
+    replay: TldrawData | Promise<TldrawData>;
   }): React.ReactNode {
   const playback = useME();
   const [editor, setEditor] = useState<Editor | null>(null);
@@ -32,29 +32,29 @@ export function TldrawReplay({
 
   // subscribe to replay
   useEffect(() => {
-    const subscribe = (data: TldrawData) => {
+    const subscribe = (recording: TldrawData) => {
       if (!editor) return () => {};
       return tldrawReplay({
         start,
         playback,
         editor,
-        data,
+        recording,
         handlePointer: cursorRef.current?.handlePointer ?? (() => {}),
         isFollowing: () => isFollowing.current,
       });
     };
 
     // Promise polymorphism
-    if (data instanceof Promise) {
+    if (replay instanceof Promise) {
       let unsub: () => void;
-      data.then((d) => (unsub = subscribe(d)));
+      replay.then((d) => (unsub = subscribe(d)));
       return () => {
         unsub?.();
       };
     } else {
-      return subscribe(data);
+      return subscribe(replay);
     }
-  }, [data, editor, playback, props, start]);
+  }, [replay, editor, playback, props, start]);
 
   return (
     <Tldraw>
