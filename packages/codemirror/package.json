@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codemirror",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Codemirror 6 recording and replaying",
   "exports": {
     ".": {
