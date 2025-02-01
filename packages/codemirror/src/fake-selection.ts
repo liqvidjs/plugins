@@ -1,4 +1,4 @@
-import { SelectionRange, StateEffect, type Extension } from "@codemirror/state";
+import { type Extension, SelectionRange, StateEffect } from "@codemirror/state";
 import type { EditorView, ViewUpdate } from "@codemirror/view";
 
 export interface Range {
@@ -29,8 +29,12 @@ interface DrawSelection {
 export function fakeSelection(
   drawSelection: Extension[],
 ): (view: EditorView) => DrawSelection {
+  const layers = drawSelection.filter(
+    (extn) => Array.isArray(extn) && extn.length === 2,
+  );
+
   // @ts-expect-error create is not exposed
-  const create = drawSelection[1].create as (view: EditorView) => DrawSelection;
+  const create = layers[0][0].create as (view: EditorView) => DrawSelection;
 
   return (view: EditorView) => {
     const instance = create(view);

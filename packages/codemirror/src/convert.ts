@@ -58,16 +58,18 @@ export function convert(oldFormat: OldFormat): NewFormat {
             break;
         }
         break;
-      case "cursor":
+      case "cursor": {
         const pos = convertPosition(action[1], doc);
         newFormat.push([time, [[doc.length], [pos, pos]]]);
         break;
-      case "selection":
+      }
+      case "selection": {
         const anchor = convertPosition(action[1].anchor, doc);
         const head = convertPosition(action[1].head, doc);
         newFormat.push([time, [[doc.length], [anchor, head]]]);
         break;
-      case "text":
+      }
+      case "text": {
         const from = convertPosition(action[1].from, doc);
         const to = convertPosition(action[1].to, doc);
         const cs = ChangeSet.of(
@@ -77,6 +79,7 @@ export function convert(oldFormat: OldFormat): NewFormat {
         doc = cs.apply(doc);
         newFormat.push([time, [cs.toJSON()]]);
         break;
+      }
     }
   }
 

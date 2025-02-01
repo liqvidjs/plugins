@@ -3,8 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "declarationDir": "./dist/types",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "jsx": "react-jsx",
     "outDir": "./dist/esm",
     "rootDir": "./src",
     "target": "esnext"

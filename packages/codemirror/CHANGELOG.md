@@ -1,4 +1,8 @@
-## 0.4.6 (January 31, 2025)
+## 0.4.7 (Feb 1, 2025)
+
+- fix `fakeSelection()` extension
+
+## 0.4.6 (Feb 1, 2025)
 
 - don't crash when running on the server
 

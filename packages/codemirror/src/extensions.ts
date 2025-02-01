@@ -34,7 +34,9 @@ function cm2lv(seq: string): string {
   const isMac =
     typeof globalThis.navigator !== "undefined" &&
     navigator.platform === "MacIntel";
+  // biome-ignore lint/style/noParameterAssign: this is fine
   seq = seq.replace("Mod", isMac ? "Meta" : "Ctrl");
+  // biome-ignore lint/style/noParameterAssign: this is fine
   seq = seq.replace(/-/g, "+");
   return Keymap.normalize(seq);
 }

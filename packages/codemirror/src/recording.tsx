@@ -1,6 +1,6 @@
 import type { Extension } from "@codemirror/state";
-import { EditorView, keymap, ViewPlugin } from "@codemirror/view";
-import { ReplayDataRecorder, type RecorderPlugin } from "@liqvid/recording";
+import { EditorView, ViewPlugin, keymap } from "@codemirror/view";
+import { type RecorderPlugin, ReplayDataRecorder } from "@liqvid/recording";
 import { bind } from "@liqvid/utils/misc";
 import type { ReplayData } from "@liqvid/utils/replay-data";
 
@@ -33,7 +33,8 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
    */
   extension(specialKeys: Record<string, string> | string[] = {}): Extension {
     // legacy
-    if (specialKeys instanceof Array) {
+    if (Array.isArray(specialKeys)) {
+      // biome-ignore lint/style/noParameterAssign: helpful for backwards compatibility
       specialKeys = Object.fromEntries(specialKeys.map((key) => [key, key]));
     }
 
@@ -86,10 +87,10 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
       // empty events can break replay
       if (update.changes.empty && transactions.length === 0) return;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.capture(this.manager.getTime(), [
         update.changes.toJSON(),
         ...transactions,
+        // biome-ignore lint/suspicious/noExplicitAny: TODO
       ] as any);
     });
 
@@ -98,7 +99,7 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
       Object.keys(specialKeys).map((key) => ({
         key,
         run: () => {
-          if (this.manager && this.manager.active && !this.manager.paused) {
+          if (this.manager?.active && !this.manager.paused) {
             this.capture(
               this.manager.getTime(),
               (specialKeys as Record<string, string>)[key],
@@ -118,7 +119,7 @@ const KeySaveComponent: React.FC<{ data: ReplayData<CaptureData> }> = (
 ) => {
   return (
     <>
-      <textarea readOnly value={JSON.stringify(props.data)}></textarea>
+      <textarea readOnly value={JSON.stringify(props.data)} />
     </>
   );
 };

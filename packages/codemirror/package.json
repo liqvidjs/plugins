@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codemirror",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Codemirror 6 recording and replaying",
   "exports": {
     ".": {
@@ -35,19 +35,19 @@
     "build": "pnpm build:clean; pnpm lint; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -rf dist",
     "build:js": "pnpm build:cjs; pnpm build:esm; node ../../build.mjs",
-    "build:cjs": "tsc --outDir dist/cjs --module commonjs",
+    "build:cjs": "tsc --outDir dist/cjs --module commonjs --moduleResolution node",
     "build:esm": "tsc",
     "build:postclean": "rm dist/tsconfig.tsbuildinfo",
-    "lint": "pnpm biome lint --fix"
+    "lint": "pnpm biome check --fix"
   },
   "peerDependencies": {
-    "@codemirror/state": ">=6.0.0",
-    "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.2.2",
-    "@liqvid/recording": "^0.2.1",
-    "@types/react": ">=18.0.0",
-    "liqvid": "^2.1.9",
-    "react": ">=18.0.0"
+    "@codemirror/state": ">=6",
+    "@codemirror/view": ">=6",
+    "@liqvid/keymap": "^1.2",
+    "@liqvid/recording": "^0.2.3",
+    "@types/react": ">=18",
+    "liqvid": "^2.1.15",
+    "react": ">=18"
   },
   "peerDependenciesMeta": {
     "@liqvid/keymap": {
@@ -67,11 +67,8 @@
     }
   },
   "devDependencies": {
-    "@codemirror/state": ">=6.0.0",
-    "@codemirror/view": ">=6.0.0",
-    "@liqvid/keymap": "^1.2.2",
-    "@liqvid/recording": "^0.2.1",
-    "liqvid": "^2.1.9"
+    "@codemirror/state": ">=6",
+    "@codemirror/view": ">=6"
   },
   "dependencies": {
     "@liqvid/utils": "^1.8.0",

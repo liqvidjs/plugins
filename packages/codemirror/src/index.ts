@@ -54,8 +54,8 @@ export function cmReplay({
   view: EditorView;
 }): () => void {
   return cmReplayMultiple({
-    data: [[0, selectCmd + "default"], ...data],
-    handle: (key, docs) => handle(key, docs["default"]),
+    data: [[0, `${selectCmd}default`], ...data],
+    handle: (key, docs) => handle(key, docs.default),
     playback,
     scrollBehavior,
     shouldScroll,
@@ -142,7 +142,7 @@ export function cmReplayMultiple({
   // deserialize changesets
   for (const [, action] of data) {
     // changeset
-    if (action instanceof Array && action[0] instanceof Array) {
+    if (Array.isArray(action) && Array.isArray(action[0])) {
       action[0] = ChangeSet.fromJSON(action[0]);
     }
   }
@@ -172,7 +172,7 @@ export function cmReplayMultiple({
     for (let i = 0; i < data.length; ++i) {
       const action = data[i][1];
 
-      if (action instanceof Array) {
+      if (Array.isArray(action)) {
         if (action[0] instanceof ChangeSet) {
           // editor change
           inverses[file][i] = action[0].invert(docs[file]);
@@ -305,8 +305,8 @@ export function cmReplayMultiple({
 
       if (scrollIntoView) {
         // get position of last change
-        let pos;
-        changes[key].iterChangedRanges((fromA, toA, fromB, toB) => {
+        let pos: number;
+        changes[key].iterChangedRanges((_fromA, _toA, _fromB, toB) => {
           pos = toB;
         });
 

@@ -11,6 +11,9 @@ importers:
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
+      '@liqvid/keymap':
+        specifier: ^1.2.2
+        version: 1.2.2(@types/react@19.0.8)(react@19.0.0)
       '@liqvid/recording':
         specifier: ^0.2.3
         version: 0.2.3(@types/react@19.0.8)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
@@ -129,6 +132,12 @@ importers:
 
   packages/codemirror:
     dependencies:
+      '@liqvid/keymap':
+        specifier: ^1.2.2
+        version: 1.2.2(@types/react@18.3.18)(react@18.3.1)
+      '@liqvid/recording':
+        specifier: ^0.2.1
+        version: 0.2.3(@types/react@18.3.18)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@liqvid/utils':
         specifier: ^1.8.0
         version: 1.9.1
@@ -138,25 +147,19 @@ importers:
       '@types/react':
         specifier: '>=18.0.0'
         version: 18.3.18
+      liqvid:
+        specifier: ^2.1.9
+        version: 2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
       react:
         specifier: '>=18.0.0'
         version: 18.3.1
     devDependencies:
       '@codemirror/state':
-        specifier: '>=6.0.0'
+        specifier: '>=6'
         version: 6.5.0
       '@codemirror/view':
-        specifier: '>=6.0.0'
+        specifier: '>=6'
         version: 6.36.1
-      '@liqvid/keymap':
-        specifier: ^1.2.2
-        version: 1.2.2(@types/react@18.3.18)(react@18.3.1)
-      '@liqvid/recording':
-        specifier: ^0.2.1
-        version: 0.2.3(@types/react@18.3.18)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1))(react@18.3.1)
-      liqvid:
-        specifier: ^2.1.9
-        version: 2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
 
   packages/cursor:
     dependencies:
