@@ -15,7 +15,17 @@ const selector = (state: State) => [
 /**
  * File selector component.
  */
-export function FileTabs({ className }: { className?: string }) {
+export function FileTabs({
+  className,
+  classNames: propClassNames,
+}: {
+  /** @deprecated Use `classNames.container` instead. */
+  className?: string;
+  classNames?: {
+    container?: string;
+    tab?: string;
+  };
+}) {
   const store = useBoothStore();
   const [activeGroup, activeFilename] = useStore(store, selector);
   const group = store.getState().groups[activeGroup];
@@ -50,7 +60,7 @@ export function FileTabs({ className }: { className?: string }) {
         setTimeout(() => view.focus());
       }
     },
-    [recorder],
+    [recorder, store.getState, store.setState],
   );
 
   const events = useMemo(
@@ -92,17 +102,39 @@ export function FileTabs({ className }: { className?: string }) {
         ...selectShortcuts,
       },
     }));
-  }, []);
+
+    return () => {
+      store.setState((prev) => ({
+        // set class
+        classNames: prev.classNames.filter((_) => _ !== "multifile"),
+        // shortcuts
+        shortcuts: Object.fromEntries(
+          Object.entries(prev.shortcuts).filter(
+            ([key]) => !("Mod-1" <= key && key <= "Mod-9"),
+          ),
+        ),
+      }));
+    };
+  }, [select, store.getState, store.setState]);
 
   if (!group) return null;
 
   return (
-    <div className={classNames("lqv-file-tabs", className)} role="tablist">
+    <div
+      className={classNames(
+        "lqv-file-tabs",
+        propClassNames?.container ?? className,
+      )}
+      role="tablist"
+    >
       {group.files.map(({ filename }) => (
         <button
           aria-controls={ids.editorPanel({ filename, group: activeGroup })}
           aria-selected={activeFilename === filename}
-          className={`lqv-filetype-${getFileType(filename)}`}
+          className={classNames(
+            `lqv-filetype-${getFileType(filename)}`,
+            propClassNames?.tab,
+          )}
           id={ids.fileTab({ filename, group: activeGroup })}
           key={filename}
           role="tab"

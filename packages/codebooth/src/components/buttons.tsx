@@ -7,35 +7,36 @@ import { useBoothStore } from "../store";
 import { ids } from "../utils";
 
 /** Div to hold buttons. */
-export function Buttons({
-  className,
-  children,
-}: { className?: string; children?: React.ReactNode }) {
-  return (
-    <div className={classNames("lqv-cb-buttons", className)}>{children}</div>
-  );
+export function Buttons({ className, ...props }: { className?: string }) {
+  return <div className={classNames("lqv-cb-buttons", className)} {...props} />;
 }
 
 /** Button for clearing the output/console. */
 export function Clear({
   className,
-  children,
+  children = "Clear",
+  shortcut = "Mod-L",
+  title = "Clear",
   ...attrs
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  /** Keyboard shortcut to clear the console. */
+  shortcut?: string;
+}) {
   const store = useBoothStore();
 
   const clear = useCallback(() => {
     store.setState({ messages: [] });
-  }, []);
-  const events = useMemo(() => onClick(clear), []);
+  }, [store.setState]);
+
+  const events = useMemo(() => onClick(clear), [clear]);
 
   /* add keyboard shortcuts */
   useEffect(() => {
     store.setState((prev) => ({
       shortcuts: {
         ...prev.shortcuts,
-        "Mod-L": {
-          key: "Mod-L",
+        [shortcut]: {
+          key: shortcut,
           run: () => {
             clear();
             return true;
@@ -43,26 +44,33 @@ export function Clear({
         },
       },
     }));
-  }, []);
 
-  const label = "Clear";
+    return () => {
+      store.setState((prev) => ({
+        shortcuts: {
+          ...prev.shortcuts,
+          [shortcut]: undefined,
+        },
+      }));
+    };
+  }, [clear, shortcut, store.setState]);
 
   return (
     <button
-      aria-label={label}
       className={classNames("lqv-cb-clear", className)}
-      title={label}
+      title={title}
+      type="button"
       {...events}
       {...attrs}
     >
-      {children ?? label}
+      {children}
     </button>
   );
 }
 
 /** Button for copying the contents of one group to another. */
 export function Copy({
-  children,
+  children = "Copy",
   className,
   from: fromGroup,
   to: toGroup,
@@ -110,7 +118,7 @@ export function Copy({
       {...events}
       {...attrs}
     >
-      {children ?? "Copy"}
+      {children}
     </button>
   );
 }
@@ -118,7 +126,8 @@ export function Copy({
 /** Button for resetting editor contents to initial state. */
 export function Reset({
   className,
-  children,
+  children = "Reset",
+  title = "Reset",
   ...attrs
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const store = useBoothStore();
@@ -157,16 +166,14 @@ export function Reset({
 
   const resetEvents = useMemo(() => onClick(reset), []);
 
-  const label = "Reset";
-
   return (
     <button
       className={classNames("lqv-cb-reset", className)}
-      title={label}
+      title={title}
       {...resetEvents}
       {...attrs}
     >
-      {children ?? "Reset"}
+      {children}
     </button>
   );
 }
@@ -174,9 +181,14 @@ export function Reset({
 /** Button for running the code. */
 export function Run({
   className,
-  children,
-  ...attrs
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  children = "Run",
+  shortcut = "Mod-Enter",
+  title = "Run",
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  /** Keyboard shortcut to run the code. */
+  shortcut?: string;
+}) {
   const store = useBoothStore();
 
   // run callback
@@ -189,8 +201,8 @@ export function Run({
     store.setState((prev) => ({
       shortcuts: {
         ...prev.shortcuts,
-        "Mod-Enter": {
-          key: "Mod-Enter",
+        [shortcut]: {
+          key: shortcut,
           run: () => {
             run();
             return true;
@@ -206,23 +218,24 @@ export function Run({
   return (
     <button
       className={classNames("lqv-cb-run", className)}
+      title={title}
+      type="button"
       {...events}
-      {...attrs}
+      {...props}
     >
-      {children ?? "Run"}
+      {children}
     </button>
   );
 }
 
 /** Group selection tab. */
-export const Tab: React.FC<
-  React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    /** ID of {@link EditorGroup} this corresponds to */
-    id: string;
-  }
-> = (props) => {
-  const { children, id, ...attrs } = props;
-
+export function Tab({
+  id,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  /** ID of {@link EditorGroup} this corresponds to */
+  id: string;
+}) {
   const store = useBoothStore();
   const active = useStore(store, (state) => state.activeGroup === id);
 
@@ -240,22 +253,14 @@ export const Tab: React.FC<
       aria-selected={active}
       id={ids.groupTab({ group: id })}
       role="tab"
+      type="button"
       {...events}
-      {...attrs}
-    >
-      {props.children}
-    </button>
+      {...props}
+    />
   );
-};
+}
 
 /** Holds a list of {@link Tab}s. */
-export const TabList: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
-  props,
-) => {
-  const { children, ...attrs } = props;
-  return (
-    <div role="tablist" {...attrs}>
-      {children}
-    </div>
-  );
-};
+export function TabList(props: React.HTMLAttributes<HTMLDivElement>) {
+  return <div role="tablist" {...props} />;
+}

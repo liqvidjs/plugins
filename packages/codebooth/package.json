@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codebooth",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "GUI for interactive coding tutorials with CodeMirror",
   "exports": {
     ".": {
@@ -36,9 +36,9 @@
     "build": "pnpm build:clean; pnpm build:css; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -fr dist",
     "build:css": "stylus -o dist/style.css styl/style.styl; stylus -c -o dist/style.min.css styl/style.styl",
-    "build:js": "tsc --module commonjs --outDir dist/cjs; tsc; node ../../build.mjs",
+    "build:js": "tsc --module commonjs --moduleResolution node --outDir dist/cjs; tsc; node ../../build.mjs",
     "build:postclean": "rm -fr dist/tsconfig.tsbuildinfo",
-    "lint": "eslint --fix src",
+    "lint": "pnpm biome check --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
@@ -48,37 +48,37 @@
   },
   "homepage": "https://github.com/liqvidjs/plugins/tree/main/packages/codebooth",
   "devDependencies": {
-    "@codemirror/autocomplete": "^6.1.0",
-    "@codemirror/commands": "^6.0.1",
-    "@codemirror/lang-css": "^6.0.0",
-    "@codemirror/lang-html": "^6.1.0",
-    "@codemirror/lang-javascript": "^6.0.2",
-    "@codemirror/lang-python": "^6.0.1",
-    "@codemirror/language": "^6.2.1",
+    "@codemirror/autocomplete": "^6.18",
+    "@codemirror/commands": "^6.8",
+    "@codemirror/lang-css": "^6.3",
+    "@codemirror/lang-html": "^6.4",
+    "@codemirror/lang-javascript": "^6.2",
+    "@codemirror/lang-python": "^6.1",
+    "@codemirror/language": "^6.10",
     "@codemirror/lint": "^6.0.0",
     "@codemirror/search": "^6.0.1",
     "@codemirror/state": "^6.1.1",
     "@codemirror/view": "^6.2.0",
     "@lqv/codemirror": "workspace:^",
-    "skulpt": "^1.2.0",
-    "tsc-esm-fix": "^2.20.0"
+    "skulpt": "^1.2",
+    "tsc-esm-fix": "^2.20"
   },
   "peerDependencies": {
-    "@codemirror/autocomplete": ">=6.0.0",
-    "@codemirror/commands": ">=6.0.0",
-    "@codemirror/lang-css": ">=6.0.0",
-    "@codemirror/lang-html": ">=6.0.0",
-    "@codemirror/lang-javascript": ">=6.0.0",
-    "@codemirror/lang-python": ">=6.0.0",
-    "@codemirror/language": ">=6.0.0",
-    "@codemirror/lint": ">=6.0.0",
-    "@codemirror/search": ">=6.0.0",
-    "@codemirror/state": ">=6.0.0",
-    "@codemirror/view": ">=6.0.0",
-    "@liqvid/recording": ">=0.2.0",
+    "@codemirror/autocomplete": ">=6",
+    "@codemirror/commands": ">=6",
+    "@codemirror/lang-css": ">=6",
+    "@codemirror/lang-html": ">=6",
+    "@codemirror/lang-javascript": ">=6",
+    "@codemirror/lang-python": ">=6",
+    "@codemirror/language": ">=6",
+    "@codemirror/lint": ">=6",
+    "@codemirror/search": ">=6",
+    "@codemirror/state": ">=6",
+    "@codemirror/view": ">=6",
+    "@liqvid/recording": ">=0.2",
     "@lqv/codemirror": "workspace:^",
-    "react": ">=18.0.0",
-    "skulpt": "^1.2.0"
+    "react": ">=18",
+    "skulpt": "^1.2"
   },
   "peerDependenciesMeta": {
     "@codemirror/lang-css": {
@@ -101,11 +101,11 @@
     }
   },
   "dependencies": {
-    "@liqvid/keymap": "^1.2.2",
-    "@liqvid/utils": "^1.8.1",
+    "@liqvid/keymap": "^1.2",
+    "@liqvid/utils": "^1.10",
     "@lqv/playback": "workspace:^",
     "classnames": "^2.5.1",
-    "zustand": ">=4.0.0"
+    "zustand": ">=4"
   },
   "sideEffects": false,
   "type": "module"

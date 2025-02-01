@@ -9,6 +9,7 @@ import { ids } from "../utils";
  * Tabpanel containing a single editor.
  */
 export function EditorPanel({
+  children,
   className,
   filename,
   group = "default",
@@ -41,8 +42,9 @@ export function EditorPanel({
       hidden={!active}
       id={ids.editorPanel({ filename, group })}
       role="tabpanel"
+      {...props}
     >
-      {Children.map(props.children, (node) => {
+      {Children.map(children, (node) => {
         if (typeof node === "object" && "props" in node) {
           return cloneElement(node, { filename, group });
         }
