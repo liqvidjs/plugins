@@ -1,3 +1,7 @@
+## 0.4.2 (January 31, 2025)
+
+- don't crash when running on the server
+
 ## 0.4.1 (April 14, 2023)
 
 - better scrolling for legacy recordings (don't scroll the entire page)

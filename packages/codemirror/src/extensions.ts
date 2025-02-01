@@ -1,5 +1,5 @@
-import type {KeyBinding} from "@codemirror/view";
-import {Keymap} from "@liqvid/keymap";
+import type { KeyBinding } from "@codemirror/view";
+import { Keymap } from "@liqvid/keymap";
 
 /**
  * Handle key sequences in `seqs` even if key capture is suspended.
@@ -11,7 +11,8 @@ export function passThrough(keymap: Keymap, seqs: string[] = []): KeyBinding[] {
     const can = cm2lv(key);
 
     // argh
-    const fake = new KeyboardEvent("keydown");
+    const fake =
+      typeof window === "undefined" ? null : new KeyboardEvent("keydown");
 
     return {
       key,
@@ -29,7 +30,9 @@ export function passThrough(keymap: Keymap, seqs: string[] = []): KeyBinding[] {
 /**
  * Convert CodeMirror key sequences to Liqvid format.
  */
-const mac = navigator.platform === "MacIntel";
+const mac =
+  typeof navigator !== "undefined" && navigator.platform === "MacIntel";
+
 function cm2lv(seq: string): string {
   seq = seq.replace("Mod", mac ? "Meta" : "Ctrl");
   seq = seq.replace(/-/g, "+");
