@@ -1,8 +1,10 @@
 import { onClick } from "@liqvid/utils/react";
 import { selectCmd } from "@lqv/codemirror";
+import classNames from "classnames";
 import { useCallback, useEffect, useMemo } from "react";
 import { useStore } from "zustand";
-import { type State, useBoothStore } from "../store";
+
+import { useBoothStore, type State } from "../store";
 import { ids } from "../utils";
 
 const selector = (state: State) => [
@@ -13,7 +15,7 @@ const selector = (state: State) => [
 /**
  * File selector component.
  */
-export function FileTabs() {
+export function FileTabs({ className }: { className?: string }) {
   const store = useBoothStore();
   const [activeGroup, activeFilename] = useStore(store, selector);
   const group = store.getState().groups[activeGroup];
@@ -22,6 +24,7 @@ export function FileTabs() {
   const select = useCallback(
     (filename: string) => {
       // record event
+      // @ts-expect-error TODO fix this
       if (recorder?.manager?.active) {
         recorder.capture(undefined, selectCmd + filename);
       }
@@ -94,14 +97,14 @@ export function FileTabs() {
   if (!group) return null;
 
   return (
-    <div className="lqv-file-tabs" role="tablist">
+    <div className={classNames("lqv-file-tabs", className)} role="tablist">
       {group.files.map(({ filename }) => (
         <button
-          key={filename}
-          className={`lqv-filetype-${getFileType(filename)}`}
-          id={ids.fileTab({ filename, group: activeGroup })}
           aria-controls={ids.editorPanel({ filename, group: activeGroup })}
           aria-selected={activeFilename === filename}
+          className={`lqv-filetype-${getFileType(filename)}`}
+          id={ids.fileTab({ filename, group: activeGroup })}
+          key={filename}
           role="tab"
           {...events}
         >

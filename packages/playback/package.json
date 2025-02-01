@@ -1,15 +1,20 @@
 {
   "name": "@lqv/playback",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Playback interface for Liqvid-compatible plugins",
   "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts"
+    },
     "./hack": {
       "import": "./dist/esm/hack.mjs",
-      "require": "./dist/cjs/hack.cjs"
+      "require": "./dist/cjs/hack.cjs",
+      "types": "./dist/types/hack.d.ts"
     },
     "./react": {
       "import": "./dist/esm/react.mjs",
-      "require": "./dist/cjs/react.cjs"
+      "require": "./dist/cjs/react.cjs",
+      "types": "./dist/types/react.d.ts"
     }
   },
   "typesVersions": {

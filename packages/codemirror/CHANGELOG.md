@@ -1,4 +1,4 @@
-## 0.4.2 (January 31, 2025)
+## 0.4.6 (January 31, 2025)
 
 - don't crash when running on the server
 

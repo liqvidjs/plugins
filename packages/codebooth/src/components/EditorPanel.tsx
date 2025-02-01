@@ -1,12 +1,21 @@
+import classNames from "classnames";
 import { Children, cloneElement } from "react";
 import { useStore } from "zustand";
+
 import { useBoothStore } from "../store";
 import { ids } from "../utils";
 
 /**
  * Tabpanel containing a single editor.
  */
-export const EditorPanel: React.FC<{
+export function EditorPanel({
+  className,
+  filename,
+  group = "default",
+  ...props
+}: {
+  className?: string;
+
   children?: React.ReactNode;
 
   /** Filename for the panel. */
@@ -17,8 +26,7 @@ export const EditorPanel: React.FC<{
    * @default "default"
    */
   group?: string;
-}> = (props) => {
-  const { filename, group = "default" } = props;
+}) {
   const store = useBoothStore();
   const active = useStore(
     store,
@@ -29,8 +37,8 @@ export const EditorPanel: React.FC<{
     <div
       aria-expanded={active}
       aria-labelledby={ids.fileTab({ filename, group })}
+      className={classNames("lqv-editor-panel", className)}
       hidden={!active}
-      className="lqv-editor-panel"
       id={ids.editorPanel({ filename, group })}
       role="tabpanel"
     >
@@ -42,4 +50,4 @@ export const EditorPanel: React.FC<{
       })}
     </div>
   );
-};
+}

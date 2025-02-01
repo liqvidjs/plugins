@@ -10,6 +10,7 @@ import { useME } from "@lqv/playback/react";
 import { useCallback, useEffect, useMemo } from "react";
 
 import { type Store, useBoothStore } from "../store";
+
 import { Editor } from "./Editor";
 
 type CodeData = Parameters<typeof cmReplay>[0]["data"];

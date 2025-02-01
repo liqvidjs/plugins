@@ -1,4 +1,4 @@
-import { type Extension, SelectionRange, StateEffect } from "@codemirror/state";
+import { SelectionRange, StateEffect, type Extension } from "@codemirror/state";
 import type { EditorView, ViewUpdate } from "@codemirror/view";
 
 export interface Range {

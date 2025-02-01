@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["recording.json", "recordings.json"]
+    "ignore": ["dist", "recording.json", "recordings.json"]
   },
   "formatter": {
     "enabled": true,

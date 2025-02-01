@@ -2,6 +2,7 @@ import { python } from "@codemirror/lang-python";
 import type { Extension } from "@codemirror/state";
 import { CodeRecording } from "@lqv/codemirror/recording";
 import { useEffect } from "react";
+
 import { CodeBooth } from "..";
 import {
   Buttons,

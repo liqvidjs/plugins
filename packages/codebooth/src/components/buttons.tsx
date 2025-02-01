@@ -1,7 +1,7 @@
 import { onClick } from "@liqvid/utils/react";
+import classNames from "classnames";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useStore } from "zustand";
-import classNames = require("classnames");
 
 import { useBoothStore } from "../store";
 import { ids } from "../utils";
@@ -9,25 +9,19 @@ import { ids } from "../utils";
 /** Div to hold buttons. */
 export function Buttons({
   className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={classNames("lqv-cb-buttons", className)} {...props} />;
+  children,
+}: { className?: string; children?: React.ReactNode }) {
+  return (
+    <div className={classNames("lqv-cb-buttons", className)}>{children}</div>
+  );
 }
 
 /** Button for clearing the output/console. */
 export function Clear({
-  children = "Clear",
   className,
-  shortcut = "Mod-L",
-  title = "Clear",
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  /**
-   * Shortcut to clear the output/console.
-   * @default "Mod-L"
-   */
-  shortcut?: string;
-}) {
+  children,
+  ...attrs
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const store = useBoothStore();
 
   const clear = useCallback(() => {
@@ -40,8 +34,8 @@ export function Clear({
     store.setState((prev) => ({
       shortcuts: {
         ...prev.shortcuts,
-        [shortcut]: {
-          key: shortcut,
+        "Mod-L": {
+          key: "Mod-L",
           run: () => {
             clear();
             return true;
@@ -51,26 +45,28 @@ export function Clear({
     }));
   }, []);
 
+  const label = "Clear";
+
   return (
     <button
+      aria-label={label}
       className={classNames("lqv-cb-clear", className)}
-      title={title}
-      type="button"
+      title={label}
       {...events}
-      {...props}
+      {...attrs}
     >
-      {children}
+      {children ?? label}
     </button>
   );
 }
 
 /** Button for copying the contents of one group to another. */
 export function Copy({
-  children = "Copy",
+  children,
   className,
-  from: propsFrom,
-  to: propsTo,
-  ...props
+  from: fromGroup,
+  to: toGroup,
+  ...attrs
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** Source editor group. */
   from: string;
@@ -83,11 +79,11 @@ export function Copy({
   const copy = useCallback(() => {
     const { groups } = store.getState();
 
-    const from = groups[propsFrom],
-      to = groups[propsTo];
+    const from = groups[fromGroup],
+      to = groups[toGroup];
 
     if (!(from && to)) {
-      console.error(`Could not copy from ${propsFrom} to ${propsTo}`);
+      console.error(`Could not copy from ${fromGroup} to ${toGroup}`);
       return;
     }
 
@@ -111,21 +107,19 @@ export function Copy({
   return (
     <button
       className={classNames("lqv-cb-copy", className)}
-      type="button"
       {...events}
-      {...props}
+      {...attrs}
     >
-      {children}
+      {children ?? "Copy"}
     </button>
   );
 }
 
 /** Button for resetting editor contents to initial state. */
 export function Reset({
-  children = "Reset",
   className,
-  title = "Reset",
-  ...props
+  children,
+  ...attrs
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const store = useBoothStore();
   const contents = useRef<Record<string, Record<string, string>>>({});
@@ -163,33 +157,26 @@ export function Reset({
 
   const resetEvents = useMemo(() => onClick(reset), []);
 
+  const label = "Reset";
+
   return (
     <button
       className={classNames("lqv-cb-reset", className)}
-      title={title}
-      type="button"
+      title={label}
       {...resetEvents}
-      {...props}
+      {...attrs}
     >
-      {children}
+      {children ?? "Reset"}
     </button>
   );
 }
 
 /** Button for running the code. */
 export function Run({
-  children = "Run",
   className,
-  shortcut = "Mod-Enter",
-  title = "Run",
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  /**
-   * Shortcut to run the code.
-   * @default "Mod-Enter"
-   */
-  shortcut?: string;
-}) {
+  children,
+  ...attrs
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const store = useBoothStore();
 
   // run callback
@@ -202,8 +189,8 @@ export function Run({
     store.setState((prev) => ({
       shortcuts: {
         ...prev.shortcuts,
-        [shortcut]: {
-          key: shortcut,
+        "Mod-Enter": {
+          key: "Mod-Enter",
           run: () => {
             run();
             return true;
@@ -220,21 +207,22 @@ export function Run({
     <button
       className={classNames("lqv-cb-run", className)}
       {...events}
-      {...props}
+      {...attrs}
     >
-      {children}
+      {children ?? "Run"}
     </button>
   );
 }
 
 /** Group selection tab. */
-export function Tab({
-  id,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  /** ID of {@link EditorGroup} this corresponds to */
-  id: string;
-}) {
+export const Tab: React.FC<
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    /** ID of {@link EditorGroup} this corresponds to */
+    id: string;
+  }
+> = (props) => {
+  const { children, id, ...attrs } = props;
+
   const store = useBoothStore();
   const active = useStore(store, (state) => state.activeGroup === id);
 
@@ -253,12 +241,21 @@ export function Tab({
       id={ids.groupTab({ group: id })}
       role="tab"
       {...events}
-      {...props}
-    />
+      {...attrs}
+    >
+      {props.children}
+    </button>
   );
-}
+};
 
 /** Holds a list of {@link Tab}s. */
-export function TabList(props: React.HTMLAttributes<HTMLDivElement>) {
-  return <div role="tablist" {...props} />;
-}
+export const TabList: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
+  props,
+) => {
+  const { children, ...attrs } = props;
+  return (
+    <div role="tablist" {...attrs}>
+      {children}
+    </div>
+  );
+};

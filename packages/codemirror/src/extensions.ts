@@ -30,11 +30,11 @@ export function passThrough(keymap: Keymap, seqs: string[] = []): KeyBinding[] {
 /**
  * Convert CodeMirror key sequences to Liqvid format.
  */
-const mac =
-  typeof navigator !== "undefined" && navigator.platform === "MacIntel";
-
 function cm2lv(seq: string): string {
-  seq = seq.replace("Mod", mac ? "Meta" : "Ctrl");
+  const isMac =
+    typeof globalThis.navigator !== "undefined" &&
+    navigator.platform === "MacIntel";
+  seq = seq.replace("Mod", isMac ? "Meta" : "Ctrl");
   seq = seq.replace(/-/g, "+");
   return Keymap.normalize(seq);
 }

@@ -4,8 +4,10 @@ import { useKeymap } from "@liqvid/keymap/react";
 import { selectCmd } from "@lqv/codemirror";
 import { passThrough } from "@lqv/codemirror/extensions";
 import { useEffect, useMemo } from "react";
+
 import { recording } from "../extensions";
 import { type State, useBoothStore } from "../store";
+
 import { Editor } from "./Editor";
 
 /** Recording editor. */

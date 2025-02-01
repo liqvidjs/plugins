@@ -1,6 +1,7 @@
 import { keymap } from "@codemirror/view";
 import type { CodeRecorder } from "@lqv/codemirror/recording";
 import { PlaybackContext, useME } from "@lqv/playback/react";
+import classNames from "classnames";
 import { useEffect, useRef } from "react";
 import { useStore } from "zustand";
 
@@ -18,7 +19,7 @@ export { Record } from "./components/Record";
 export { Replay, ReplayMultiple } from "./components/Replay";
 export { Resize } from "./components/Resize";
 export * from "./extensions";
-export { type State, type Store, useBoothStore } from "./store";
+export { useBoothStore, type State, type Store } from "./store";
 
 /**
  * Container for code editing/recording/replaying.
@@ -28,21 +29,24 @@ export const CodeBooth: React.FC<
     /** CodeMirror recorder. */
     recorder?: CodeRecorder;
   }
-> = (props) => {
-  const { children, recorder, ...attrs } = props;
+> = ({ children, className, recorder, ...attrs }) => {
   const store = useRef<Store>();
   if (!store.current) {
     store.current = makeStore({ recorder });
   }
-  const classNames = useStore(store.current, (state) => state.classNames);
+  const stateClassNames = useStore(store.current, (state) => state.classNames);
 
   /* render */
   return (
-    <div className={classNames.join(" ")} data-affords="click" {...attrs}>
+    <div
+      className={classNames(stateClassNames, className)}
+      data-affords="click"
+      {...attrs}
+    >
       <BoothStore.Provider value={store.current}>
         <PlaybackContext.Provider value={useME()}>
           <KeyboardShortcuts />
-          {props.children}
+          {children}
         </PlaybackContext.Provider>
       </BoothStore.Provider>
     </div>

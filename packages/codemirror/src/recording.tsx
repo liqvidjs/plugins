@@ -1,10 +1,12 @@
 import type { Extension } from "@codemirror/state";
 import { EditorView, keymap, ViewPlugin } from "@codemirror/view";
-import { type RecorderPlugin, ReplayDataRecorder } from "@liqvid/recording";
+import { ReplayDataRecorder, type RecorderPlugin } from "@liqvid/recording";
 import { bind } from "@liqvid/utils/misc";
 import type { ReplayData } from "@liqvid/utils/replay-data";
-import { scrollCmd } from ".";
+
 import { icon } from "./icon";
+
+import { scrollCmd } from ".";
 
 export type EditorChange = [
   [number, ...(EditorChange | number | string)[]],
