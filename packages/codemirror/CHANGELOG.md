@@ -1,3 +1,7 @@
+## 0.4.8 (Feb 1, 2025)
+
+- fix ESM build
+
 ## 0.4.7 (Feb 1, 2025)
 
 - fix `fakeSelection()` extension

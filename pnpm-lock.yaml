@@ -13,13 +13,16 @@ importers:
         version: 1.9.4
       '@liqvid/keymap':
         specifier: ^1.2.2
-        version: 1.2.2(@types/react@19.0.8)(react@19.0.0)
+        version: 1.2.2(@types/react@18.3.18)(react@19.0.0)
+      '@liqvid/playback':
+        specifier: ^1.1.7
+        version: 1.1.7(react@19.0.0)
       '@liqvid/recording':
         specifier: ^0.2.3
-        version: 0.2.3(@types/react@19.0.8)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
+        version: 0.2.3(@types/react@18.3.18)(liqvid@2.1.15(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@19.0.0))(react@19.0.0))(react@19.0.0)
       '@testing-library/react':
         specifier: ^13.3.0
-        version: 13.4.0(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 13.4.0(@types/react@18.3.18)(react-dom@18.3.1(react@19.0.0))(react@19.0.0)
       '@types/jest':
         specifier: ^28.1.7
         version: 28.1.8
@@ -27,11 +30,11 @@ importers:
         specifier: ^18.7.9
         version: 18.19.70
       '@types/react':
-        specifier: ^19
-        version: 19.0.8
+        specifier: ^18
+        version: 18.3.18
       '@types/react-dom':
-        specifier: ^19
-        version: 19.0.3(@types/react@19.0.8)
+        specifier: ^18
+        version: 18.3.5(@types/react@18.3.18)
       jest:
         specifier: ^28.1.3
         version: 28.1.3(@types/node@18.19.70)(ts-node@10.9.2(@types/node@18.19.70)(typescript@5.7.3))
@@ -40,7 +43,7 @@ importers:
         version: 28.1.3
       liqvid:
         specifier: ^2.1.15
-        version: 2.1.15(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 2.1.15(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@19.0.0))(react@19.0.0)
       nib:
         specifier: ^1.2.0
         version: 1.2.0(stylus@0.59.0)
@@ -48,8 +51,8 @@ importers:
         specifier: ^19
         version: 19.0.0
       react-dom:
-        specifier: ^19
-        version: 19.0.0(react@19.0.0)
+        specifier: ^18
+        version: 18.3.1(react@19.0.0)
       stylus:
         specifier: ^0.59.0
         version: 0.59.0
@@ -133,11 +136,11 @@ importers:
   packages/codemirror:
     dependencies:
       '@liqvid/keymap':
-        specifier: ^1.2.2
-        version: 1.2.2(@types/react@18.3.18)(react@18.3.1)
+        specifier: ^1.2
+        version: 1.2.2(@types/react@18.3.18)(react@19.0.0)
       '@liqvid/recording':
-        specifier: ^0.2.1
-        version: 0.2.3(@types/react@18.3.18)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        specifier: ^0.2.3
+        version: 0.2.3(@types/react@18.3.18)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       '@liqvid/utils':
         specifier: ^1.8.0
         version: 1.9.1
@@ -145,14 +148,14 @@ importers:
         specifier: workspace:^
         version: link:../playback
       '@types/react':
-        specifier: '>=18.0.0'
+        specifier: '>=18'
         version: 18.3.18
       liqvid:
-        specifier: ^2.1.9
-        version: 2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
+        specifier: ^2.1.15
+        version: 2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react:
-        specifier: '>=18.0.0'
-        version: 18.3.1
+        specifier: '>=18'
+        version: 19.0.0
     devDependencies:
       '@codemirror/state':
         specifier: '>=6'
@@ -602,10 +605,10 @@ packages:
       react:
         optional: true
 
-  '@liqvid/playback@1.1.6':
-    resolution: {integrity: sha512-VLLejnFuJdUNjt6Is+Eu9xdfg0do9ElpH4QBUReRDosV1zOFdAO5au2/i2VkfwOvQNJYSrRTQsfxWacdNCdy0Q==}
+  '@liqvid/playback@1.1.7':
+    resolution: {integrity: sha512-/Ga+z2kG7DYCXgmcokPy7Zscu7aYkw/84UpOHfTwYBRuWc0QsqHteIta6ICnHN6GylJQMZ+fIUrblhRLJnqkWg==}
     peerDependencies:
-      react: '>=17.0.0'
+      react: '>=18.0.0'
     peerDependenciesMeta:
       react:
         optional: true
@@ -619,11 +622,14 @@ packages:
       liqvid:
         optional: true
 
+  '@liqvid/utils@1.10.0':
+    resolution: {integrity: sha512-9ke5HTHGfUxqBx8HiV8AtpA1Crv462Dz1VIQaGP1xa8AKfvBYx5wdHEXN4T/83fy5eCg/1ZFvKK9SYze++3Yjg==}
+
   '@liqvid/utils@1.9.1':
     resolution: {integrity: sha512-nGxglx2T7SaaB5Nfg92eZTUlgDqZNneg3588ZEarcL+uQq+VF6thLmQ0BNDS9cJBoiuf9e+A7GtkTvQEVTz3CA==}
 
-  '@lqv/playback@0.0.1':
-    resolution: {integrity: sha512-Bl5AFp7Igu1mjpthNtGfXlL/EBojKthmL7nRdpzj0ZlX4FRTosEyOJrjXaMellEyAwqzLX8gN/wuctUvKb+WZA==}
+  '@lqv/playback@0.2.2':
+    resolution: {integrity: sha512-YmjGPHYX8MhcfjHTHH67Nq8hWOge80u/K126Tf9MkjN8dQdH51EGup2NM3skgYIYQmE+0fwzlwmGyplKPCa9Aw==}
 
   '@marijn/find-cluster-break@1.0.2':
     resolution: {integrity: sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==}
@@ -2800,11 +2806,11 @@ snapshots:
       '@lezer/highlight': 1.2.1
       '@lezer/lr': 1.4.2
 
-  '@liqvid/keymap@1.2.2(@types/react@18.3.18)(react@18.3.1)':
+  '@liqvid/keymap@1.2.2(@types/react@18.3.18)(react@19.0.0)':
     dependencies:
       '@types/react': 18.3.18
     optionalDependencies:
-      react: 18.3.1
+      react: 19.0.0
 
   '@liqvid/keymap@1.2.2(@types/react@19.0.8)(react@18.3.1)':
     dependencies:
@@ -2812,42 +2818,49 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
 
-  '@liqvid/keymap@1.2.2(@types/react@19.0.8)(react@19.0.0)':
+  '@liqvid/playback@1.1.7(react@18.3.1)':
     dependencies:
-      '@types/react': 19.0.8
-    optionalDependencies:
-      react: 19.0.0
-
-  '@liqvid/playback@1.1.6(react@18.3.1)':
-    dependencies:
-      '@liqvid/utils': 1.9.1
-      '@lqv/playback': 0.0.1
+      '@liqvid/utils': 1.10.0
+      '@lqv/playback': 0.2.2
       '@types/events': 3.0.3
       events: 3.3.0
       strict-event-emitter-types: 2.0.0
     optionalDependencies:
       react: 18.3.1
 
-  '@liqvid/playback@1.1.6(react@19.0.0)':
+  '@liqvid/playback@1.1.7(react@19.0.0)':
     dependencies:
-      '@liqvid/utils': 1.9.1
-      '@lqv/playback': 0.0.1
+      '@liqvid/utils': 1.10.0
+      '@lqv/playback': 0.2.2
       '@types/events': 3.0.3
       events: 3.3.0
       strict-event-emitter-types: 2.0.0
     optionalDependencies:
       react: 19.0.0
 
-  '@liqvid/recording@0.2.3(@types/react@18.3.18)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@liqvid/recording@0.2.3(@types/react@18.3.18)(liqvid@2.1.15(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@19.0.0))(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@liqvid/keymap': 1.2.2(@types/react@18.3.18)(react@18.3.1)
+      '@liqvid/keymap': 1.2.2(@types/react@18.3.18)(react@19.0.0)
       '@liqvid/utils': 1.9.1
       '@types/events': 3.0.3
       events: 3.3.0
-      react: 18.3.1
+      react: 19.0.0
       strict-event-emitter-types: 2.0.0
     optionalDependencies:
-      liqvid: 2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
+      liqvid: 2.1.15(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@19.0.0))(react@19.0.0)
+    transitivePeerDependencies:
+      - '@types/react'
+
+  '@liqvid/recording@0.2.3(@types/react@18.3.18)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@liqvid/keymap': 1.2.2(@types/react@18.3.18)(react@19.0.0)
+      '@liqvid/utils': 1.9.1
+      '@types/events': 3.0.3
+      events: 3.3.0
+      react: 19.0.0
+      strict-event-emitter-types: 2.0.0
+    optionalDependencies:
+      liqvid: 2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -2864,24 +2877,15 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@liqvid/recording@0.2.3(@types/react@19.0.8)(liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)':
+  '@liqvid/utils@1.10.0':
     dependencies:
-      '@liqvid/keymap': 1.2.2(@types/react@19.0.8)(react@19.0.0)
-      '@liqvid/utils': 1.9.1
-      '@types/events': 3.0.3
-      events: 3.3.0
-      react: 19.0.0
-      strict-event-emitter-types: 2.0.0
-    optionalDependencies:
-      liqvid: 2.1.15(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-    transitivePeerDependencies:
-      - '@types/react'
+      bezier-easing: 2.1.0
 
   '@liqvid/utils@1.9.1':
     dependencies:
       bezier-easing: 2.1.0
 
-  '@lqv/playback@0.0.1': {}
+  '@lqv/playback@0.2.2': {}
 
   '@marijn/find-cluster-break@1.0.2': {}
 
@@ -2924,13 +2928,13 @@ snapshots:
       lz-string: 1.5.0
       pretty-format: 27.5.1
 
-  '@testing-library/react@13.4.0(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@testing-library/react@13.4.0(@types/react@18.3.18)(react-dom@18.3.1(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@testing-library/dom': 8.20.1
-      '@types/react-dom': 18.3.5(@types/react@19.0.8)
+      '@types/react-dom': 18.3.5(@types/react@18.3.18)
       react: 19.0.0
-      react-dom: 19.0.0(react@19.0.0)
+      react-dom: 18.3.1(react@19.0.0)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -3008,9 +3012,9 @@ snapshots:
 
   '@types/prop-types@15.7.14': {}
 
-  '@types/react-dom@18.3.5(@types/react@19.0.8)':
+  '@types/react-dom@18.3.5(@types/react@18.3.18)':
     dependencies:
-      '@types/react': 19.0.8
+      '@types/react': 18.3.18
 
   '@types/react-dom@19.0.3(@types/react@18.3.18)':
     dependencies:
@@ -4096,24 +4100,38 @@ snapshots:
 
   lines-and-columns@1.2.4: {}
 
-  liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@18.3.1))(react@18.3.1):
+  liqvid@2.1.15(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@19.0.0))(react@19.0.0):
     dependencies:
-      '@liqvid/keymap': 1.2.2(@types/react@18.3.18)(react@18.3.1)
-      '@liqvid/playback': 1.1.6(react@18.3.1)
+      '@liqvid/keymap': 1.2.2(@types/react@18.3.18)(react@19.0.0)
+      '@liqvid/playback': 1.1.7(react@19.0.0)
+      '@liqvid/utils': 1.9.1
+      '@types/events': 3.0.3
+      '@types/node': 22.13.0
+      '@types/react': 18.3.18
+      '@types/react-dom': 18.3.5(@types/react@18.3.18)
+      events: 3.3.0
+      react: 19.0.0
+      react-dom: 18.3.1(react@19.0.0)
+      strict-event-emitter-types: 2.0.0
+
+  liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      '@liqvid/keymap': 1.2.2(@types/react@18.3.18)(react@19.0.0)
+      '@liqvid/playback': 1.1.7(react@19.0.0)
       '@liqvid/utils': 1.9.1
       '@types/events': 3.0.3
       '@types/node': 22.13.0
       '@types/react': 18.3.18
       '@types/react-dom': 19.0.3(@types/react@18.3.18)
       events: 3.3.0
-      react: 18.3.1
-      react-dom: 19.0.0(react@18.3.1)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
       strict-event-emitter-types: 2.0.0
 
   liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@18.3.1))(react@18.3.1):
     dependencies:
       '@liqvid/keymap': 1.2.2(@types/react@19.0.8)(react@18.3.1)
-      '@liqvid/playback': 1.1.6(react@18.3.1)
+      '@liqvid/playback': 1.1.7(react@18.3.1)
       '@liqvid/utils': 1.9.1
       '@types/events': 3.0.3
       '@types/node': 22.13.0
@@ -4122,20 +4140,6 @@ snapshots:
       events: 3.3.0
       react: 18.3.1
       react-dom: 19.0.0(react@18.3.1)
-      strict-event-emitter-types: 2.0.0
-
-  liqvid@2.1.15(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
-    dependencies:
-      '@liqvid/keymap': 1.2.2(@types/react@19.0.8)(react@19.0.0)
-      '@liqvid/playback': 1.1.6(react@19.0.0)
-      '@liqvid/utils': 1.9.1
-      '@types/events': 3.0.3
-      '@types/node': 22.13.0
-      '@types/react': 19.0.8
-      '@types/react-dom': 19.0.3(@types/react@19.0.8)
-      events: 3.3.0
-      react: 19.0.0
-      react-dom: 19.0.0(react@19.0.0)
       strict-event-emitter-types: 2.0.0
 
   locate-path@5.0.0:
@@ -4312,6 +4316,12 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
       react: 18.3.1
+      scheduler: 0.23.2
+
+  react-dom@18.3.1(react@19.0.0):
+    dependencies:
+      loose-envify: 1.4.0
+      react: 19.0.0
       scheduler: 0.23.2
 
   react-dom@19.0.0(react@18.3.1):
