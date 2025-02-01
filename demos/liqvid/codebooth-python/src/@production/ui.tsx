@@ -1,6 +1,6 @@
-import {loadJSON} from "@liqvid/utils/json";
-import {PythonReplay} from "@lqv/codebooth/python";
-import type {cmReplay} from "@lqv/codemirror";
+import { loadJSON } from "@liqvid/utils/json";
+import { PythonReplay } from "@lqv/codebooth/python";
+import type { cmReplay } from "@lqv/codemirror";
 
 declare module "@liqvid/utils/json" {
   interface GetJSONMap {
@@ -9,7 +9,5 @@ declare module "@liqvid/utils/json" {
 }
 
 export function UI() {
-  return (
-    <PythonReplay replay={loadJSON("code")}/>
-  );
+  return <PythonReplay replay={loadJSON("code")} />;
 }

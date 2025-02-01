@@ -1,8 +1,9 @@
-import {length, ReplayData} from "@liqvid/utils/replay-data";
-import type {MediaElement, MediaElementEventMap} from "@lqv/playback";
-import {PlaybackContext, useME} from "@lqv/playback/react";
-import React, {useEffect, useRef, useState} from "react";
-import {Sequence, useCurrentFrame, useVideoConfig} from "remotion";
+import { length, type ReplayData } from "@liqvid/utils/replay-data";
+import type { MediaElement, MediaElementEventMap } from "@lqv/playback";
+import { PlaybackContext, useME } from "@lqv/playback/react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import { Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 
 /** Wrapper component for using Liqvid plugins in Remotion. */
 export const Bridge: React.FC<{
@@ -27,10 +28,10 @@ export function ReplaySequence<T>(
     /** Recording data, or a Promise loading it. */
     data: Promise<ReplayData<T>> | ReplayData<T>;
   }> &
-    React.ComponentProps<typeof Sequence>
+    React.ComponentProps<typeof Sequence>,
 ): ReturnType<typeof Sequence> {
-  const {fps} = useVideoConfig();
-  const {data, ...attrs} = props;
+  const { fps } = useVideoConfig();
+  const { data, ...attrs } = props;
 
   const [duration, setDuration] = useState(() => {
     if (data instanceof Promise) {
@@ -49,7 +50,7 @@ export function ReplaySequence<T>(
 
 /** Sync with Remotion playback. */
 function Sync(): null {
-  const {fps} = useVideoConfig();
+  const { fps } = useVideoConfig();
   const playback = useME() as RemotionPlayback;
 
   const frame = useCurrentFrame();
@@ -68,20 +69,25 @@ to get the @lqv/* plugins working. It's not hard to do this properly, but it
 depends a bit on whether we're in `@remotion/player` or just `remotion`. */
 class RemotionPlayback implements MediaElement {
   currentTime = 0;
-  duration = Infinity;
+  duration = Number.POSITIVE_INFINITY;
   paused = false;
   muted = false;
   playbackRate = 1;
   seeking = false;
   volume = 1;
 
-  private __listeners: Partial<Record<keyof MediaElementEventMap, (() => unknown)[]>>;
+  private __listeners: Partial<
+    Record<keyof MediaElementEventMap, (() => unknown)[]>
+  >;
 
   constructor() {
     this.__listeners = {};
   }
 
-  addEventListener<K extends keyof MediaElementEventMap>(type: K, listener: () => unknown): void {
+  addEventListener<K extends keyof MediaElementEventMap>(
+    type: K,
+    listener: () => unknown,
+  ): void {
     if (!this.__listeners.hasOwnProperty(type)) {
       this.__listeners[type] = [];
     }
@@ -90,7 +96,7 @@ class RemotionPlayback implements MediaElement {
 
   removeEventListener<K extends keyof MediaElementEventMap>(
     type: K,
-    listener: () => unknown
+    listener: () => unknown,
   ): void {
     if (!this.__listeners[type]) {
       return;

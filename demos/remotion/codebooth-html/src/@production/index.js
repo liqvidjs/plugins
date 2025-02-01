@@ -3,21 +3,38 @@ import "../style.css";
 import "../syntax.css";
 import "./interactive.css";
 
-import {syntaxHighlighting} from "@codemirror/language";
-import {classHighlighter} from "@lezer/highlight";
-import {basicSetup, Buttons, Clear, CodeBooth, Console, Copy, Editor, EditorGroup, EditorPanel, FileTabs, Replay, ReplayMultiple, Resize, Run, Tab, TabList} from "@lqv/codebooth";
-import {extensionFromFilename, HTMLPreview} from "@lqv/codebooth/html";
-import {Bridge} from "@lqv/remotion";
-import {Player} from "@remotion/player";
-import {Audio} from "remotion";
+import { syntaxHighlighting } from "@codemirror/language";
+import { classHighlighter } from "@lezer/highlight";
+import {
+  basicSetup,
+  Buttons,
+  Clear,
+  CodeBooth,
+  Console,
+  Copy,
+  Editor,
+  EditorGroup,
+  EditorPanel,
+  FileTabs,
+  Replay,
+  ReplayMultiple,
+  Resize,
+  Run,
+  Tab,
+  TabList,
+} from "@lqv/codebooth";
+import { extensionFromFilename, HTMLPreview } from "@lqv/codebooth/html";
+import { Bridge } from "@lqv/remotion";
+import { Player } from "@remotion/player";
+import { Audio } from "remotion";
 
 // import audio from "../../public/audio.webm";
-import {Popup} from "../components/Popup";
-import {ToggleButton} from "../components/ToggleButton";
-import {files} from "../files";
-import {duration, fps} from "../metadata";
+import { Popup } from "../components/Popup";
+import { ToggleButton } from "../components/ToggleButton";
+import { files } from "../files";
+import { duration, fps } from "../metadata";
 
-const recordingData = fetch("./recordings.json").then(res => res.json());
+const recordingData = fetch("./recordings.json").then((res) => res.json());
 
 function App() {
   return (
@@ -29,7 +46,7 @@ function App() {
       compositionHeight={window.innerHeight}
       fps={fps}
       style={{
-        width: "100%"
+        width: "100%",
       }}
       controls
     />
@@ -71,7 +88,7 @@ function Content() {
                 extensions={[
                   basicSetup,
                   extensionFromFilename(filename),
-                  syntaxHighlighting(classHighlighter)
+                  syntaxHighlighting(classHighlighter),
                 ]}
               />
             </EditorPanel>
@@ -85,14 +102,14 @@ function Content() {
                 extensions={[
                   basicSetup,
                   extensionFromFilename(filename),
-                  syntaxHighlighting(classHighlighter)
+                  syntaxHighlighting(classHighlighter),
                 ]}
               />
             </EditorPanel>
           ))}
         </EditorGroup>
-        <Resize min={.1} max={.3} />
-        <Resize dir="ns" min={0.04} max={.5} />
+        <Resize min={0.1} max={0.3} />
+        <Resize dir="ns" min={0.04} max={0.5} />
         <Popup title="Preview">
           <HTMLPreview />
         </Popup>

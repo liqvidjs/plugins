@@ -1,9 +1,9 @@
 import "./Record.css";
 
-import {AudioRecorder, RecordingManager} from "@liqvid/recording";
-import {length} from "@liqvid/utils/replay-data";
-import {CodeRecorder} from "@lqv/codemirror/recording";
-import {useCallback, useEffect, useState} from "react";
+import { AudioRecorder, RecordingManager } from "@liqvid/recording";
+import { length } from "@liqvid/utils/replay-data";
+import { CodeRecorder } from "@lqv/codemirror/recording";
+import { useCallback, useEffect, useState } from "react";
 
 type CodingData = ReturnType<CodeRecorder["finalizeRecording"]>;
 type RecordingData = {
@@ -25,7 +25,8 @@ export function RecordingControl() {
     if (!data) {
       return;
     }
-    const warn = (e: BeforeUnloadEvent) => e.returnValue = "You have recording data";
+    const warn = (e: BeforeUnloadEvent) =>
+      (e.returnValue = "You have recording data");
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [data]);
@@ -35,12 +36,12 @@ export function RecordingControl() {
       (manager.endRecording() as Promise<RecordingData>).then(
         (recordingData) => {
           setData(recordingData);
-        }
+        },
       );
     } else {
       manager.beginRecording({
         audio: audioRecorder,
-        coding: codeRecorder
+        coding: codeRecorder,
       });
     }
     setActive(!active);

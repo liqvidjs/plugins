@@ -3,22 +3,39 @@ import "../style.css";
 import "../syntax.css";
 import "./interactive.css";
 
-import {syntaxHighlighting} from "@codemirror/language";
-import {classHighlighter} from "@lezer/highlight";
-import {basicSetup, Buttons, Clear, CodeBooth, Console, Copy, Editor, EditorGroup, EditorPanel, FileTabs, Replay, ReplayMultiple, Resize, Run, Tab, TabList} from "@lqv/codebooth";
-import {extensionFromFilename, HTMLPreview} from "@lqv/codebooth/html";
-import {Bridge} from "@lqv/gsap";
-import {gsap} from "gsap";
+import { syntaxHighlighting } from "@codemirror/language";
+import { classHighlighter } from "@lezer/highlight";
+import {
+  basicSetup,
+  Buttons,
+  Clear,
+  CodeBooth,
+  Console,
+  Copy,
+  Editor,
+  EditorGroup,
+  EditorPanel,
+  FileTabs,
+  Replay,
+  ReplayMultiple,
+  Resize,
+  Run,
+  Tab,
+  TabList,
+} from "@lqv/codebooth";
+import { extensionFromFilename, HTMLPreview } from "@lqv/codebooth/html";
+import { Bridge } from "@lqv/gsap";
+import { gsap } from "gsap";
 
-import {Audio} from "./Audio";
-import {Popup} from "../components/Popup";
-import {ToggleButton} from "../components/ToggleButton";
-import {files} from "../files";
-import {duration} from "../metadata";
-import {ScrubberBar} from "./ScrubberBar";
+import { Audio } from "./Audio";
+import { Popup } from "../components/Popup";
+import { ToggleButton } from "../components/ToggleButton";
+import { files } from "../files";
+import { duration } from "../metadata";
+import { ScrubberBar } from "./ScrubberBar";
 
-const tl = gsap.timeline({duration, paused: true});
-const recordingData = fetch("./recordings.json").then(res => res.json());
+const tl = gsap.timeline({ duration, paused: true });
+const recordingData = fetch("./recordings.json").then((res) => res.json());
 
 function App() {
   return (
@@ -66,7 +83,7 @@ function Content() {
                 extensions={[
                   basicSetup,
                   extensionFromFilename(filename),
-                  syntaxHighlighting(classHighlighter)
+                  syntaxHighlighting(classHighlighter),
                 ]}
               />
             </EditorPanel>
@@ -80,14 +97,14 @@ function Content() {
                 extensions={[
                   basicSetup,
                   extensionFromFilename(filename),
-                  syntaxHighlighting(classHighlighter)
+                  syntaxHighlighting(classHighlighter),
                 ]}
               />
             </EditorPanel>
           ))}
         </EditorGroup>
-        <Resize min={.1} max={.3} />
-        <Resize dir="ns" min={0.04} max={.5} />
+        <Resize min={0.1} max={0.3} />
+        <Resize dir="ns" min={0.04} max={0.5} />
         <Popup title="Preview">
           <HTMLPreview />
         </Popup>

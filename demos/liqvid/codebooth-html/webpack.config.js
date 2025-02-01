@@ -10,8 +10,8 @@ module.exports = {
   },
 
   externals: {
-    "liqvid": "Liqvid",
-    "react": "React",
+    liqvid: "Liqvid",
+    react: "React",
     "react-dom": "ReactDOM",
   },
 

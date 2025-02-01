@@ -14,7 +14,8 @@
   width: calc(100% - var(--split));
 }
 
-.lqv-editor-group > *, .lqv-editor-panel > * {
+.lqv-editor-group > *,
+.lqv-editor-panel > * {
   height: 100%;
   /* width: 100%; */
 }
@@ -89,22 +90,22 @@
 
 .lqv-file-tabs > [role="tab"][aria-selected="true"] {
   background: #37373d;
-  color: #FFF;
+  color: #fff;
 }
 
 *[class*="lqv-filetype-"]::before {
-	font-family: monospace;
-	font-weight: bold;
-	left: 0.5em;
-	width: 1em;
-	text-align: center;
-	position: absolute;
+  font-family: monospace;
+  font-weight: bold;
+  left: 0.5em;
+  width: 1em;
+  text-align: center;
+  position: absolute;
 }
 
 /* specific filetypes */
 .lqv-filetype-html::before {
   content: "<>";
-  color: #F66;
+  color: #f66;
 }
 
 .lqv-filetype-js::before {
@@ -134,7 +135,7 @@
 
 /* preview */
 .lqv-preview {
-  background: #FFF;
+  background: #fff;
   border-radius: 0 0 2px 2px;
   display: block;
   height: 100%;
@@ -202,14 +203,16 @@
   z-index: 90;
 }
 
-.ui-resizable-e, .ui-resizable-ew {
+.ui-resizable-e,
+.ui-resizable-ew {
   cursor: ew-resize;
   height: 100%;
   top: 0;
   width: 7px;
 }
 
-.ui-resizable-s, .ui-resizable-ns {
+.ui-resizable-s,
+.ui-resizable-ns {
   height: 7px;
   cursor: ns-resize;
 }

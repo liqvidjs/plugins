@@ -1,4 +1,4 @@
-export const Targets: React.FC<React.PropsWithChildren<{}>> = (props) =>
+export const Targets: React.FC<React.PropsWithChildren<{}>> = (props) => (
   <>
     <span id="watch">Look, you can point at things</span>
     <div id="targets">
@@ -11,4 +11,5 @@ export const Targets: React.FC<React.PropsWithChildren<{}>> = (props) =>
       </svg>
       {props.children}
     </div>
-  </>;
+  </>
+);

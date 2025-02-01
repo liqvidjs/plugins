@@ -6,7 +6,7 @@
   font-family: "Monaco", monospace;
 }
 .cm-activeLine {
-  background: rgba(255,255,255,0.067);
+  background: rgba(255, 255, 255, 0.067);
 }
 .cm-activeLineGutter {
   background: #333;
@@ -33,7 +33,6 @@
   outline: 1px solid #333;
 }
 
-
 .cm-selectionBackground,
 body.dark.cm-focused .cm-selectionBackground {
   background: #005ca4 !important;
@@ -44,8 +43,8 @@ body.dark.cm-focused .cm-selectionBackground {
 }
 .lqv-codebooth .cm-matchingBracket,
 .lqv-codebooth .cm-focused .cm-matchingBracket {
-  background: rgba(255,255,255,0.067);
-  outline: 1px solid rgba(255,255,255,0.133);
+  background: rgba(255, 255, 255, 0.067);
+  outline: 1px solid rgba(255, 255, 255, 0.133);
 }
 
 /* tokens */
@@ -53,7 +52,7 @@ body.dark.cm-focused .cm-selectionBackground {
   color: #b688be;
 }
 .tok-atom {
-  color: #CE9178;
+  color: #ce9178;
 }
 .tok-bool {
   color: #ff0;
@@ -62,7 +61,7 @@ body.dark.cm-focused .cm-selectionBackground {
   color: #00b7ff;
 }
 .tok-comment {
-  color: #6A9955;
+  color: #6a9955;
 }
 .tok-labelName {
   color: #ec4646;
@@ -78,7 +77,7 @@ body.dark.cm-focused .cm-selectionBackground {
 }
 .tok-string,
 .tok-string2 {
-  color: #CE9178;
+  color: #ce9178;
 }
 .tok-propertyName {
   color: #b3dbfc;

@@ -4,7 +4,10 @@
   padding: 0;
 }
 
-html, body, #root, .App {
+html,
+body,
+#root,
+.App {
   background-color: #fff;
   height: 100%;
   width: 100%;
@@ -18,10 +21,10 @@ html, body, #root, .App {
 .__remotion-player {
   background-color: #fff;
   margin-left: 0 !important;
-	margin-top: 0 !important;
-	width: 100% !important;
-	height: 100% !important;
-	transform: none !important;
+  margin-top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
 }
 
 #watch {

@@ -10,14 +10,10 @@
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/types/*.d.ts"
-      ]
+      "*": ["./dist/types/*.d.ts"]
     }
   },
-  "files": [
-    "dist/*"
-  ],
+  "files": ["dist/*"],
   "scripts": {
     "build": "pnpm build:clean; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -rf dist",
@@ -31,9 +27,7 @@
     "type": "git",
     "url": "git+https://github.com/liqvidjs/plugins.git"
   },
-  "keywords": [
-    "liqvid"
-  ],
+  "keywords": ["liqvid"],
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
   "license": "MIT",
   "bugs": {

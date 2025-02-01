@@ -1,8 +1,8 @@
-import type {MediaElement} from "@lqv/playback";
-import {PlaybackContext} from "@lqv/playback/react";
-import type {gsap} from "gsap";
-import {useRef} from "react";
-import {EventEmitter} from "./EventEmitter";
+import type { MediaElement } from "@lqv/playback";
+import { PlaybackContext } from "@lqv/playback/react";
+import type { gsap } from "gsap";
+import { useRef } from "react";
+import { EventEmitter } from "./EventEmitter";
 
 // GSAP already provides this, but as a global type,
 // which causes TS to complain about private names
@@ -20,7 +20,9 @@ export const Bridge: React.FC<
   }
 
   return (
-    <PlaybackContext.Provider value={playback.current}>{props.children}</PlaybackContext.Provider>
+    <PlaybackContext.Provider value={playback.current}>
+      {props.children}
+    </PlaybackContext.Provider>
   );
 };
 
@@ -33,7 +35,7 @@ class GSAPPlayback extends EventEmitter implements MediaElement {
 
   constructor(
     /** GSAP {@link https://greensock.com/docs/v3/GSAP/Timeline Timeline} to sync with. */
-    public tl: GSAPTimeline
+    public tl: GSAPTimeline,
   ) {
     super();
 

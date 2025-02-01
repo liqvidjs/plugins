@@ -14,7 +14,7 @@ declare module "skulpt" {
     name: string,
     dumpJS: boolean,
     body: string,
-    canSuspend: boolean
+    canSuspend: boolean,
   ): void;
 
   const misceval: {

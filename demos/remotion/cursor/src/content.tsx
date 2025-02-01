@@ -1,6 +1,6 @@
 export const duration = 12.124;
 
-export const Targets: React.FC<React.PropsWithChildren<{}>> = (props) =>
+export const Targets: React.FC<React.PropsWithChildren<{}>> = (props) => (
   <>
     <div id="targets">
       <span id="watch">Look, you can point at things</span>
@@ -13,4 +13,5 @@ export const Targets: React.FC<React.PropsWithChildren<{}>> = (props) =>
       </svg>
       {props.children}
     </div>
-  </>;
+  </>
+);

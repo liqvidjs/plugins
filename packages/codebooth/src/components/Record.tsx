@@ -1,12 +1,12 @@
-import {Extension} from "@codemirror/state";
-import {keymap} from "@codemirror/view";
-import {useKeymap} from "@liqvid/keymap/react";
-import {selectCmd} from "@lqv/codemirror";
-import {passThrough} from "@lqv/codemirror/extensions";
-import {useEffect, useMemo} from "react";
-import {recording} from "../extensions";
-import {State, useBoothStore} from "../store";
-import {Editor} from "./Editor";
+import type { Extension } from "@codemirror/state";
+import { keymap } from "@codemirror/view";
+import { useKeymap } from "@liqvid/keymap/react";
+import { selectCmd } from "@lqv/codemirror";
+import { passThrough } from "@lqv/codemirror/extensions";
+import { useEffect, useMemo } from "react";
+import { recording } from "../extensions";
+import { type State, useBoothStore } from "../store";
+import { Editor } from "./Editor";
 
 /** Recording editor. */
 export const Record: React.FC<
@@ -44,15 +44,15 @@ export const Record: React.FC<
       lqvKeymap
         ? [keymap.of(passThrough(lqvKeymap, passKeys)), ...extensions]
         : extensions,
-    [passKeys]
+    [passKeys],
   );
 
   // attach recording extensions --- this has to be done this way because
   // the `shortcuts` Compartment will abort further handling of the sequence
   useEffect(() => {
     const state = store.getState();
-    const {view} = state.groups[group].files.find(
-      (file) => file.filename === props.filename
+    const { view } = state.groups[group].files.find(
+      (file) => file.filename === props.filename,
     );
 
     view.dispatch({
@@ -73,7 +73,7 @@ export const Record: React.FC<
 /* NOOOOOOOOOO */
 const modifiedRecorder = Symbol();
 
-type Hack = State["recorder"] & {[modifiedRecorder]: boolean};
+type Hack = State["recorder"] & { [modifiedRecorder]: boolean };
 
 function includeFilenameInRecording(state: State) {
   // only do this if we are recording in multiple files
@@ -81,7 +81,7 @@ function includeFilenameInRecording(state: State) {
 
   outer: {
     for (const group of Object.values(state.groups)) {
-      for (const {view} of group.files) {
+      for (const { view } of group.files) {
         const extnState = recording.get(view.state);
         if (extnState instanceof Array && extnState.length > 0) {
           recordingExtensions++;

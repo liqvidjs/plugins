@@ -1,5 +1,5 @@
-import {Playback, PlaybackEvents} from ".";
-import {MediaElement, MediaElementEventMap} from "./MediaElement";
+import type { Playback, PlaybackEvents } from ".";
+import type { MediaElement, MediaElementEventMap } from "./MediaElement";
 
 /** Hack to make Liqvid behave like {@link MediaElement}. */
 export const PlaybackMEProxy: ProxyHandler<Playback> = {
@@ -10,7 +10,10 @@ export const PlaybackMEProxy: ProxyHandler<Playback> = {
       case "duration":
         return target.duration / 1000;
       case "addEventListener":
-        return <K extends keyof MediaElementEventMap>(type: K, listener: () => unknown): void => {
+        return <K extends keyof MediaElementEventMap>(
+          type: K,
+          listener: () => unknown,
+        ): void => {
           switch (type) {
             case "seeking":
               return target.on("seek", listener);
@@ -19,7 +22,10 @@ export const PlaybackMEProxy: ProxyHandler<Playback> = {
           }
         };
       case "removeEventListener":
-        return <K extends keyof MediaElementEventMap>(type: K, listener: () => unknown): void => {
+        return <K extends keyof MediaElementEventMap>(
+          type: K,
+          listener: () => unknown,
+        ): void => {
           switch (type) {
             case "seeking":
               return target.off("seek", listener);
@@ -31,7 +37,11 @@ export const PlaybackMEProxy: ProxyHandler<Playback> = {
         return target[p as keyof Playback];
     }
   },
-  set<P extends keyof MediaElement & keyof Playback>(target: Playback, p: P, value: Playback[P]) {
+  set<P extends keyof MediaElement & keyof Playback>(
+    target: Playback,
+    p: P,
+    value: Playback[P],
+  ) {
     switch (p) {
       case "currentTime":
         target.seek((value as number) * 1000);

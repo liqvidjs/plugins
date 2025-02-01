@@ -17,5 +17,5 @@ html, body {
   width: 100%;
 }
 `,
-  "script.js": ""
+  "script.js": "",
 };

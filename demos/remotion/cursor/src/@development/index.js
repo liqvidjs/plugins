@@ -1,7 +1,7 @@
 import "../style.css";
 
-import {Targets} from "../content";
-import {RecordingControl} from "./Record";
+import { Targets } from "../content";
+import { RecordingControl } from "./Record";
 
 function App() {
   return (

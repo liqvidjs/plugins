@@ -14,14 +14,10 @@
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/types/*"
-      ]
+      "*": ["./dist/types/*"]
     }
   },
-  "files": [
-    "dist/*"
-  ],
+  "files": ["dist/*"],
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
   "license": "MIT",
   "scripts": {

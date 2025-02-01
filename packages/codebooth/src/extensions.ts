@@ -19,9 +19,9 @@ import {
   indentOnInput,
   syntaxHighlighting,
 } from "@codemirror/language";
-import {lintKeymap} from "@codemirror/lint";
-import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
-import {Compartment, EditorState, Extension} from "@codemirror/state";
+import { lintKeymap } from "@codemirror/lint";
+import { highlightSelectionMatches, searchKeymap } from "@codemirror/search";
+import { Compartment, EditorState, type Extension } from "@codemirror/state";
 import {
   drawSelection,
   dropCursor,
@@ -43,7 +43,7 @@ export const basicSetup: Extension = [
   dropCursor(),
   EditorState.allowMultipleSelections.of(true),
   indentOnInput(),
-  syntaxHighlighting(defaultHighlightStyle, {fallback: true}),
+  syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
   bracketMatching(),
   closeBrackets(),
   autocompletion(),

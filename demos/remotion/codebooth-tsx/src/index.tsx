@@ -1,4 +1,4 @@
-import {createRoot} from "react-dom/client";
+import { createRoot } from "react-dom/client";
 
 function importBuildTarget() {
   if (process.env.REACT_APP_MODE === "record") {
@@ -9,6 +9,6 @@ function importBuildTarget() {
 }
 
 const root = createRoot(document.getElementById("root")!);
-importBuildTarget().then(({default: App}) => {
+importBuildTarget().then(({ default: App }) => {
   root.render(<App />);
 });

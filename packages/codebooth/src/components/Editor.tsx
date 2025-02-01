@@ -1,8 +1,9 @@
-import {EditorState, Extension} from "@codemirror/state";
-import {EditorView} from "@codemirror/view";
-import {useEffect, useRef} from "react";
-import {recording, shortcuts} from "../extensions";
-import {useBoothStore} from "../store";
+import { EditorState, type Extension } from "@codemirror/state";
+import { EditorView } from "@codemirror/view";
+import { useEffect, useRef } from "react";
+
+import { recording, shortcuts } from "../extensions";
+import { useBoothStore } from "../store";
 
 /** CodeMirror editor. */
 export function Editor(props: {
@@ -27,7 +28,7 @@ export function Editor(props: {
    */
   group?: string;
 }) {
-  const {editable = true, group: groupId = "default"} = props;
+  const { editable = true, group: groupId = "default" } = props;
   const store = useBoothStore();
 
   const ref = useRef<HTMLDivElement>();
@@ -35,7 +36,11 @@ export function Editor(props: {
   useEffect(() => {
     // be idempotent
     const state = store.getState();
-    if (state.groups[groupId]?.files.some((file) => file.filename === props.filename)) {
+    if (
+      state.groups[groupId]?.files.some(
+        (file) => file.filename === props.filename,
+      )
+    ) {
       return;
     }
 

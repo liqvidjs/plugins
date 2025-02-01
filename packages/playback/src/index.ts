@@ -1,4 +1,4 @@
-export type {MediaElement, MediaElementEventMap} from "./MediaElement";
+export type { MediaElement, MediaElementEventMap } from "./MediaElement";
 
 export interface PlaybackEvents {
   bufferupdate: [];
@@ -23,10 +23,16 @@ export interface PlaybackEvents {
  */
 export interface Playback {
   /** Subscribe to events */
-  on<K extends keyof PlaybackEvents>(name: K, cb: (...args: PlaybackEvents[K]) => void): void;
+  on<K extends keyof PlaybackEvents>(
+    name: K,
+    cb: (...args: PlaybackEvents[K]) => void,
+  ): void;
 
   /** Unsubscribe from events */
-  off<K extends keyof PlaybackEvents>(name: K, cb: (...args: PlaybackEvents[K]) => void): void;
+  off<K extends keyof PlaybackEvents>(
+    name: K,
+    cb: (...args: PlaybackEvents[K]) => void,
+  ): void;
 
   /**
     The current playback time in milliseconds.

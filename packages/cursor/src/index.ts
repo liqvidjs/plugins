@@ -1,6 +1,6 @@
-import {replay} from "@liqvid/utils/animation";
-import {length, ReplayData} from "@liqvid/utils/replay-data";
-import type {MediaElement} from "@lqv/playback";
+import { replay } from "@liqvid/utils/animation";
+import { length, type ReplayData } from "@liqvid/utils/replay-data";
+import type { MediaElement } from "@lqv/playback";
 
 /** Alignment string shortcut */
 export type AlignmentString =
@@ -49,15 +49,23 @@ export function cursorReplay(opts: {
   /** Element to sync with */
   target: HTMLElement;
 }): () => void {
-  const {align = "center", data, target, start = 0, end = start + length(data), playback} = opts;
-  const [alignX, alignY] = typeof align === "string" ? parseAlignment(align) : align;
+  const {
+    align = "center",
+    data,
+    target,
+    start = 0,
+    end = start + length(data),
+    playback,
+  } = opts;
+  const [alignX, alignY] =
+    typeof align === "string" ? parseAlignment(align) : align;
 
   // styles
   target.style.pointerEvents = "none";
   target.style.position = "absolute";
 
   // prevent FoUC
-  const {hidden} = target;
+  const { hidden } = target;
   // if (between(start, playback.currentTime, end)) {
   //   target.hidden = true;
   // }
@@ -85,7 +93,7 @@ export function cursorReplay(opts: {
   /* remeasure image in case not loaded yet. Both of these calls are necessary due to possible switching of image */
   target.addEventListener("load", () => {
     // need to unhide and display:block to measure
-    const {display} = target.style;
+    const { display } = target.style;
     target.hidden = false;
     target.style.display = "block";
 
@@ -166,7 +174,10 @@ function parseAlignment(align: AlignmentString): [number, number] {
  * @param playback {@link MediaElement} to synchronize with.
  * @param update Callback function.
  */
-function subscribe(playback: MediaElement, update: (t: number) => void): () => void {
+function subscribe(
+  playback: MediaElement,
+  update: (t: number) => void,
+): () => void {
   const callback = (): void => update(playback.currentTime);
 
   // subscribe

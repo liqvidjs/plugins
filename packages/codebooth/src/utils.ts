@@ -6,10 +6,10 @@ export function sanitize(str: string): string {
 }
 
 export const ids = {
-  fileTab: ({filename, group}: {filename: string; group: string}) =>
+  fileTab: ({ filename, group }: { filename: string; group: string }) =>
     `lqv-tab-${group}-${sanitize(filename)}`,
-  groupTab: ({group}: {group: string}) => `lqv-grouptab-${group}`,
-  editorGroup: ({group}: {group: string}) => `lqv-group-${group}`,
-  editorPanel: ({filename, group}: {filename: string; group: string}) =>
+  groupTab: ({ group }: { group: string }) => `lqv-grouptab-${group}`,
+  editorGroup: ({ group }: { group: string }) => `lqv-group-${group}`,
+  editorPanel: ({ filename, group }: { filename: string; group: string }) =>
     `lqv-panel-${group}-${sanitize(filename)}`,
 };

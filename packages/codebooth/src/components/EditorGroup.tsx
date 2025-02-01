@@ -1,7 +1,7 @@
-import {Children, cloneElement, useEffect} from "react";
-import {useStore} from "zustand";
-import {useBoothStore} from "../store";
-import {ids} from "../utils";
+import { Children, cloneElement, useEffect } from "react";
+import { useStore } from "zustand";
+import { useBoothStore } from "../store";
+import { ids } from "../utils";
 
 /** Holds a group of editors. */
 export const EditorGroup: React.FC<
@@ -10,7 +10,7 @@ export const EditorGroup: React.FC<
     id: string;
   }
 > = (props) => {
-  const {children, id, ...attrs} = props;
+  const { children, id, ...attrs } = props;
 
   const store = useBoothStore();
   const active = useStore(store, (state) => state.activeGroup === id);
@@ -18,23 +18,23 @@ export const EditorGroup: React.FC<
   useEffect(() => {
     const state = store.getState();
     if (!state.activeGroup) {
-      store.setState({activeGroup: id});
+      store.setState({ activeGroup: id });
     }
   }, []);
 
   return (
     <div
       aria-expanded={active}
-      aria-labelledby={ids.groupTab({group: id})}
+      aria-labelledby={ids.groupTab({ group: id })}
       hidden={!active}
       className="lqv-editor-group"
-      id={ids.editorGroup({group: id})}
+      id={ids.editorGroup({ group: id })}
       role="tabpanel"
       {...attrs}
     >
       {Children.map(children, (node) => {
         if (typeof node === "object" && "props" in node) {
-          return cloneElement(node, {group: id});
+          return cloneElement(node, { group: id });
         }
         return node;
       })}

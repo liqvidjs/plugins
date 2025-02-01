@@ -1,5 +1,5 @@
-import {Extension, SelectionRange, StateEffect} from "@codemirror/state";
-import type {EditorView, ViewUpdate} from "@codemirror/view";
+import { type Extension, SelectionRange, StateEffect } from "@codemirror/state";
+import type { EditorView, ViewUpdate } from "@codemirror/view";
 
 export interface Range {
   anchor: number;
@@ -26,11 +26,13 @@ interface DrawSelection {
  * CodeMirror extension to imitate selections.
  * @param drawSelection CodeMirror extension to modify.
  */
-export function fakeSelection(drawSelection: Extension[]): (view: EditorView) => DrawSelection {
+export function fakeSelection(
+  drawSelection: Extension[],
+): (view: EditorView) => DrawSelection {
   // @ts-expect-error create is not exposed
   const create = drawSelection[1].create as (view: EditorView) => DrawSelection;
 
-  return function (view: EditorView) {
+  return (view: EditorView) => {
     const instance = create(view);
     instance.cursorLayer.classList.add("fake");
 
@@ -57,7 +59,7 @@ export function fakeSelection(drawSelection: Extension[]): (view: EditorView) =>
 
       for (const c of measure.cursors) {
         const draw = c.draw.bind(c);
-        c.draw = function () {
+        c.draw = () => {
           const elt = draw();
           elt.style.display = "block";
           return elt;
@@ -69,7 +71,12 @@ export function fakeSelection(drawSelection: Extension[]): (view: EditorView) =>
     // update method
     instance.update = function (this: DrawSelection, update: ViewUpdate) {
       const effects = update.transactions
-        .map((tr) => tr.effects.filter((e) => e.is(FakeSelection)) as StateEffect<Range>[])
+        .map(
+          (tr) =>
+            tr.effects.filter((e) =>
+              e.is(FakeSelection),
+            ) as StateEffect<Range>[],
+        )
         .reduce((a, b) => a.concat(b), []);
 
       if (effects.length > 0) {

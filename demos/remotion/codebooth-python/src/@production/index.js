@@ -2,18 +2,34 @@ import "../codebooth.css";
 import "../style.css";
 import "../syntax.css";
 
-import {python} from "@codemirror/lang-python";
-import {syntaxHighlighting} from "@codemirror/language";
-import {classHighlighter} from "@lezer/highlight";
-import {basicSetup, Buttons, Clear, CodeBooth, Console, Copy, Editor, EditorGroup, EditorPanel, Replay, ReplayMultiple, Resize, Run, Tab, TabList} from "@lqv/codebooth";
-import {PythonRun} from "@lqv/codebooth/python";
-import {Bridge} from "@lqv/remotion";
-import {Player} from "@remotion/player";
-import {Audio} from "remotion";
+import { python } from "@codemirror/lang-python";
+import { syntaxHighlighting } from "@codemirror/language";
+import { classHighlighter } from "@lezer/highlight";
+import {
+  basicSetup,
+  Buttons,
+  Clear,
+  CodeBooth,
+  Console,
+  Copy,
+  Editor,
+  EditorGroup,
+  EditorPanel,
+  Replay,
+  ReplayMultiple,
+  Resize,
+  Run,
+  Tab,
+  TabList,
+} from "@lqv/codebooth";
+import { PythonRun } from "@lqv/codebooth/python";
+import { Bridge } from "@lqv/remotion";
+import { Player } from "@remotion/player";
+import { Audio } from "remotion";
 
-import {duration, fps} from "../metadata";
+import { duration, fps } from "../metadata";
 
-const recordingData = fetch("./recordings.json").then(res => res.json());
+const recordingData = fetch("./recordings.json").then((res) => res.json());
 
 function App() {
   return (
@@ -25,7 +41,7 @@ function App() {
       compositionHeight={window.innerHeight}
       fps={fps}
       style={{
-        width: "100%"
+        width: "100%",
       }}
       controls
     />
@@ -57,7 +73,11 @@ function Content() {
         <EditorGroup id="replay">
           <EditorPanel filename="untitled.py">
             <Replay
-              extensions={[python(), basicSetup, syntaxHighlighting(classHighlighter)]}
+              extensions={[
+                python(),
+                basicSetup,
+                syntaxHighlighting(classHighlighter),
+              ]}
               replay={recordingData}
             />
           </EditorPanel>
@@ -65,16 +85,20 @@ function Content() {
         <EditorGroup id="playground">
           <EditorPanel filename="untitled.py">
             <Editor
-              extensions={[python(), basicSetup, syntaxHighlighting(classHighlighter)]}
+              extensions={[
+                python(),
+                basicSetup,
+                syntaxHighlighting(classHighlighter),
+              ]}
             />
           </EditorPanel>
         </EditorGroup>
 
-        <Resize min={.1} max={.3} />
-        <Resize dir="ns" min={0.04} max={.5} />
+        <Resize min={0.1} max={0.3} />
+        <Resize dir="ns" min={0.04} max={0.5} />
         <PythonRun />
         <Console />
       </CodeBooth>
-    </Bridge >
+    </Bridge>
   );
 }

@@ -1,7 +1,7 @@
 import * as Babel from "@babel/standalone";
-import {State, useBoothStore} from "@lqv/codebooth";
-import {useEffect, useRef} from "react";
-import {htmlTemplate, tsxTemplate} from "./files";
+import { type State, useBoothStore } from "@lqv/codebooth";
+import { useEffect, useRef } from "react";
+import { htmlTemplate, tsxTemplate } from "./files";
 
 declare global {
   interface Window {
@@ -33,21 +33,22 @@ export function Preview() {
       const opts: any = {
         filename: "index.tsx",
         plugins: [
-          ["transform-modules-umd", {
-            "globals": {
-              "react": "React",
-              "react-dom": "ReactDOM"
-            }
-          }]
+          [
+            "transform-modules-umd",
+            {
+              globals: {
+                react: "React",
+                "react-dom": "ReactDOM",
+              },
+            },
+          ],
         ],
-        presets: ["env", "react", "typescript"]
+        presets: ["env", "react", "typescript"],
       };
       try {
-        const {code} = Babel.transform(tsx, opts);
+        const { code } = Babel.transform(tsx, opts);
         iframe.current.srcdoc = htmlTemplate(code);
-      } catch (e) {
-
-      }
+      } catch (e) {}
     }
 
     // initial render
@@ -74,7 +75,7 @@ export function Preview() {
 function getFileContents(state: State): Record<string, string> {
   const ret: Record<string, string> = {};
   if (!state.groups[state.activeGroup]) return ret;
-  const {files} = state.groups[state.activeGroup];
+  const { files } = state.groups[state.activeGroup];
   for (const file of files) {
     ret[file.filename] = file.view.state.doc.toString();
   }

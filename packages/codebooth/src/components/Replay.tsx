@@ -1,11 +1,16 @@
-import {Extension, Text} from "@codemirror/state";
-import {drawSelection, EditorView, ViewPlugin} from "@codemirror/view";
-import {cmReplay, cmReplayMultiple, fakeSelection, selectCmd} from "@lqv/codemirror";
-import {useME} from "@lqv/playback/react";
-import {useCallback, useEffect, useMemo} from "react";
+import type { Extension, Text } from "@codemirror/state";
+import { drawSelection, type EditorView, ViewPlugin } from "@codemirror/view";
+import {
+  cmReplay,
+  cmReplayMultiple,
+  fakeSelection,
+  selectCmd,
+} from "@lqv/codemirror";
+import { useME } from "@lqv/playback/react";
+import { useCallback, useEffect, useMemo } from "react";
 
-import {Store, useBoothStore} from "../store";
-import {Editor} from "./Editor";
+import { type Store, useBoothStore } from "../store";
+import { Editor } from "./Editor";
 
 type CodeData = Parameters<typeof cmReplay>[0]["data"];
 
@@ -13,7 +18,10 @@ type CodeData = Parameters<typeof cmReplay>[0]["data"];
  * Editor to replay recorded coding.
  */
 export function Replay(
-  props: Pick<Parameters<typeof cmReplay>[0], "scrollBehavior" | "shouldScroll"> &
+  props: Pick<
+    Parameters<typeof cmReplay>[0],
+    "scrollBehavior" | "shouldScroll"
+  > &
     React.ComponentProps<typeof Editor> & {
       /**
        * Callback to handle special commands.
@@ -31,7 +39,7 @@ export function Replay(
        * @default 0
        */
       start?: number;
-    }
+    },
 ): JSX.Element {
   const store = useBoothStore();
   const playback = useME();
@@ -50,17 +58,17 @@ export function Replay(
     (cmd: string, doc: Text) => {
       if (cmd === "run") {
         // run command
-        store.setState((state) => ({run: state.run + 1}));
+        store.setState((state) => ({ run: state.run + 1 }));
       } else if (cmd === "clear") {
         // clear console
-        store.setState(() => ({messages: []}));
+        store.setState(() => ({ messages: [] }));
       }
       // userspace handler
       if (props.handle) {
         props.handle(store, cmd, doc);
       }
     },
-    [handle]
+    [handle],
   );
 
   const __extensions: Extension[] = useMemo(
@@ -78,7 +86,7 @@ export function Replay(
                 shouldScroll,
                 start,
                 view,
-              })
+              }),
             );
           } else {
             cmReplay({
@@ -96,7 +104,7 @@ export function Replay(
       }),
       ...extensions,
     ],
-    [extensions, replay, start]
+    [extensions, replay, start],
   );
 
   return <Editor editable={false} extensions={__extensions} {...attrs} />;
@@ -106,7 +114,10 @@ export function Replay(
  * Replay coding to multiple editors.
  */
 export function ReplayMultiple(
-  props: Pick<Parameters<typeof cmReplayMultiple>[0], "scrollBehavior" | "shouldScroll"> & {
+  props: Pick<
+    Parameters<typeof cmReplayMultiple>[0],
+    "scrollBehavior" | "shouldScroll"
+  > & {
     /** Editor group to replay. */
     group?: string;
 
@@ -128,11 +139,11 @@ export function ReplayMultiple(
      * @default 0
      */
     start?: number;
-  }
+  },
 ): null {
   const playback = useME();
   const store = useBoothStore();
-  const {start = 0} = props;
+  const { start = 0 } = props;
 
   /* Handle callback */
   const handle = useCallback(
@@ -150,17 +161,17 @@ export function ReplayMultiple(
         }));
       } else if (cmd === "run") {
         // run command
-        store.setState((state) => ({run: state.run + 1}));
+        store.setState((state) => ({ run: state.run + 1 }));
       } else if (cmd === "clear") {
         // clear console
-        store.setState(() => ({messages: []}));
+        store.setState(() => ({ messages: [] }));
       }
       // userspace handler
       if (props.handle) {
         props.handle(store, cmd, docs);
       }
     },
-    [props.handle]
+    [props.handle],
   );
 
   useEffect(() => {
@@ -181,7 +192,7 @@ export function ReplayMultiple(
           shouldScroll: props.shouldScroll,
           start,
           views,
-        })
+        }),
       );
     } else {
       cmReplayMultiple({

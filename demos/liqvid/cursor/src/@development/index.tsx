@@ -1,19 +1,21 @@
-import {AudioRecording, RecordingControl} from "@liqvid/recording";
-import {CursorRecording} from "@lqv/cursor/recording";
-import {Playback, Player, usePlayer} from "liqvid";
-import {useEffect} from "react";
-import {createRoot} from "react-dom/client";
-import {Words} from "../words";
+import { AudioRecording, RecordingControl } from "@liqvid/recording";
+import { CursorRecording } from "@lqv/cursor/recording";
+import { Playback, Player, usePlayer } from "liqvid";
+import { useEffect } from "react";
+import { createRoot } from "react-dom/client";
+import { Words } from "../words";
 
-const controls = [<RecordingControl plugins={[AudioRecording, CursorRecording]} />];
+const controls = [
+  <RecordingControl plugins={[AudioRecording, CursorRecording]} />,
+];
 
-const playback = new Playback({duration: 10000});
+const playback = new Playback({ duration: 10000 });
 
 function Lesson() {
   return (
     <Player controls={controls} playback={playback}>
-      <SetRecordingTarget/>
-      <Words/>
+      <SetRecordingTarget />
+      <Words />
     </Player>
   );
 }

@@ -1,14 +1,19 @@
-import type {Extension} from "@codemirror/state";
-import {EditorView, keymap, ViewPlugin} from "@codemirror/view";
-import {RecorderPlugin, ReplayDataRecorder} from "@liqvid/recording";
-import {bind} from "@liqvid/utils/misc";
-import {ReplayData} from "@liqvid/utils/replay-data";
-import {scrollCmd} from ".";
-import {icon} from "./icon";
+import type { Extension } from "@codemirror/state";
+import { EditorView, keymap, ViewPlugin } from "@codemirror/view";
+import { type RecorderPlugin, ReplayDataRecorder } from "@liqvid/recording";
+import { bind } from "@liqvid/utils/misc";
+import type { ReplayData } from "@liqvid/utils/replay-data";
+import { scrollCmd } from ".";
+import { icon } from "./icon";
 
-export type EditorChange = [[number, ...(EditorChange | number | string)[]], [number, number]];
+export type EditorChange = [
+  [number, ...(EditorChange | number | string)[]],
+  [number, number],
+];
 export type SpecialKey = string;
-export type ScrollAction = [typeof scrollCmd, number, number] | [typeof scrollCmd, number];
+export type ScrollAction =
+  | [typeof scrollCmd, number, number]
+  | [typeof scrollCmd, number];
 
 export type CaptureData = EditorChange | ScrollAction | SpecialKey;
 
@@ -37,11 +42,12 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
       class {
         constructor(view: EditorView) {
           view.scrollDOM.addEventListener("scroll", () => {
-            if (!$this.manager || $this.manager.paused || !$this.manager.active) return;
+            if (!$this.manager || $this.manager.paused || !$this.manager.active)
+              return;
             const time = $this.manager.getTime();
 
-            const fontSize = parseFloat(
-              getComputedStyle(view.scrollDOM).getPropertyValue("font-size")
+            const fontSize = Number.parseFloat(
+              getComputedStyle(view.scrollDOM).getPropertyValue("font-size"),
             );
 
             // vertical scroll is more common so we put it first and omit
@@ -58,7 +64,7 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
             $this.capture(time, action);
           });
         }
-      }
+      },
     );
 
     // record document changes
@@ -79,7 +85,10 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
       if (update.changes.empty && transactions.length === 0) return;
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.capture(this.manager.getTime(), [update.changes.toJSON(), ...transactions] as any);
+      this.capture(this.manager.getTime(), [
+        update.changes.toJSON(),
+        ...transactions,
+      ] as any);
     });
 
     // record special key presses
@@ -88,18 +97,23 @@ export class CodeRecorder extends ReplayDataRecorder<CaptureData> {
         key,
         run: () => {
           if (this.manager && this.manager.active && !this.manager.paused) {
-            this.capture(this.manager.getTime(), (specialKeys as Record<string, string>)[key]);
+            this.capture(
+              this.manager.getTime(),
+              (specialKeys as Record<string, string>)[key],
+            );
           }
           return false;
         },
-      }))
+      })),
     );
 
     return [scrollListener, updateListener, keyListener];
   }
 }
 
-const KeySaveComponent: React.FC<{data: ReplayData<CaptureData>}> = (props) => {
+const KeySaveComponent: React.FC<{ data: ReplayData<CaptureData> }> = (
+  props,
+) => {
   return (
     <>
       <textarea readOnly value={JSON.stringify(props.data)}></textarea>

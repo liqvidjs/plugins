@@ -24,6 +24,12 @@ export type MediaElement = Pick<
   | "seeking"
   | "volume"
 > & {
-  addEventListener<K extends keyof MediaElementEventMap>(type: K, listener: () => unknown): void;
-  removeEventListener<K extends keyof MediaElementEventMap>(type: K, listener: () => unknown): void;
+  addEventListener<K extends keyof MediaElementEventMap>(
+    type: K,
+    listener: () => unknown,
+  ): void;
+  removeEventListener<K extends keyof MediaElementEventMap>(
+    type: K,
+    listener: () => unknown,
+  ): void;
 };

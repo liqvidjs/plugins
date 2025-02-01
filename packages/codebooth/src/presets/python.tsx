@@ -1,8 +1,8 @@
-import {python} from "@codemirror/lang-python";
-import {Extension} from "@codemirror/state";
-import {CodeRecording} from "@lqv/codemirror/recording";
-import {useEffect} from "react";
-import {CodeBooth} from "..";
+import { python } from "@codemirror/lang-python";
+import type { Extension } from "@codemirror/state";
+import { CodeRecording } from "@lqv/codemirror/recording";
+import { useEffect } from "react";
+import { CodeBooth } from "..";
 import {
   Buttons,
   Clear,
@@ -12,15 +12,15 @@ import {
   Tab,
   TabList,
 } from "../components/buttons";
-import {Console} from "../components/Console";
-import {Editor} from "../components/Editor";
-import {EditorGroup} from "../components/EditorGroup";
-import {Record} from "../components/Record";
-import {Replay} from "../components/Replay";
-import {Resize} from "../components/Resize";
-import {basicSetup} from "../extensions";
-import {PythonInterpreter} from "../interpreters/skulpt";
-import {useBoothStore} from "../store";
+import { Console } from "../components/Console";
+import { Editor } from "../components/Editor";
+import { EditorGroup } from "../components/EditorGroup";
+import { Record } from "../components/Record";
+import { Replay } from "../components/Replay";
+import { Resize } from "../components/Resize";
+import { basicSetup } from "../extensions";
+import { PythonInterpreter } from "../interpreters/skulpt";
+import { useBoothStore } from "../store";
 
 const interpreter = new PythonInterpreter();
 
@@ -35,7 +35,7 @@ export const PythonDemo: React.FC<{
    */
   extensions?: Extension[];
 }> = (props) => {
-  const {extensions = []} = props;
+  const { extensions = [] } = props;
 
   return (
     <CodeBooth>
@@ -67,7 +67,7 @@ export const PythonRecord: React.FC<{
    */
   extensions?: Extension[];
 }> = (props) => {
-  const {extensions = []} = props;
+  const { extensions = [] } = props;
 
   return (
     <CodeBooth recorder={CodeRecording.recorder}>
@@ -109,7 +109,7 @@ export const PythonReplay: React.FC<{
    */
   start?: number;
 }> = (props) => {
-  const {extensions = []} = props;
+  const { extensions = [] } = props;
 
   return (
     <CodeBooth>
@@ -173,7 +173,7 @@ export const PythonRun: React.FC = () => {
         store.setState((prev) => ({
           messages: [...prev.messages, ...output],
         }));
-      }
+      },
     );
   }, []);
   return null;

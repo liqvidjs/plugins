@@ -15,21 +15,22 @@ body.dragging .draggable,
 }
 
 .cm-editor {
-  background: #FAFAFA;
+  background: #fafafa;
 }
 
 .lqv-console {
   display: none;
 }
 
-body.dragging iframe, body.resizing iframe {
+body.dragging iframe,
+body.resizing iframe {
   pointer-events: none;
 }
 
 /* preview */
 output {
-  background: #FFF;
-  border-left: 1px solid #AAA;
+  background: #fff;
+  border-left: 1px solid #aaa;
   grid-area: console;
   height: 100%;
   overflow-y: auto;
@@ -73,9 +74,9 @@ output {
 }
 
 .lv-controls-face > svg.active > circle:first-child {
-  stroke: #FFF;
+  stroke: #fff;
 }
 
 .lv-controls-face > svg.active > *:not(:first-child) {
-  fill: #FFF;
+  fill: #fff;
 }

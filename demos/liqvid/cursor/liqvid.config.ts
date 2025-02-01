@@ -1,9 +1,9 @@
-import type {LiqvidConfig} from "@liqvid/cli";
+import type { LiqvidConfig } from "@liqvid/cli";
 
 const port = process.env.PORT || 3000;
 
 const config: LiqvidConfig = {
-  serve: {port},
+  serve: { port },
   thumbs: {
     browserHeight: 800,
     browserWidth: 1280,

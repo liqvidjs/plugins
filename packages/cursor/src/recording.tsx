@@ -1,6 +1,10 @@
-import {compress, RecorderPlugin, ReplayDataRecorder} from "@liqvid/recording";
-import {bind} from "@liqvid/utils/misc";
-import type {ReplayData} from "@liqvid/utils/replay-data";
+import {
+  compress,
+  type RecorderPlugin,
+  ReplayDataRecorder,
+} from "@liqvid/recording";
+import { bind } from "@liqvid/utils/misc";
+import type { ReplayData } from "@liqvid/utils/replay-data";
 
 export class CursorRecorder extends ReplayDataRecorder<[number, number]> {
   /** Container element for recording. */
@@ -26,20 +30,24 @@ export class CursorRecorder extends ReplayDataRecorder<[number, number]> {
 
     if (this.manager.paused) return;
 
-    const {left, top, height, width} = this.target.getBoundingClientRect();
+    const { left, top, height, width } = this.target.getBoundingClientRect();
 
-    this.capture(t, [((e.pageX - left) / width) * 100, ((e.pageY - top) / height) * 100] as [
-      number,
-      number
-    ]);
+    this.capture(t, [
+      ((e.pageX - left) / width) * 100,
+      ((e.pageY - top) / height) * 100,
+    ] as [number, number]);
   }
 
-  finalizeRecording(data: ReplayData<[number, number]>): ReplayData<[number, number]> {
+  finalizeRecording(
+    data: ReplayData<[number, number]>,
+  ): ReplayData<[number, number]> {
     return compress(data, 4);
   }
 }
 
-const CursorSaveComponent: React.FC<{data: ReplayData<[number, number]>}> = (props) => {
+const CursorSaveComponent: React.FC<{ data: ReplayData<[number, number]> }> = (
+  props,
+) => {
   return (
     <>
       {props.data ? (

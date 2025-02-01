@@ -1,11 +1,12 @@
-import {css} from "@codemirror/lang-css";
-import {html} from "@codemirror/lang-html";
-import {javascript} from "@codemirror/lang-javascript";
-import {Extension} from "@codemirror/state";
-import {CodeRecorder, CodeRecording} from "@lqv/codemirror/recording";
-import React, {useEffect, useRef} from "react";
-import {useStore} from "zustand";
-import {CodeBooth} from "..";
+import { css } from "@codemirror/lang-css";
+import { html } from "@codemirror/lang-html";
+import { javascript } from "@codemirror/lang-javascript";
+import type { Extension } from "@codemirror/state";
+import { type CodeRecorder, CodeRecording } from "@lqv/codemirror/recording";
+import type React from "react";
+import { useEffect, useRef } from "react";
+import { useStore } from "zustand";
+import { CodeBooth } from "..";
 import {
   Buttons,
   Clear,
@@ -15,16 +16,16 @@ import {
   Tab,
   TabList,
 } from "../components/buttons";
-import {Console} from "../components/Console";
-import {Editor} from "../components/Editor";
-import {EditorGroup} from "../components/EditorGroup";
-import {EditorPanel} from "../components/EditorPanel";
-import {FileTabs} from "../components/FileTabs";
-import {Record} from "../components/Record";
-import {Replay, ReplayMultiple} from "../components/Replay";
-import {Resize} from "../components/Resize";
-import {basicSetup} from "../extensions";
-import {State, useBoothStore} from "../store";
+import { Console } from "../components/Console";
+import { Editor } from "../components/Editor";
+import { EditorGroup } from "../components/EditorGroup";
+import { EditorPanel } from "../components/EditorPanel";
+import { FileTabs } from "../components/FileTabs";
+import { Record } from "../components/Record";
+import { Replay, ReplayMultiple } from "../components/Replay";
+import { Resize } from "../components/Resize";
+import { basicSetup } from "../extensions";
+import { type State, useBoothStore } from "../store";
 
 /** HTML demo */
 export function HTMLDemo(props: {
@@ -41,7 +42,7 @@ export function HTMLDemo(props: {
    */
   files: Record<string, string>;
 }) {
-  const {extensions = []} = props;
+  const { extensions = [] } = props;
 
   return (
     <CodeBooth>
@@ -94,7 +95,7 @@ export const HTMLReplay: React.FC<{
    */
   start?: number;
 }> = (props) => {
-  const {extensions = []} = props;
+  const { extensions = [] } = props;
 
   return (
     <CodeBooth>
@@ -164,7 +165,7 @@ export const HTMLRecord: React.FC<{
    */
   recorder: CodeRecorder;
 }> = (props) => {
-  const {extensions = [], recorder = CodeRecording.recorder} = props;
+  const { extensions = [], recorder = CodeRecording.recorder } = props;
 
   return (
     <CodeBooth recorder={recorder}>
@@ -226,7 +227,7 @@ export function HTMLPreview() {
           messages: prev.messages.concat(
             <pre key={Math.random()}>
               {msg.data.content.map((item: unknown) => formatLog(item))}
-            </pre>
+            </pre>,
           ),
         }));
       } else if (msg.data.type === "console.clear") {
@@ -253,8 +254,8 @@ export function HTMLPreview() {
           //   filename: file.filename,
           //   content
           // }, "*");
-        }
-      )
+        },
+      ),
     );
 
     // unsubscribe
@@ -289,7 +290,7 @@ export function transform(html: string, files: Record<string, string>) {
         return "<script>" + files[src] + "</script>";
       }
       return match;
-    }
+    },
   );
 
   // transform <link>s
@@ -375,7 +376,7 @@ export function extensionFromFilename(filename: string): Extension {
 function getFileContents(state: State): Record<string, string> {
   const ret: Record<string, string> = {};
   if (!state.groups[state.activeGroup]) return ret;
-  const {files} = state.groups[state.activeGroup];
+  const { files } = state.groups[state.activeGroup];
   for (const file of files) {
     ret[file.filename] = file.view.state.doc.toString();
   }

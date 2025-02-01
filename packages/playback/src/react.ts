@@ -1,7 +1,7 @@
-import {createContext, useContext, useEffect, useRef} from "react";
-import type {Playback} from ".";
-import {PlaybackMEProxy} from "./hack";
-import type {MediaElement} from "./MediaElement";
+import { createContext, useContext, useEffect, useRef } from "react";
+import type { Playback } from ".";
+import { PlaybackMEProxy } from "./hack";
+import type { MediaElement } from "./MediaElement";
 
 type GlobalThis = {
   [symbol]: React.Context<MediaElement>;
@@ -10,7 +10,8 @@ type GlobalThis = {
 const symbol = Symbol.for("@lqv/playback");
 
 if (!(symbol in globalThis)) {
-  (globalThis as unknown as GlobalThis)[symbol] = createContext<MediaElement>(null);
+  (globalThis as unknown as GlobalThis)[symbol] =
+    createContext<MediaElement>(null);
 }
 
 /**
@@ -44,16 +45,19 @@ export function usePlayback(): Playback {
 }
 
 /** Register a callback for time update. */
-export function useTime(callback: (value: number) => void, deps?: React.DependencyList): void;
+export function useTime(
+  callback: (value: number) => void,
+  deps?: React.DependencyList,
+): void;
 export function useTime<T = number>(
   callback: (value: T) => void,
   transform?: (t: number) => T,
-  deps?: React.DependencyList
+  deps?: React.DependencyList,
 ): void;
 export function useTime<T = number>(
   callback: (value: T) => void,
   transform?: React.DependencyList | ((t: number) => T),
-  deps?: React.DependencyList
+  deps?: React.DependencyList,
 ): void {
   const playback = useME();
   const prev = useRef<T>();
@@ -86,6 +90,6 @@ export function useTime<T = number>(
         playback.removeEventListener("timeupdate", listener);
       };
     },
-    typeof transform === "function" ? deps : transform
+    typeof transform === "function" ? deps : transform,
   );
 }

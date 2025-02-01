@@ -7,18 +7,24 @@ const cols = 10;
 
 /** Wait a specified number of milliseconds. */
 function wait(time) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, time);
   });
 }
 
 /** Generate a random color in hex format. */
 function randomColor() {
-  return "#" + new Array(3).fill(null).map(() => (
-    Math.floor(0x100 * Math.random())
-    .toString(16)
-    .padStart(2, "0")
-  )).join("");
+  return (
+    "#" +
+    new Array(3)
+      .fill(null)
+      .map(() =>
+        Math.floor(0x100 * Math.random())
+          .toString(16)
+          .padStart(2, "0"),
+      )
+      .join("")
+  );
 }
 
 /* set canvas dimensions */
@@ -46,4 +52,3 @@ async function draw() {
 }
 
 draw();
-

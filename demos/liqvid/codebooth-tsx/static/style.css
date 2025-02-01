@@ -3,15 +3,15 @@
 
 /* container */
 .lqv-codebooth {
-  grid-template: 
+  grid-template:
     "editor console" calc(100% - var(--button-height))
     "buttons console" var(--button-height) / var(--split);
 }
 
 /* preview */
 output {
-  background: #FFF;
-  border-left: 1px solid #AAA;
+  background: #fff;
+  border-left: 1px solid #aaa;
   grid-area: console;
   height: 100%;
 }

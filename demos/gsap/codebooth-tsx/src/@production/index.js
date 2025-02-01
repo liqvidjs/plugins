@@ -2,27 +2,42 @@ import "../codebooth.css";
 import "../style.css";
 import "../syntax.css";
 
-import {javascript} from "@codemirror/lang-javascript";
-import {syntaxHighlighting} from "@codemirror/language";
-import {classHighlighter} from "@lezer/highlight";
-import {basicSetup, Buttons, Clear, CodeBooth, Console, Copy, Editor, EditorGroup, EditorPanel, Replay, Resize, Run, Tab, TabList} from "@lqv/codebooth";
-import {Bridge} from "@lqv/gsap";
-import {gsap} from "gsap";
+import { javascript } from "@codemirror/lang-javascript";
+import { syntaxHighlighting } from "@codemirror/language";
+import { classHighlighter } from "@lezer/highlight";
+import {
+  basicSetup,
+  Buttons,
+  Clear,
+  CodeBooth,
+  Console,
+  Copy,
+  Editor,
+  EditorGroup,
+  EditorPanel,
+  Replay,
+  Resize,
+  Run,
+  Tab,
+  TabList,
+} from "@lqv/codebooth";
+import { Bridge } from "@lqv/gsap";
+import { gsap } from "gsap";
 
-import {Popup} from "../components/Popup";
-import {file} from "../files";
-import {duration} from "../metadata";
-import {Preview} from "../Preview";
-import {Audio} from "./Audio";
-import {ScrubberBar} from "./ScrubberBar";
+import { Popup } from "../components/Popup";
+import { file } from "../files";
+import { duration } from "../metadata";
+import { Preview } from "../Preview";
+import { Audio } from "./Audio";
+import { ScrubberBar } from "./ScrubberBar";
 
-const tl = gsap.timeline({duration, paused: true});
-const recordingData = fetch("./recordings.json").then(res => res.json());
+const tl = gsap.timeline({ duration, paused: true });
+const recordingData = fetch("./recordings.json").then((res) => res.json());
 
 const extensions = [
   basicSetup,
-  javascript({jsx: true, typescript: true}),
-  syntaxHighlighting(classHighlighter)
+  javascript({ jsx: true, typescript: true }),
+  syntaxHighlighting(classHighlighter),
 ];
 
 function App() {
@@ -58,11 +73,10 @@ function Content() {
           </Buttons>
         </section>
 
-
         <EditorGroup id="replay">
           <EditorPanel filename="index.tsx">
             <Replay
-            content={file}
+              content={file}
               extensions={extensions}
               replay={recordingData}
             />
@@ -70,13 +84,11 @@ function Content() {
         </EditorGroup>
         <EditorGroup id="playground">
           <EditorPanel filename="index.tsx">
-            <Editor
-              extensions={extensions}
-            />
+            <Editor extensions={extensions} />
           </EditorPanel>
         </EditorGroup>
 
-        <Resize min={.1} max={.3} />
+        <Resize min={0.1} max={0.3} />
         <Popup title="Preview">
           <Preview />
         </Popup>

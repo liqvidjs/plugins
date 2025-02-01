@@ -1,6 +1,6 @@
-import {useME} from "@lqv/playback/react";
-import {useEffect, useRef} from "react";
-import {cursorReplay} from ".";
+import { useME } from "@lqv/playback/react";
+import { useEffect, useRef } from "react";
+import { cursorReplay } from ".";
 
 type CursorData = Parameters<typeof cursorReplay>[0]["data"];
 
@@ -8,13 +8,16 @@ type CursorData = Parameters<typeof cursorReplay>[0]["data"];
  * Move an image along a recorder cursor path. React version of {@link cursorReplay}.
  */
 export function Cursor(
-  props: Omit<Parameters<typeof cursorReplay>[0], "data" | "playback" | "target"> & {
+  props: Omit<
+    Parameters<typeof cursorReplay>[0],
+    "data" | "playback" | "target"
+  > & {
     /** Cursor data to replay. */
     data: CursorData | Promise<CursorData>;
 
     /** Src of cursor image. */
     src: string;
-  }
+  },
 ): JSX.Element {
   const playback = useME();
   const ref = useRef<HTMLImageElement>();

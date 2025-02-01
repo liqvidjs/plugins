@@ -2,20 +2,29 @@ import "../codebooth.css";
 import "../style.css";
 import "../syntax.css";
 
-import {javascript} from "@codemirror/lang-javascript";
-import {syntaxHighlighting} from "@codemirror/language";
-import {classHighlighter} from "@lezer/highlight";
-import {basicSetup, Buttons, Clear, CodeBooth, EditorPanel, Record, Resize, Run} from "@lqv/codebooth";
+import { javascript } from "@codemirror/lang-javascript";
+import { syntaxHighlighting } from "@codemirror/language";
+import { classHighlighter } from "@lezer/highlight";
+import {
+  basicSetup,
+  Buttons,
+  Clear,
+  CodeBooth,
+  EditorPanel,
+  Record,
+  Resize,
+  Run,
+} from "@lqv/codebooth";
 
-import {Popup} from "../components/Popup";
-import {file} from "../files";
-import {Preview} from "../Preview";
-import {codeRecorder, RecordingControl} from "./Record";
+import { Popup } from "../components/Popup";
+import { file } from "../files";
+import { Preview } from "../Preview";
+import { codeRecorder, RecordingControl } from "./Record";
 
 const extensions = [
   basicSetup,
-  javascript({jsx: true, typescript: true}),
-  syntaxHighlighting(classHighlighter)
+  javascript({ jsx: true, typescript: true }),
+  syntaxHighlighting(classHighlighter),
 ];
 
 function App() {
@@ -31,13 +40,10 @@ function App() {
           <RecordingControl />
         </section>
         <EditorPanel filename="index.tsx">
-          <Record
-            content={file}
-            extensions={extensions}
-          />
+          <Record content={file} extensions={extensions} />
         </EditorPanel>
 
-        <Resize min={.1} max={.3} />
+        <Resize min={0.1} max={0.3} />
         <Popup title="Preview">
           <Preview />
         </Popup>

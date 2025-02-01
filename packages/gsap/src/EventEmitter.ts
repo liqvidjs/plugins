@@ -1,13 +1,18 @@
-import type {MediaElementEventMap} from "@lqv/playback";
+import type { MediaElementEventMap } from "@lqv/playback";
 
 export class EventEmitter {
-  private __listeners: Partial<Record<keyof MediaElementEventMap, (() => unknown)[]>>;
+  private __listeners: Partial<
+    Record<keyof MediaElementEventMap, (() => unknown)[]>
+  >;
 
   constructor() {
     this.__listeners = {};
   }
 
-  addEventListener<K extends keyof MediaElementEventMap>(type: K, listener: () => unknown): void {
+  addEventListener<K extends keyof MediaElementEventMap>(
+    type: K,
+    listener: () => unknown,
+  ): void {
     if (!this.__listeners.hasOwnProperty(type)) {
       this.__listeners[type] = [];
     }
@@ -16,7 +21,7 @@ export class EventEmitter {
 
   removeEventListener<K extends keyof MediaElementEventMap>(
     type: K,
-    listener: () => unknown
+    listener: () => unknown,
   ): void {
     if (!this.__listeners[type]) {
       return;

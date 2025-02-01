@@ -1,12 +1,12 @@
-import {getJSON, loadAllJSON} from "@liqvid/utils/json";
-import {Cursor} from "@lqv/cursor/react";
-import {Playback, Player} from "liqvid";
-import {useCallback, useState} from "react";
-import {createRoot} from "react-dom/client";
+import { getJSON, loadAllJSON } from "@liqvid/utils/json";
+import { Cursor } from "@lqv/cursor/react";
+import { Playback, Player } from "liqvid";
+import { useCallback, useState } from "react";
+import { createRoot } from "react-dom/client";
 
-import {Words} from "../words";
+import { Words } from "../words";
 
-const playback = new Playback({duration: 15000});
+const playback = new Playback({ duration: 15000 });
 
 // might use a static assets host
 const MEDIA_URL = ".";
@@ -19,12 +19,12 @@ declare module "@liqvid/utils/json" {
 
 const alignments = {
   crosshair: "center",
-  pointer: "top left"
+  pointer: "top left",
 };
 
 const srcs = {
   crosshair: "crosshair.png",
-  pointer: "cursor.svg"
+  pointer: "cursor.svg",
 };
 
 function Lesson() {
@@ -35,12 +35,18 @@ function Lesson() {
 
   const thumbs = {
     frequency: 1,
-    path: "./thumbs/%s.png"
+    path: "./thumbs/%s.png",
   };
 
   return (
     <Player playback={playback} thumbs={thumbs}>
-      <Cursor align={alignments[cursor]} data={getJSON("cursor")} src={`${MEDIA_URL}/${srcs[cursor]}`} start={0} end={15000} />
+      <Cursor
+        align={alignments[cursor]}
+        data={getJSON("cursor")}
+        src={`${MEDIA_URL}/${srcs[cursor]}`}
+        start={0}
+        end={15000}
+      />
       <select onChange={onChange} value={cursor}>
         <option value="crosshair">Crosshair</option>
         <option value="pointer">Pointer</option>
@@ -50,4 +56,6 @@ function Lesson() {
   );
 }
 
-loadAllJSON().then(() => void createRoot(document.querySelector("main")).render(<Lesson />));
+loadAllJSON().then(
+  () => void createRoot(document.querySelector("main")).render(<Lesson />),
+);

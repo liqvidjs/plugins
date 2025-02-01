@@ -1,20 +1,19 @@
-import type {LiqvidConfig} from "@liqvid/cli";
+import type { LiqvidConfig } from "@liqvid/cli";
 
-const scripts = {
-};
+const scripts = {};
 
 const port = process.env.PORT || 3000;
 
 const config: LiqvidConfig = {
-  build: {scripts},
+  build: { scripts },
   render: {
     audioFile: "./dist/audio.mp4",
     output: "video.mp4",
-    url: `http://localhost:${port}/dist/`
+    url: `http://localhost:${port}/dist/`,
   },
   serve: {
     port,
-    scripts
+    scripts,
   },
   thumbs: {
     browserHeight: 800,
@@ -22,8 +21,8 @@ const config: LiqvidConfig = {
     frequency: 1,
     imageFormat: "png",
     output: "./dist/thumbs/%s.png",
-    url: `http://localhost:${port}/dist/`
-  }
+    url: `http://localhost:${port}/dist/`,
+  },
 };
 
 module.exports = config;

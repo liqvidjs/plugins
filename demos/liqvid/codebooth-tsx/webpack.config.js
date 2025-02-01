@@ -6,13 +6,13 @@ module.exports = {
   entry: `./src/@${env}/index.tsx`,
   output: {
     filename: "bundle.js",
-    path: path.join(__dirname, "static")
+    path: path.join(__dirname, "static"),
   },
 
   externals: {
-    "liqvid": "Liqvid",
-    "react": "React",
-    "react-dom": "ReactDOM"
+    liqvid: "Liqvid",
+    react: "React",
+    "react-dom": "ReactDOM",
   },
 
   mode: env,
@@ -21,8 +21,8 @@ module.exports = {
     rules: [
       {
         test: /\.[jt]sx?$/,
-        loader: "ts-loader"
-      }
+        loader: "ts-loader",
+      },
     ],
   },
 
@@ -34,21 +34,21 @@ module.exports = {
       new TerserPlugin({
         parallel: true,
         terserOptions: {
-          safari10: true
-        }
-      })
+          safari10: true,
+        },
+      }),
     ],
-    emitOnErrors: true
+    emitOnErrors: true,
   },
-  
+
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
     alias: {
-      "@env": path.join(__dirname, "src", "@" + env)
-    }
+      "@env": path.join(__dirname, "src", "@" + env),
+    },
   },
 
   snapshot: {
-    managedPaths: []
-  }
+    managedPaths: [],
+  },
 };

@@ -3,12 +3,15 @@
   cursor: -webkit-grab;
 }
 
-body.dragging, body.dragging .draggable, .dragging {
+body.dragging,
+body.dragging .draggable,
+.dragging {
   cursor: grabbing;
   cursor: -webkit-grabbing;
 }
 
-body.dragging iframe, body.resizing iframe {
+body.dragging iframe,
+body.resizing iframe {
   pointer-events: none;
 }
 
@@ -18,7 +21,7 @@ body.dragging iframe, body.resizing iframe {
   resize: both;
   position: absolute;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   flex-flow: column;
   /* initial */
   height: 80%;

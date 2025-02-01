@@ -1,8 +1,8 @@
-import {EditorView, KeyBinding} from "@codemirror/view";
-import type {CodeRecorder} from "@lqv/codemirror/recording";
-import {createContext, useContext} from "react";
-import {createStore} from "zustand";
-import {subscribeWithSelector} from "zustand/middleware";
+import type { EditorView, KeyBinding } from "@codemirror/view";
+import type { CodeRecorder } from "@lqv/codemirror/recording";
+import { createContext, useContext } from "react";
+import { createStore } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 type RecordType<T> = T extends Record<string, infer K> ? K : never;
 type ArrayType<T> = T extends (infer K)[] ? K : never;
@@ -78,7 +78,7 @@ export const makeStore = (state: Partial<State> = {}) =>
       run: 0,
       shortcuts: {},
       ...state,
-    }))
+    })),
   );
 
 export type Store = ReturnType<typeof makeStore>;

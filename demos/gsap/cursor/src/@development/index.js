@@ -1,11 +1,11 @@
 import "../App.css";
-import {Targets} from "../shared";
-import {RecordingControl} from "./Record";
+import { Targets } from "../shared";
+import { RecordingControl } from "./Record";
 
 function App() {
   return (
     <div className="App">
-      <Targets/>
+      <Targets />
       <RecordingControl />
     </div>
   );

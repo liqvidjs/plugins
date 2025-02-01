@@ -1,9 +1,9 @@
-import {onClick} from "@liqvid/utils/react";
-import {selectCmd} from "@lqv/codemirror";
-import {useCallback, useEffect, useMemo} from "react";
-import {useStore} from "zustand";
-import {State, useBoothStore} from "../store";
-import {ids} from "../utils";
+import { onClick } from "@liqvid/utils/react";
+import { selectCmd } from "@lqv/codemirror";
+import { useCallback, useEffect, useMemo } from "react";
+import { useStore } from "zustand";
+import { type State, useBoothStore } from "../store";
+import { ids } from "../utils";
 
 const selector = (state: State) => [
   state.activeGroup,
@@ -17,7 +17,7 @@ export function FileTabs() {
   const store = useBoothStore();
   const [activeGroup, activeFilename] = useStore(store, selector);
   const group = store.getState().groups[activeGroup];
-  const {recorder} = store.getState();
+  const { recorder } = store.getState();
 
   const select = useCallback(
     (filename: string) => {
@@ -40,14 +40,14 @@ export function FileTabs() {
       // focus editor
       const state = store.getState();
       const view = state.groups[state.activeGroup]?.files.find(
-        (_) => _.filename === filename
+        (_) => _.filename === filename,
       )?.view;
       if (view) {
         // XXX yikes
         setTimeout(() => view.focus());
       }
     },
-    [recorder]
+    [recorder],
   );
 
   const events = useMemo(
@@ -55,7 +55,7 @@ export function FileTabs() {
       onClick<HTMLButtonElement>((e) => {
         select(e.currentTarget.textContent.trim());
       }),
-    [select]
+    [select],
   );
 
   // set class
@@ -95,12 +95,12 @@ export function FileTabs() {
 
   return (
     <div className="lqv-file-tabs" role="tablist">
-      {group.files.map(({filename}) => (
+      {group.files.map(({ filename }) => (
         <button
           key={filename}
           className={`lqv-filetype-${getFileType(filename)}`}
-          id={ids.fileTab({filename, group: activeGroup})}
-          aria-controls={ids.editorPanel({filename, group: activeGroup})}
+          id={ids.fileTab({ filename, group: activeGroup })}
+          aria-controls={ids.editorPanel({ filename, group: activeGroup })}
           aria-selected={activeFilename === filename}
           role="tab"
           {...events}

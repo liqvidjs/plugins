@@ -1,15 +1,18 @@
-import {ChangeSet, type Text} from "@codemirror/state";
-import type {EditorView} from "@codemirror/view";
-import type {ReplayData} from "@liqvid/utils/replay-data";
-import type {MediaElement} from "@lqv/playback";
+import { ChangeSet, type Text } from "@codemirror/state";
+import type { EditorView } from "@codemirror/view";
+import type { ReplayData } from "@liqvid/utils/replay-data";
+import type { MediaElement } from "@lqv/playback";
 
-import {FakeSelection, type Range} from "./fake-selection";
-import type {ScrollAction} from "./recording";
+import { FakeSelection, type Range } from "./fake-selection";
+import type { ScrollAction } from "./recording";
 
-export {fakeSelection} from "./fake-selection";
+export { fakeSelection } from "./fake-selection";
 
 /** Possible replay commands. */
-export type Action = ScrollAction | string | [changes: ChangeSet, selection?: [number, number]];
+export type Action =
+  | ScrollAction
+  | string
+  | [changes: ChangeSet, selection?: [number, number]];
 
 /** Reserved command for specifying file. */
 export const selectCmd = "file:";
@@ -29,7 +32,10 @@ export function cmReplay({
   shouldScroll = () => true,
   start,
   view,
-}: Omit<Parameters<typeof cmReplayMultiple>[0], "handle" | "shouldScroll" | "views"> & {
+}: Omit<
+  Parameters<typeof cmReplayMultiple>[0],
+  "handle" | "shouldScroll" | "views"
+> & {
   /**
    * Function for handling special commands.
    * @param cmd Command to handle.
@@ -148,7 +154,8 @@ export function cmReplayMultiple({
   }
 
   // initialize inverses
-  const inverses: Record<keyof typeof views, (ChangeSet | [number, number])[]> = {};
+  const inverses: Record<keyof typeof views, (ChangeSet | [number, number])[]> =
+    {};
   const lastScroll: Record<keyof typeof views, [number, number]> = {};
   for (const key in views) {
     inverses[key] = [];
@@ -233,7 +240,7 @@ export function cmReplayMultiple({
             // handle selection
             if (action[1]) {
               const [anchor, head] = action[1];
-              selections[file] = {anchor, head};
+              selections[file] = { anchor, head };
             }
           }
         }
@@ -247,7 +254,9 @@ export function cmReplayMultiple({
           const inverse = inverses[file][i];
           // editor change
           if (inverse instanceof ChangeSet) {
-            changes[file] = changes[file].compose(inverses[file][i] as ChangeSet);
+            changes[file] = changes[file].compose(
+              inverses[file][i] as ChangeSet,
+            );
           }
           // scroll
           else if (inverses[file][i].length === 2) {
@@ -279,14 +288,16 @@ export function cmReplayMultiple({
     }
 
     for (const key in views) {
-      const effects = selections[key] ? [FakeSelection.of(selections[key])] : undefined;
+      const effects = selections[key]
+        ? [FakeSelection.of(selections[key])]
+        : undefined;
       const view = views[key];
 
       view.dispatch(
         view.state.update({
           changes: changes[key],
           effects,
-        })
+        }),
       );
 
       // scrolling for legacy recordings
@@ -304,7 +315,7 @@ export function cmReplayMultiple({
           return;
         }
 
-        const {scrollDOM} = view;
+        const { scrollDOM } = view;
         const rect = scrollDOM.getBoundingClientRect();
 
         // it isn't possible to measure things that are offscreen
@@ -340,5 +351,5 @@ export function cmReplayMultiple({
 
 /** Get the fontSize of a view's scrollDOM. */
 function getFontSize(view: EditorView): number {
-  return parseFloat(getComputedStyle(view.scrollDOM).fontSize);
+  return Number.parseFloat(getComputedStyle(view.scrollDOM).fontSize);
 }

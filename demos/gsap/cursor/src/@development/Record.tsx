@@ -1,9 +1,9 @@
 import "./Record.css";
 
-import {RecordingManager} from "@liqvid/recording";
-import {CursorRecorder} from "@lqv/cursor/recording";
-import {useCallback, useState} from "react";
-import {length} from "@liqvid/utils/replay-data";
+import { RecordingManager } from "@liqvid/recording";
+import { CursorRecorder } from "@lqv/cursor/recording";
+import { useCallback, useState } from "react";
+import { length } from "@liqvid/utils/replay-data";
 
 type CursorData = ReturnType<CursorRecorder["finalizeRecording"]>;
 
@@ -16,12 +16,14 @@ export function RecordingControl() {
 
   const toggleRecording = useCallback(() => {
     if (active) {
-      (manager.endRecording() as Promise<{cursor: CursorData}>).then(recordingData => {
-        setData(recordingData.cursor);
-      });
+      (manager.endRecording() as Promise<{ cursor: CursorData }>).then(
+        (recordingData) => {
+          setData(recordingData.cursor);
+        },
+      );
     } else {
       recorder.target = document.getElementById("targets")!;
-      manager.beginRecording({cursor: recorder} as any);
+      manager.beginRecording({ cursor: recorder } as any);
     }
     setActive(!active);
   }, [active]);
@@ -38,11 +40,17 @@ export function RecordingControl() {
         </button>
         Press to start recording
       </p>
-      {data && <>
-        <p>Duration: <code>{length(data) / 1000}</code></p>
-        <p>Copy this into <code>recordings.json</code>:</p>
-        <textarea readOnly value={JSON.stringify(data)} />
-      </>}
+      {data && (
+        <>
+          <p>
+            Duration: <code>{length(data) / 1000}</code>
+          </p>
+          <p>
+            Copy this into <code>recordings.json</code>:
+          </p>
+          <textarea readOnly value={JSON.stringify(data)} />
+        </>
+      )}
     </div>
   );
 }

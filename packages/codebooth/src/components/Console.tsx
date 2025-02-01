@@ -1,5 +1,5 @@
-import {useStore} from "zustand";
-import {useBoothStore} from "../store";
+import { useStore } from "zustand";
+import { useBoothStore } from "../store";
 
 /** Component for displaying console logs. */
 export function Console() {

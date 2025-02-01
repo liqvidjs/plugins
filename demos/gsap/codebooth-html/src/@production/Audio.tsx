@@ -1,10 +1,12 @@
-import {useME} from "@lqv/playback/react";
-import {useEffect, useRef} from "react";
+import { useME } from "@lqv/playback/react";
+import { useEffect, useRef } from "react";
 
 /**
  * <audio> element synced with MediaElement.
  */
-export function Audio(props: React.PropsWithChildren<React.AudioHTMLAttributes<HTMLAudioElement>>): JSX.Element {
+export function Audio(
+  props: React.PropsWithChildren<React.AudioHTMLAttributes<HTMLAudioElement>>,
+): JSX.Element {
   const audio = useRef<HTMLAudioElement>();
   const playback = useME();
 
@@ -29,8 +31,8 @@ export function Audio(props: React.PropsWithChildren<React.AudioHTMLAttributes<H
       playback.removeEventListener("pause", pause);
       playback.removeEventListener("play", play);
       playback.removeEventListener("seeking", syncTime);
-    }
+    };
   }, []);
 
-  return <audio ref={audio} {...props}/>;
+  return <audio ref={audio} {...props} />;
 }

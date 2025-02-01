@@ -1,5 +1,5 @@
-import {ChangeSet, Text} from "@codemirror/state";
-import type {ReplayData} from "@liqvid/utils/replay-data";
+import { ChangeSet, Text } from "@codemirror/state";
+import type { ReplayData } from "@liqvid/utils/replay-data";
 
 interface CMPosition {
   line: number;
@@ -19,10 +19,15 @@ interface Change {
 }
 
 export type OldFormat = ReplayData<
-  ["command", string] | ["cursor", CMPosition] | ["selection", CMSelection] | ["text", Change]
+  | ["command", string]
+  | ["cursor", CMPosition]
+  | ["selection", CMSelection]
+  | ["text", Change]
 >;
 
-export type Action = string | [changes: [number, ...string[]], selection?: [number, number]];
+export type Action =
+  | string
+  | [changes: [number, ...string[]], selection?: [number, number]];
 export type NewFormat = ReplayData<Action>;
 
 /**
@@ -65,7 +70,10 @@ export function convert(oldFormat: OldFormat): NewFormat {
       case "text":
         const from = convertPosition(action[1].from, doc);
         const to = convertPosition(action[1].to, doc);
-        const cs = ChangeSet.of({from, to, insert: action[1].text.join("\n")}, doc.length);
+        const cs = ChangeSet.of(
+          { from, to, insert: action[1].text.join("\n") },
+          doc.length,
+        );
         doc = cs.apply(doc);
         newFormat.push([time, [cs.toJSON()]]);
         break;

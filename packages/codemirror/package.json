@@ -14,23 +14,15 @@
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/types/*.d.ts"
-      ]
+      "*": ["./dist/types/*.d.ts"]
     }
   },
-  "files": [
-    "dist/*"
-  ],
+  "files": ["dist/*"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/liqvidjs/plugins.git"
   },
-  "keywords": [
-    "liqvid",
-    "@liqvid/recording",
-    "codemirror"
-  ],
+  "keywords": ["liqvid", "@liqvid/recording", "codemirror"],
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
   "license": "MIT",
   "bugs": {
