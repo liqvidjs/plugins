@@ -6,7 +6,7 @@ import type { MediaElement } from "@lqv/playback";
 import { FakeSelection, type Range } from "./fake-selection";
 import type { ScrollAction } from "./recording";
 
-export { fakeSelection } from "./fake-selection";
+export { fakeSelection, FakeSelectionConfig } from "./fake-selection";
 
 /** Possible replay commands. */
 export type Action =

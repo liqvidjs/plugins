@@ -22,5 +22,14 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.7"
   },
+  "overrides": {
+    "@liqvid/keymap": "^1.2",
+    "@liqvid/recording": "^0.2.5",
+    "@liqvid/utils": "^1.10",
+    "@types/react": ">=18",
+    "liqvid": "^2.1.17",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
   "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

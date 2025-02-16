@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codemirror",
-  "version": "0.4.8",
+  "version": "0.5.0",
   "description": "Codemirror 6 recording and replaying",
   "exports": {
     ".": {
@@ -38,15 +38,16 @@
     "build:cjs": "tsc --outDir dist/cjs --module commonjs --moduleResolution node",
     "build:esm": "tsc",
     "build:postclean": "rm dist/tsconfig.tsbuildinfo",
-    "lint": "pnpm biome check --fix"
+    "lint": "pnpm biome check --fix",
+    "debug": "pnpm build && cp -R dist ~/me/duck/node_modules/@lqv/codemirror"
   },
   "peerDependencies": {
     "@codemirror/state": ">=6",
     "@codemirror/view": ">=6",
     "@liqvid/keymap": "^1.2",
-    "@liqvid/recording": "^0.2.3",
+    "@liqvid/recording": "^0.2.5",
     "@types/react": ">=18",
-    "liqvid": "^2.1.15",
+    "liqvid": "^2.1.17",
     "react": ">=18"
   },
   "peerDependenciesMeta": {
@@ -71,7 +72,7 @@
     "@codemirror/view": ">=6"
   },
   "dependencies": {
-    "@liqvid/utils": "^1.8.0",
+    "@liqvid/utils": "^1.10.0",
     "@lqv/playback": "workspace:^"
   }
 }
