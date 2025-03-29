@@ -1,12 +1,22 @@
-import { EditorState, type Extension } from "@codemirror/state";
+import { Compartment, EditorState, type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { recording, shortcuts } from "../extensions";
 import { useBoothStore } from "../store";
 
+/** Compartment for toggling extensions in CodeMirror. */
+const editorCompartment = new Compartment();
+
 /** CodeMirror editor. */
-export function Editor(props: {
+export function Editor({
+  content = "",
+  editable = true,
+  extensions,
+  filename,
+  group: groupId = "default",
+  ...props
+}: {
   /** Initial content for editor. */
   content?: string;
 
@@ -27,42 +37,37 @@ export function Editor(props: {
    * @default "default"
    */
   group?: string;
-}) {
-  const { editable = true, group: groupId = "default" } = props;
+} & React.HTMLAttributes<HTMLDivElement>) {
   const store = useBoothStore();
 
   const ref = useRef<HTMLDivElement>();
+  const [view, setView] = useState<EditorView>();
 
+  // initialize the view
+  // biome-ignore lint/correctness/useExhaustiveDependencies: changing `content` is an error
   useEffect(() => {
-    // be idempotent
-    const state = store.getState();
-    if (
-      state.groups[groupId]?.files.some(
-        (file) => file.filename === props.filename,
-      )
-    ) {
-      return;
-    }
+    if (!ref.current) return;
 
     // create editor
     const view = new EditorView({
+      parent: ref.current,
       state: EditorState.create({
-        doc: props.content ?? "",
+        doc: content,
         extensions: [
           recording.of([]),
           shortcuts.of([]),
           ...(editable ? [] : [EditorView.editable.of(false)]),
-          ...(props.extensions ?? []),
+          ...(extensions ?? []),
         ],
       }),
     });
 
-    ref.current.replaceWith(view.dom);
+    setView(view);
 
     // insert into state
     store.setState((prev) => {
       const group = prev.groups[groupId] ?? {
-        activeFile: props.filename,
+        activeFile: filename,
         files: [],
       };
 
@@ -76,7 +81,7 @@ export function Editor(props: {
               ...group.files,
               {
                 editable,
-                filename: props.filename,
+                filename,
                 view,
               },
             ],
@@ -84,7 +89,40 @@ export function Editor(props: {
         },
       };
     });
+
+    return () => {
+      view.destroy();
+
+      // store.setState((prev) => {
+      //   return {
+      //     ...prev,
+      //     groups: {
+      //       ...prev.groups,
+      //       ...(prev.groups[groupId]
+      //         ? {
+      //             [groupId]: {
+      //               ...prev.groups[groupId],
+      //               files: prev.groups[groupId].files.filter(
+      //                 (file) => file.filename !== props.filename,
+      //               ),
+      //             },
+      //           }
+      //         : {}),
+      //     },
+      //   };
+      // });
+    };
   }, []);
 
-  return <div ref={ref} />;
+  // configure extensions
+  useEffect(() => {
+    view?.dispatch({
+      effects: editorCompartment.reconfigure([
+        ...(editable ? [] : [EditorView.editable.of(false)]),
+        ...(extensions ?? []),
+      ]),
+    });
+  }, [editable, extensions, view]);
+
+  return <div ref={ref} {...props} />;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codebooth",
-  "version": "0.3.6",
+  "version": "0.4.1",
   "description": "GUI for interactive coding tutorials with CodeMirror",
   "exports": {
     ".": {
@@ -33,13 +33,14 @@
     "url": "git+https://github.com/liqvidjs/plugins.git"
   },
   "scripts": {
-    "build": "pnpm build:clean; pnpm build:css; pnpm build:js; pnpm build:postclean",
+    "build": "pnpm build:clean; pnpm build:css; pnpm lint; pnpm build:js; pnpm build:postclean",
     "build:clean": "rm -fr dist",
     "build:css": "stylus -o dist/style.css styl/style.styl; stylus -c -o dist/style.min.css styl/style.styl",
     "build:js": "tsc --module commonjs --moduleResolution node --outDir dist/cjs; tsc; node ../../build.mjs",
     "build:postclean": "rm -fr dist/tsconfig.tsbuildinfo",
     "lint": "pnpm biome check --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "pnpm build && cp -R dist ~/me/duck/node_modules/@lqv/codebooth"
   },
   "author": "Yuri Sulyma <yuri@liqvidjs.org>",
   "license": "MIT",

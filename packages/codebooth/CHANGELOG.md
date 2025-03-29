@@ -1,3 +1,7 @@
+## 0.4.1 (Mar 29, 2025)
+
+- allow passing props to `<Editor>`
+
 ## 0.3.6 (Feb 1, 2025)
 
 - allow customizing button class names, shortcuts, and text

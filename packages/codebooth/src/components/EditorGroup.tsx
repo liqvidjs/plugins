@@ -23,7 +23,23 @@ export function EditorGroup({
     if (!state.activeGroup) {
       store.setState({ activeGroup: id });
     }
-  }, []);
+
+    return () => {
+      store.setState((prev) => {
+        const newGroups = Object.fromEntries(
+          Object.entries(prev.groups).filter(([key]) => key !== id),
+        );
+        return {
+          ...prev,
+          activeGroup:
+            prev.activeGroup === id
+              ? Object.keys(newGroups)[0]
+              : prev.activeGroup,
+          groups: newGroups,
+        };
+      });
+    };
+  }, [id, store]);
 
   return (
     <div
