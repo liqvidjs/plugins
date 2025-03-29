@@ -4,6 +4,12 @@ import { CodeRecording } from "@lqv/codemirror/recording";
 import { useEffect } from "react";
 
 import { CodeBooth } from "..";
+import { Console } from "../components/Console";
+import { Editor } from "../components/Editor";
+import { EditorGroup } from "../components/EditorGroup";
+import { Record } from "../components/Record";
+import { Replay } from "../components/Replay";
+import { Resize } from "../components/Resize";
 import {
   Buttons,
   Clear,
@@ -13,12 +19,6 @@ import {
   Tab,
   TabList,
 } from "../components/buttons";
-import { Console } from "../components/Console";
-import { Editor } from "../components/Editor";
-import { EditorGroup } from "../components/EditorGroup";
-import { Record } from "../components/Record";
-import { Replay } from "../components/Replay";
-import { Resize } from "../components/Resize";
 import { basicSetup } from "../extensions";
 import { PythonInterpreter } from "../interpreters/skulpt";
 import { useBoothStore } from "../store";
@@ -176,6 +176,6 @@ export const PythonRun: React.FC = () => {
         }));
       },
     );
-  }, []);
+  }, [store]);
   return null;
 };

@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { useCallback, useEffect, useMemo } from "react";
 import { useStore } from "zustand";
 
-import { useBoothStore, type State } from "../store";
+import { type State, useBoothStore } from "../store";
 import { ids } from "../utils";
 
 const selector = (state: State) => [

@@ -7,7 +7,10 @@ import { useBoothStore } from "../store";
 import { ids } from "../utils";
 
 /** Div to hold buttons. */
-export function Buttons({ className, ...props }: { className?: string }) {
+export function Buttons({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={classNames("lqv-cb-buttons", className)} {...props} />;
 }
 
@@ -87,8 +90,8 @@ export function Copy({
   const copy = useCallback(() => {
     const { groups } = store.getState();
 
-    const from = groups[fromGroup],
-      to = groups[toGroup];
+    const from = groups[fromGroup];
+    const to = groups[toGroup];
 
     if (!(from && to)) {
       console.error(`Could not copy from ${fromGroup} to ${toGroup}`);
@@ -108,9 +111,9 @@ export function Copy({
         }),
       );
     }
-  }, []);
+  }, [fromGroup, store.getState, toGroup]);
 
-  const events = useMemo(() => onClick(copy), []);
+  const events = useMemo(() => onClick(copy), [copy]);
 
   return (
     <button
@@ -142,7 +145,7 @@ export function Reset({
         contents.current[key][file.filename] = file.view.state.doc.toString();
       }
     }
-  }, []);
+  }, [store]);
 
   /* reset */
   const reset = useCallback(() => {
@@ -162,9 +165,9 @@ export function Reset({
         }
       }
     }
-  }, []);
+  }, [store]);
 
-  const resetEvents = useMemo(() => onClick(reset), []);
+  const resetEvents = useMemo(() => onClick(reset), [reset]);
 
   return (
     <button
@@ -194,7 +197,7 @@ export function Run({
   // run callback
   const run = useCallback(() => {
     store.setState((prev) => ({ run: prev.run + 1 }));
-  }, []);
+  }, [store.setState]);
 
   /* add keyboard shortcuts */
   useEffect(() => {
@@ -210,10 +213,10 @@ export function Run({
         },
       },
     }));
-  }, []);
+  }, [run, shortcut, store.setState]);
 
   // click events
-  const events = useMemo(() => onClick(run), []);
+  const events = useMemo(() => onClick(run), [run]);
 
   return (
     <button
@@ -244,7 +247,7 @@ export function Tab({
       onClick(() => {
         store.setState({ activeGroup: id });
       }),
-    [],
+    [id, store.setState],
   );
 
   return (

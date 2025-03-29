@@ -62,25 +62,27 @@ export interface State {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const makeStore = (state: Partial<State> = {}) =>
   createStore<State>()(
-    subscribeWithSelector((set, get) => ({
-      // default values
-      activeGroup: undefined,
-      classNames: ["lqv-codebooth"],
-      getActiveFile() {
-        const state = get();
-        const group = state.groups[state.activeGroup];
-        return group?.files?.find((_) => _.filename === group.activeFile);
-      },
-      getActiveView() {
-        return get().getActiveFile().view;
-      },
-      groups: {},
-      messages: [],
-      recorder: undefined,
-      run: 0,
-      shortcuts: {},
-      ...state,
-    })),
+    subscribeWithSelector(
+      (_set, get): State => ({
+        // default values
+        activeGroup: undefined,
+        classNames: ["lqv-codebooth"],
+        getActiveFile() {
+          const state = get();
+          const group = state.groups[state.activeGroup];
+          return group?.files?.find((_) => _.filename === group.activeFile);
+        },
+        getActiveView() {
+          return get().getActiveFile().view;
+        },
+        groups: {},
+        messages: [],
+        recorder: undefined,
+        run: 0,
+        shortcuts: {},
+        ...state,
+      }),
+    ),
   );
 
 export type Store = ReturnType<typeof makeStore>;

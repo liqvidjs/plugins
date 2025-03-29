@@ -34,19 +34,15 @@ export function Resize({
   const resizeEvents = useMemo(() => {
     let container: HTMLDivElement;
     return onDrag(
-      (e, { x, y }) => {
+      (_e, { x, y }) => {
         const rect = container.getBoundingClientRect();
 
         if (dir === "ew") {
-          container.style.setProperty(
-            "--split",
-            clamp(min, (x - rect.left) / rect.width, max) * 100 + "%",
-          );
+          const split = clamp(min, (x - rect.left) / rect.width, max) * 100;
+          container.style.setProperty("--split", `${split}%`);
         } else if (dir === "ns") {
-          container.style.setProperty(
-            "--v-split",
-            clamp(min, (rect.bottom - y) / rect.height, max) * 100 + "%",
-          );
+          const split = clamp(min, (rect.bottom - y) / rect.height, max) * 100;
+          container.style.setProperty("--v-split", `${split}%`);
         }
       },
       () => {
@@ -57,7 +53,7 @@ export function Resize({
         container.classList.remove("dragging");
       },
     );
-  }, []);
+  }, [dir, max, min]);
 
   return (
     <div

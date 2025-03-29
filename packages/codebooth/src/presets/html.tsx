@@ -8,6 +8,14 @@ import { useEffect, useRef } from "react";
 import { useStore } from "zustand";
 
 import { CodeBooth } from "..";
+import { Console } from "../components/Console";
+import { Editor } from "../components/Editor";
+import { EditorGroup } from "../components/EditorGroup";
+import { EditorPanel } from "../components/EditorPanel";
+import { FileTabs } from "../components/FileTabs";
+import { Record } from "../components/Record";
+import { Replay, ReplayMultiple } from "../components/Replay";
+import { Resize } from "../components/Resize";
 import {
   Buttons,
   Clear,
@@ -17,14 +25,6 @@ import {
   Tab,
   TabList,
 } from "../components/buttons";
-import { Console } from "../components/Console";
-import { Editor } from "../components/Editor";
-import { EditorGroup } from "../components/EditorGroup";
-import { EditorPanel } from "../components/EditorPanel";
-import { FileTabs } from "../components/FileTabs";
-import { Record } from "../components/Record";
-import { Replay, ReplayMultiple } from "../components/Replay";
-import { Resize } from "../components/Resize";
 import { basicSetup } from "../extensions";
 import { type State, useBoothStore } from "../store";
 
@@ -197,7 +197,9 @@ export const HTMLRecord: React.FC<{
 };
 
 /** Preview of HTML document. */
-export function HTMLPreview() {
+export function HTMLPreview(
+  props: React.IframeHTMLAttributes<HTMLIFrameElement>,
+) {
   const store = useBoothStore();
 
   /** <iframe> containing preview document */
@@ -265,42 +267,45 @@ export function HTMLPreview() {
         unsub();
       }
     };
-  }, []);
+  }, [store]);
 
   return (
     <iframe
       className="lqv-preview"
       ref={iframe}
       sandbox="allow-popups allow-scripts"
+      {...props}
     />
   );
 }
 
 /**
  * Inlines scripts and stylesheets in HTML code.
- * @param html HTML code to transform
+ * @param output HTML code to transform
  * @param files Map of file
  * @returns Transformed HTML code.
  */
 export function transform(html: string, files: Record<string, string>) {
+  let output = html;
+
   // transform <script>s
-  html = html.replace(
+  output = output.replace(
     /<script\s*src=(['"])(?:\.\/)?([^\1]+?\.js)\1\s*><\/script>/gi,
-    (match, q, src) => {
+    (match, _q, src) => {
       if (src in files) {
-        return "<script>" + files[src] + "</script>";
+        return `<script>${files[src]}</script>`;
       }
       return match;
     },
   );
 
   // transform <link>s
-  html = html.replace(/<link([^>]+?)>/gi, (match, attrs) => {
+  output = output.replace(/<link([^>]+?)>/gi, (match, attrs) => {
     const $_ = attrs.match(/href=(['"])(?:\.\/)?([^\1]+?\.css)\1/);
     if ($_) {
       const href = $_[2];
       if (href in files) {
-        return `<style data-filename="${href}">` + files[href] + "</style>";
+        return `<style data-filename="${href}">${files[href]}</style>`;
       }
       return match;
     }
@@ -308,10 +313,10 @@ export function transform(html: string, files: Record<string, string>) {
   });
 
   // magic scripts
-  html = html.replace("<head>", "<head>" + magicScripts);
+  output = output.replace("<head>", `<head>${magicScripts}`);
 
   // return
-  return html;
+  return output;
 }
 
 /** Iframe client code for development magic */
@@ -390,56 +395,65 @@ function getFileContents(state: State): Record<string, string> {
  * @param formatString Whether to format the log entry.
  */
 function formatLog(o: unknown, formatString = false): JSX.Element | string {
-  if (o instanceof Array) {
-    return (
-      <span className="array" key={key()}>
-        Array [{" "}
-        <ol>
-          {o.map((entry, i) => (
-            <li key={i}>{formatLog(entry, true)}</li>
-          ))}
-        </ol>{" "}
-        ]
-      </span>
-    );
-  } else if (typeof o === "object") {
-    return (
-      <span className="object" key={key()}>
-        Object &#123;{" "}
-        <ol>
-          {Object.keys(o).map((k, i) => (
-            <li key={i}>
-              {k}: {formatLog((o as Record<string, unknown>)[k], true)}
-            </li>
-          ))}
-        </ol>{" "}
-        &#125;
-      </span>
-    );
-  } else if (typeof o === "number") {
-    return (
-      <span className="number" key={key()}>
-        {o}
-      </span>
-    );
-  } else if (typeof o === "string") {
-    if (formatString) {
+  switch (true) {
+    // array
+    case Array.isArray(o):
       return (
-        <span className="string" key={key()}>
-          &quot;{o}&quot;
+        <span className="array" key={key()}>
+          Array [{" "}
+          <ol>
+            {o.map((entry, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <li key={i}>{formatLog(entry, true)}</li>
+            ))}
+          </ol>{" "}
+          ]
         </span>
       );
-    } else {
+    // object
+    case typeof o === "object":
+      return (
+        <span className="object" key={key()}>
+          Object &#123;{" "}
+          <ol>
+            {Object.keys(o).map((k, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <li key={i}>
+                {k}: {formatLog((o as Record<string, unknown>)[k], true)}
+              </li>
+            ))}
+          </ol>{" "}
+          &#125;
+        </span>
+      );
+    // number
+    case typeof o === "number":
+      return (
+        <span className="number" key={key()}>
+          {o}
+        </span>
+      );
+    // string
+    case typeof o === "string":
+      if (formatString) {
+        return (
+          <span className="string" key={key()}>
+            &quot;{o}&quot;
+          </span>
+        );
+      }
       return <span key={key()}>{o}</span>;
-    }
-  } else if (typeof o === "undefined") {
-    return (
-      <span className="undefined" key={key()}>
-        undefined
-      </span>
-    );
+    // undefined
+    case typeof o === "undefined":
+      return (
+        <span className="undefined" key={key()}>
+          undefined
+        </span>
+      );
+    // default
+    default:
+      return o.toString();
   }
-  return o.toString();
 }
 
 /** Get unique React key. */

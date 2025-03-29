@@ -1,11 +1,12 @@
 import type { Extension, Text } from "@codemirror/state";
-import { drawSelection, type EditorView, ViewPlugin } from "@codemirror/view";
+import { type EditorView, ViewPlugin } from "@codemirror/view";
 import {
   cmReplay,
   cmReplayMultiple,
   fakeSelection,
   selectCmd,
 } from "@lqv/codemirror";
+import type { FakeSelectionConfig } from "@lqv/codemirror/fake-selection";
 import { useME } from "@lqv/playback/react";
 import { useCallback, useEffect, useMemo } from "react";
 
@@ -18,42 +19,39 @@ type CodeData = Parameters<typeof cmReplay>[0]["data"];
 /**
  * Editor to replay recorded coding.
  */
-export function Replay(
-  props: Pick<
-    Parameters<typeof cmReplay>[0],
-    "scrollBehavior" | "shouldScroll"
-  > &
-    React.ComponentProps<typeof Editor> & {
-      /**
-       * Callback to handle special commands.
-       * @param useStore The CodeBooth store.
-       * @param cmd The command to handle.
-       * @param doc The CodeMirror document.
-       */
-      handle?: (useStore: Store, cmd: string, doc: Text) => void;
+export function Replay({
+  extensions = [],
+  handle,
+  replay,
+  scrollBehavior,
+  selectionConfig,
+  shouldScroll,
+  start = 0,
+  ...props
+}: Pick<Parameters<typeof cmReplay>[0], "scrollBehavior" | "shouldScroll"> &
+  React.ComponentProps<typeof Editor> & {
+    /**
+     * Callback to handle special commands.
+     * @param useStore The CodeBooth store.
+     * @param cmd The command to handle.
+     * @param doc The CodeMirror document.
+     */
+    handle?: (useStore: Store, cmd: string, doc: Text) => void;
 
-      /** Coding data to replay. */
-      replay?: CodeData | Promise<CodeData>;
+    /** Coding data to replay. */
+    replay?: CodeData | Promise<CodeData>;
 
-      /**
-       * Time to start replaying.
-       * @default 0
-       */
-      start?: number;
-    },
-): JSX.Element {
+    /** Configuration for replaying the author's cursor and selection. */
+    selectionConfig?: FakeSelectionConfig;
+
+    /**
+     * Time to start replaying.
+     * @default 0
+     */
+    start?: number;
+  }): JSX.Element {
   const store = useBoothStore();
   const playback = useME();
-
-  const {
-    extensions = [],
-    handle,
-    replay,
-    scrollBehavior,
-    shouldScroll,
-    start = 0,
-    ...attrs
-  } = props;
 
   const __handle = useCallback(
     (cmd: string, doc: Text) => {
@@ -64,17 +62,16 @@ export function Replay(
         // clear console
         store.setState(() => ({ messages: [] }));
       }
+
       // userspace handler
-      if (props.handle) {
-        props.handle(store, cmd, doc);
-      }
+      handle?.(store, cmd, doc);
     },
-    [handle],
+    [handle, store],
   );
 
   const __extensions: Extension[] = useMemo(
     () => [
-      ViewPlugin.define(fakeSelection(drawSelection() as Extension[])),
+      fakeSelection(selectionConfig),
       ViewPlugin.define((view) => {
         if (replay) {
           if (replay instanceof Promise) {
@@ -105,46 +102,59 @@ export function Replay(
       }),
       ...extensions,
     ],
-    [extensions, replay, start],
+    [
+      __handle,
+      extensions,
+      playback,
+      replay,
+      scrollBehavior,
+      selectionConfig,
+      shouldScroll,
+      start,
+    ],
   );
 
-  return <Editor editable={false} extensions={__extensions} {...attrs} />;
+  return <Editor editable={false} extensions={__extensions} {...props} />;
 }
 
 /**
  * Replay coding to multiple editors.
  */
-export function ReplayMultiple(
-  props: Pick<
-    Parameters<typeof cmReplayMultiple>[0],
-    "scrollBehavior" | "shouldScroll"
-  > & {
-    /** Editor group to replay. */
-    group?: string;
+export function ReplayMultiple({
+  group,
+  handle: propsHandle,
+  replay,
+  scrollBehavior,
+  shouldScroll,
+  start = 0,
+}: Pick<
+  Parameters<typeof cmReplayMultiple>[0],
+  "scrollBehavior" | "shouldScroll"
+> & {
+  /** Editor group to replay. */
+  group?: string;
 
-    /**
-     * Callback to handle special commands.
-     * @param store The CodeBooth store.
-     * @param cmd The command to handle.
-     * @param docs CodeMirror documents.
-     */
-    handle?: (store: Store, cmd: string, docs: Record<string, Text>) => void;
+  /**
+   * Callback to handle special commands.
+   * @param store The CodeBooth store.
+   * @param cmd The command to handle.
+   * @param docs CodeMirror documents.
+   */
+  handle?: (store: Store, cmd: string, docs: Record<string, Text>) => void;
 
-    /**
-     * Coding data to replay.
-     */
-    replay: CodeData | Promise<CodeData>;
+  /**
+   * Coding data to replay.
+   */
+  replay: CodeData | Promise<CodeData>;
 
-    /**
-     * Time to start replaying.
-     * @default 0
-     */
-    start?: number;
-  },
-): null {
+  /**
+   * Time to start replaying.
+   * @default 0
+   */
+  start?: number;
+}): null {
   const playback = useME();
   const store = useBoothStore();
-  const { start = 0 } = props;
 
   /* Handle callback */
   const handle = useCallback(
@@ -154,8 +164,8 @@ export function ReplayMultiple(
         store.setState((state) => ({
           groups: {
             ...state.groups,
-            [props.group]: {
-              ...state.groups[props.group],
+            [group]: {
+              ...state.groups[group],
               activeFile: cmd.slice(selectCmd.length),
             },
           },
@@ -167,46 +177,54 @@ export function ReplayMultiple(
         // clear console
         store.setState(() => ({ messages: [] }));
       }
+
       // userspace handler
-      if (props.handle) {
-        props.handle(store, cmd, docs);
-      }
+      propsHandle?.(store, cmd, docs);
     },
-    [props.handle],
+    [group, propsHandle, store],
   );
 
   useEffect(() => {
     const state = store.getState();
 
     const views: Record<string, EditorView> = {};
-    for (const file of state.groups[props.group].files) {
+    for (const file of state.groups[group].files) {
       views[file.filename] = file.view;
     }
 
-    if (props.replay instanceof Promise) {
-      props.replay.then((data) =>
+    if (replay instanceof Promise) {
+      replay.then((data) =>
         cmReplayMultiple({
           data,
           handle,
           playback,
-          scrollBehavior: props.scrollBehavior,
-          shouldScroll: props.shouldScroll,
+          scrollBehavior,
+          shouldScroll,
           start,
           views,
         }),
       );
     } else {
       cmReplayMultiple({
-        data: props.replay,
+        data: replay,
         handle,
         playback,
-        scrollBehavior: props.scrollBehavior,
-        shouldScroll: props.shouldScroll,
+        scrollBehavior,
+        shouldScroll,
         start,
         views,
       });
     }
-  }, []);
+  }, [
+    group,
+    handle,
+    playback,
+    replay,
+    scrollBehavior,
+    shouldScroll,
+    start,
+    store,
+  ]);
 
   return null;
 }

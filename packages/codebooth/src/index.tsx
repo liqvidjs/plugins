@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { useStore } from "zustand";
 
 import { shortcuts } from "./extensions";
-import { BoothStore, makeStore, type Store, useBoothStore } from "./store";
+import { BoothStore, type Store, makeStore, useBoothStore } from "./store";
 
 // buttons
 export * from "./components/buttons";
@@ -85,7 +85,7 @@ function KeyboardShortcuts(): null {
         unsub();
       }
     };
-  }, []);
+  }, [store]);
 
   return null;
 }

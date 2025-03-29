@@ -11,10 +11,10 @@ export class PythonInterpreter {
   read(filename: string): string {
     if (
       Sk.builtinFiles === undefined ||
-      Sk.builtinFiles["files"][filename] === undefined
+      Sk.builtinFiles.files[filename] === undefined
     )
-      throw "File not found: '" + filename + "'";
-    return Sk.builtinFiles["files"][filename];
+      throw `File not found: '${filename}'`;
+    return Sk.builtinFiles.files[filename];
   }
 
   run(code: string): Promise<string[]> {

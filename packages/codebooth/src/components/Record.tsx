@@ -46,7 +46,7 @@ export const Record: React.FC<
       lqvKeymap
         ? [keymap.of(passThrough(lqvKeymap, passKeys)), ...extensions]
         : extensions,
-    [passKeys],
+    [extensions, lqvKeymap, passKeys],
   );
 
   // attach recording extensions --- this has to be done this way because
@@ -65,7 +65,7 @@ export const Record: React.FC<
     });
 
     includeFilenameInRecording(state);
-  }, []);
+  }, [captureKeys, group, props.filename, store.getState]);
 
   return (
     <Editor content={props.content} extensions={newExtensions} {...attrs} />
@@ -81,17 +81,16 @@ function includeFilenameInRecording(state: State) {
   // only do this if we are recording in multiple files
   let recordingExtensions = 0;
 
-  outer: {
-    for (const group of Object.values(state.groups)) {
-      for (const { view } of group.files) {
-        const extnState = recording.get(view.state);
-        if (extnState instanceof Array && extnState.length > 0) {
-          recordingExtensions++;
-          if (recordingExtensions > 1) break outer;
-        }
+  outer: for (const group of Object.values(state.groups)) {
+    for (const { view } of group.files) {
+      const extnState = recording.get(view.state);
+      if (Array.isArray(extnState) && extnState.length > 0) {
+        recordingExtensions++;
+        if (recordingExtensions > 1) break outer;
       }
     }
   }
+
   if (recordingExtensions < 2) {
     return;
   }
