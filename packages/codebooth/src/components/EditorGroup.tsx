@@ -52,7 +52,7 @@ export function EditorGroup({
       {...attrs}
     >
       {Children.map(children, (node) => {
-        if (typeof node === "object" && "props" in node) {
+        if (typeof node === "object" && node !== null && "props" in node) {
           return cloneElement(node, { group: id });
         }
         return node;

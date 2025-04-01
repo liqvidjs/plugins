@@ -1,6 +1,6 @@
 {
   "name": "@lqv/codebooth",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "GUI for interactive coding tutorials with CodeMirror",
   "exports": {
     ".": {

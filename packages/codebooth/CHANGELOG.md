@@ -1,3 +1,7 @@
+## 0.4.2 (Mar 31, 2025)
+
+- fix null bug in `<EditorPanel>` and `<EditorGroup>`
+
 ## 0.4.1 (Mar 29, 2025)
 
 - allow passing props to `<Editor>`

@@ -45,7 +45,7 @@ export function EditorPanel({
       {...props}
     >
       {Children.map(children, (node) => {
-        if (typeof node === "object" && "props" in node) {
+        if (typeof node === "object" && node !== null && "props" in node) {
           return cloneElement(node, { filename, group });
         }
         return node;
