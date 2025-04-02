@@ -1,3 +1,7 @@
+## 0.5.0 (Apr 2, 2025)
+
+- add `didScroll()` option to `<Replay>` and `<ReplayMultiple>`
+
 ## 0.4.2 (Mar 31, 2025)
 
 - fix null bug in `<EditorPanel>` and `<EditorGroup>`

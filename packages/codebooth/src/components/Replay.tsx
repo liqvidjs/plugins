@@ -25,10 +25,14 @@ export function Replay({
   replay,
   scrollBehavior,
   selectionConfig,
+  didScroll,
   shouldScroll,
   start = 0,
   ...props
-}: Pick<Parameters<typeof cmReplay>[0], "scrollBehavior" | "shouldScroll"> &
+}: Pick<
+  Parameters<typeof cmReplay>[0],
+  "didScroll" | "scrollBehavior" | "shouldScroll"
+> &
   React.ComponentProps<typeof Editor> & {
     /**
      * Callback to handle special commands.
@@ -78,6 +82,7 @@ export function Replay({
             replay.then((data) =>
               cmReplay({
                 data,
+                didScroll,
                 handle: __handle,
                 playback,
                 scrollBehavior,
@@ -89,6 +94,7 @@ export function Replay({
           } else {
             cmReplay({
               data: replay,
+              didScroll,
               handle: __handle,
               playback,
               scrollBehavior,
@@ -104,6 +110,7 @@ export function Replay({
     ],
     [
       __handle,
+      didScroll,
       extensions,
       playback,
       replay,
@@ -121,6 +128,7 @@ export function Replay({
  * Replay coding to multiple editors.
  */
 export function ReplayMultiple({
+  didScroll,
   group,
   handle: propsHandle,
   replay,
@@ -129,7 +137,7 @@ export function ReplayMultiple({
   start = 0,
 }: Pick<
   Parameters<typeof cmReplayMultiple>[0],
-  "scrollBehavior" | "shouldScroll"
+  "didScroll" | "scrollBehavior" | "shouldScroll"
 > & {
   /** Editor group to replay. */
   group?: string;
@@ -196,6 +204,7 @@ export function ReplayMultiple({
       replay.then((data) =>
         cmReplayMultiple({
           data,
+          didScroll,
           handle,
           playback,
           scrollBehavior,
@@ -207,6 +216,7 @@ export function ReplayMultiple({
     } else {
       cmReplayMultiple({
         data: replay,
+        didScroll,
         handle,
         playback,
         scrollBehavior,
@@ -216,6 +226,7 @@ export function ReplayMultiple({
       });
     }
   }, [
+    didScroll,
     group,
     handle,
     playback,
