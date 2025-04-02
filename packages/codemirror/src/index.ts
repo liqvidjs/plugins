@@ -20,6 +20,9 @@ export const selectCmd = "file:";
 /** Reserved string for specifying scroll actions. */
 export const scrollCmd = "s";
 
+/** Key for the default view (in single-file mode). */
+export const defaultViewName = "default";
+
 /**
  * Replay typing in CodeMirror.
  * @returns Unsubscription function.
@@ -29,6 +32,7 @@ export function cmReplay({
   handle,
   playback,
   scrollBehavior,
+  didScroll,
   shouldScroll = () => true,
   start,
   view,
@@ -44,6 +48,12 @@ export function cmReplay({
   handle?: (cmd: string, doc: Text) => void;
 
   /**
+   * Callback that gets called when the replay scrolls to a new position.
+   * You can use this to try to distinguish user scroll events from programmatic ones.
+   */
+  didScroll?: (scrollToOptions: ScrollToOptions) => void;
+
+  /**
    * Callback for determining whether to replay scrolling. You can have this
    * return `false` to relinquish scrolling control back to the viewer.
    * By default, always returns `true`, i.e. scrolls are always replayed.
@@ -54,14 +64,17 @@ export function cmReplay({
   view: EditorView;
 }): () => void {
   return cmReplayMultiple({
-    data: [[0, `${selectCmd}default`], ...data],
+    data: [[0, selectCmd + defaultViewName], ...data],
     handle: (key, docs) => handle(key, docs.default),
     playback,
     scrollBehavior,
+    didScroll: (_filename, scrollToOptions) => {
+      didScroll?.(scrollToOptions);
+    },
     shouldScroll,
     start,
     views: {
-      default: view,
+      [defaultViewName]: view,
     },
   });
 }
@@ -72,6 +85,7 @@ export function cmReplay({
  */
 export function cmReplayMultiple({
   data,
+  didScroll,
   handle,
   playback,
   scrollBehavior = "auto",
@@ -94,6 +108,12 @@ export function cmReplayMultiple({
    * @default "auto"
    */
   scrollBehavior?: ScrollBehavior;
+
+  /**
+   * Callback that gets called when the replay scrolls to a new position.
+   * You can use this to try to distinguish user scroll events from programmatic ones.
+   */
+  didScroll?: (filename: string, scrollToOptions: ScrollToOptions) => void;
 
   /**
    * Callback for determining whether to replay scrolling for a given file.
@@ -227,11 +247,13 @@ export function cmReplayMultiple({
               // scroll
               const [, y, x = 0] = action;
               const fontSize = getFontSize(views[file]);
-              views[file].scrollDOM.scrollTo({
+              const scrollToOptions = {
                 left: x * fontSize,
                 top: y * fontSize,
                 behavior: scrollBehavior,
-              });
+              };
+              views[file].scrollDOM.scrollTo(scrollToOptions);
+              didScroll?.(file, scrollToOptions);
             }
           } else {
             // editor change
@@ -263,11 +285,13 @@ export function cmReplayMultiple({
             if (shouldScroll(file)) {
               const [y, x] = inverses[file][i] as [number, number];
               const fontSize = getFontSize(views[file]);
-              views[file].scrollDOM.scrollTo({
+              const scrollToOptions = {
                 left: x * fontSize,
                 top: y * fontSize,
                 behavior: scrollBehavior,
-              });
+              };
+              views[file].scrollDOM.scrollTo(scrollToOptions);
+              didScroll?.(file, scrollToOptions);
             }
           }
         } else if (data[i][1] === selectCmd + file) {
@@ -323,15 +347,19 @@ export function cmReplayMultiple({
         const wordTop = view.defaultLineHeight * (line.number - 1);
 
         if (wordTop < scrollDOM.scrollTop) {
-          scrollDOM.scrollTo({
+          const scrollToOptions = {
             behavior: scrollBehavior,
             top: wordTop,
-          });
+          };
+          scrollDOM.scrollTo(scrollToOptions);
+          didScroll?.(key, scrollToOptions);
         } else if (wordTop > scrollDOM.scrollTop + rect.height) {
-          scrollDOM.scrollTo({
+          const scrollToOptions = {
             behavior: scrollBehavior,
             top: wordTop - rect.height + view.defaultLineHeight,
-          });
+          };
+          scrollDOM.scrollTo(scrollToOptions);
+          didScroll?.(key, scrollToOptions);
         }
       }
     }
