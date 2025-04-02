@@ -1,3 +1,8 @@
+## 0.6.0 (Apr 2, 2025)
+
+- add `didScroll()` option
+- fix `NaN` bug` in scrolling
+
 ## 0.5.0 (Feb 16, 2025)
 
 - new `fakeSelection()` extension: support configuration and block vs column cursors

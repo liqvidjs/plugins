@@ -247,13 +247,15 @@ export function cmReplayMultiple({
               // scroll
               const [, y, x = 0] = action;
               const fontSize = getFontSize(views[file]);
-              const scrollToOptions = {
-                left: x * fontSize,
-                top: y * fontSize,
-                behavior: scrollBehavior,
-              };
-              views[file].scrollDOM.scrollTo(scrollToOptions);
-              didScroll?.(file, scrollToOptions);
+              if (!Number.isNaN(fontSize)) {
+                const scrollToOptions = {
+                  left: x * fontSize,
+                  top: y * fontSize,
+                  behavior: scrollBehavior,
+                };
+                views[file].scrollDOM.scrollTo(scrollToOptions);
+                didScroll?.(file, scrollToOptions);
+              }
             }
           } else {
             // editor change
@@ -285,13 +287,15 @@ export function cmReplayMultiple({
             if (shouldScroll(file)) {
               const [y, x] = inverses[file][i] as [number, number];
               const fontSize = getFontSize(views[file]);
-              const scrollToOptions = {
-                left: x * fontSize,
-                top: y * fontSize,
-                behavior: scrollBehavior,
-              };
-              views[file].scrollDOM.scrollTo(scrollToOptions);
-              didScroll?.(file, scrollToOptions);
+              if (!Number.isNaN(fontSize)) {
+                const scrollToOptions = {
+                  left: x * fontSize,
+                  top: y * fontSize,
+                  behavior: scrollBehavior,
+                };
+                views[file].scrollDOM.scrollTo(scrollToOptions);
+                didScroll?.(file, scrollToOptions);
+              }
             }
           }
         } else if (data[i][1] === selectCmd + file) {
