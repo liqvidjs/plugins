@@ -1,3 +1,7 @@
+## 0.5.1 (Apr 30, 2025)
+
+- fix `<Editor>` unmounting
+
 ## 0.5.0 (Apr 2, 2025)
 
 - add `didScroll()` option to `<Replay>` and `<ReplayMultiple>`
